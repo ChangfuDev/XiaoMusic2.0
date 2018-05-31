@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CommonLibrary</string>
+    <string name="error_get_data">获取数据失败，请稍后再试</string>
+    <string name="error_connect">连接错误</string>
+    <string name="error_connect_time_out">连接超时</string>
+    <string name="error_parse">解析错误</string>
+    <string name="error_else">未知错误</string>
+    <string name="error_net">网络异常</string>
+</resources>

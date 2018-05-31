@@ -1,0 +1,75 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.yzx.xiaomusic"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [qqappid: "你的qq appid"]
+//        manifestPlaceholders = [UMENG_CHANNEL: "你的qq appid"]
+        flavorDimensions("channel")
+    }
+    buildTypes {
+        release {
+            //是否开启混淆
+            minifyEnabled false
+//            //是否去除未利用的资源
+//            shrinkResources true
+//            //是否使用zipalign工具压缩
+//            zipAlignEnable false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+//    配置多渠道打包
+    productFlavors {
+        vivo {
+        }
+        xiaomi {
+        }
+    }
+//配置友盟多渠道
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    //    友盟统计
+    implementation 'com.umeng.sdk:common:1.5.1'
+    implementation 'com.umeng.sdk:analytics:7.5.1'
+    implementation 'com.umeng.sdk:debug:1.0.0'
+    //友盟分享
+    implementation 'com.umeng.sdk:share-core:6.9.1'
+    implementation 'com.umeng.sdk:share-qq:6.9.1.1'
+    implementation 'com.umeng.sdk:share-wechat:6.9.1'
+    implementation 'com.umeng.sdk:share-sina:6.9.1'
+    implementation 'com.umeng.sdk:shareboard-widget:6.9.1'
+    //butterknife
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    //EventBus
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation project(':commonLibrary')
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+
+    //圆形头像
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+}

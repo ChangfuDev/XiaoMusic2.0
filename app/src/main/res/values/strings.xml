@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">XiaoMusic</string>
+    <string name="signIn">签到</string>
+    <string name="commingSoon">敬请期待</string>
+    <string name="setting">设置</string>
+    <string name="nightMode">夜间模式</string>
+    <string name="exit">退出</string>
+    <string name="myMessage">我的消息</string>
+    <string name="vip">VIP会员</string>
+    <string name="shoppingMall">商城</string>
+    <string name="gameRecommend">游戏推荐</string>
+    <string name="listenOnLine">在线听歌免流量</string>
+    <string name="myFriend">我的好友</string>
+    <string name="nearbyPerson">附近的人</string>
+    <string name="personalSkin">个性换肤</string>
+    <string name="findSongByListen">听歌识曲</string>
+    <string name="stopPlayTimely">定时停止播放</string>
+    <string name="scan">扫一扫</string>
+    <string name="musicAlarm">音乐闹铃</string>
+    <string name="driveMode">驾驶模式</string>
+    <string name="musicCloudDisk">音乐云盘</string>
+    <string name="coupon">优惠券</string>
+</resources>
