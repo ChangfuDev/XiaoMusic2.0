@@ -38,7 +38,8 @@ public class CommonLazyFragment extends Fragment {
                  * 在第一个ViewPager的Fragment的setUserVisibleHint方法调用时，尚未添加到Activity，所以加层判断
                  */
                 if (isAdded()) {
-                    /**如果Fragment里嵌套有ViewPager,在切换父ViewPager时，
+                    /**
+                     * 如果Fragment里嵌套有ViewPager,在切换父ViewPager时，
                      * 子ViewPager的第一个不会走任何生命周期和setUserVisibleHint(boolean isVisibleToUser)方法，
                      * 因此需要遍历子ViewPager,调用其load()方法
                      */

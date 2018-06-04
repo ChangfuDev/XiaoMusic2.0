@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.List;
 
 /**
- *
  * @author yzx
  * @date 2018/4/26
  * Description FragmentPagerAdapter的基类
@@ -34,7 +33,8 @@ public class CommonBaseFragmentPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return titles.get(position);
+
+        return titles == null ? null : titles.get(position);
     }
 
     public void setFragments(List<Fragment> fragments) {

@@ -26,7 +26,7 @@
 
         <LinearLayout
             android:id="@+id/ll_night_mode"
-            style="@style/waterEffect"
+            style="@style/WaterEffect"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -51,7 +51,7 @@
 
         <LinearLayout
             android:id="@+id/ll_setting"
-            style="@style/waterEffect"
+            style="@style/WaterEffect"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -75,7 +75,7 @@
 
         <LinearLayout
             android:id="@+id/ll_exit"
-            style="@style/waterEffect"
+            style="@style/WaterEffect"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

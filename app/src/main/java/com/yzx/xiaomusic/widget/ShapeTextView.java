@@ -72,4 +72,5 @@ public class ShapeTextView extends AppCompatTextView {
         super.onDraw(canvas);
     }
 
+
 }

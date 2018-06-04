@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'androidx.navigation.safeargs'
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -72,4 +72,11 @@ dependencies {
 
     //圆形头像
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'android.arch.navigation:navigation-fragment:1.0.0-alpha01'
+    implementation 'android.arch.navigation:navigation-ui:1.0.0-alpha01'
+
+    //FlowLayout
+    implementation 'com.hyman:flowlayout-lib:1.1.2'
+    //新控件
+//    implementation 'com.google.android.material:material:1.0.0-alpha1'
 }

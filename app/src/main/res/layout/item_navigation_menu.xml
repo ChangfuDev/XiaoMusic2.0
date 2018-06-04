@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    style="@style/waterEffect"
+    style="@style/WaterEffect"
     android:layout_height="40dp"
     android:background="@color/colorWhite"
     android:gravity="center_vertical"

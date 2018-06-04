@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yzx.xiaomusic.widget.ShapeTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="8dp"
+    android:paddingTop="5dp"
+    android:paddingEnd="8dp"
+    android:textSize="12sp"
+    android:textColor="@color/colorTitle"
+    android:paddingBottom="5dp"
+    app:solidColor="@color/colorWhite"
+    app:strokeColor="@color/colorDivider"
+    app:strokeWidth="0.5dp"
+    tools:text="杨子晓" />
+
