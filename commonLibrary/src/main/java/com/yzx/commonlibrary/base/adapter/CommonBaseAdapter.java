@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,6 +63,26 @@ public abstract class CommonBaseAdapter<VH extends RecyclerView.ViewHolder, B> e
         } else {
             datas.addAll(newData);
             notifyItemRangeInserted(datas.size() - newData.size(), newData.size());
+        }
+    }
+
+    /**
+     * 添加数据
+     *
+     * @param newData
+     */
+    public void addOneData(B newData) {
+        if (newData == null) {
+            return;
+        }
+
+        if (datas == null) {
+            datas = new ArrayList<B>();
+            datas.add(newData);
+            notifyItemRangeInserted(0, 1);
+        } else {
+            datas.add(newData);
+            notifyItemRangeInserted(datas.size(), 1);
         }
     }
 

@@ -2,11 +2,19 @@ package com.yzx.xiaomusic.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.TransitionOptions;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by yzx on 2018/5/31.
@@ -35,8 +43,18 @@ public class GlideUtils {
                 placeholder = R.drawable.zhanweitu;
                 break;
         }
-        options.placeholder(placeholder).error(placeholder);
 
-        Glide.with(context).load(resource).apply(options).into(imageView);
+        options.placeholder(placeholder).error(placeholder);
+//        options.centerCrop();
+//        options.transform(new RoundedCornersTransformation(DensityUtils.dip2px(context, 3), 3));
+        options.transform(new RoundedCorners(DensityUtils.dip2px(context, 3)));
+        //加载动画(会造成transform效果失效，但是刷新后就好了)
+        DrawableTransitionOptions transitionOptions = DrawableTransitionOptions.withCrossFade(100);
+
+        Glide.with(context)
+                .load(resource)
+                .apply(options)
+//                .transition(transitionOptions)
+                .into(imageView);
     }
 }

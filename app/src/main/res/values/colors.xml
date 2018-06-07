@@ -9,4 +9,7 @@
     <!--<color name="colorTransparent">#33ffffff</color>-->
     <color name="windowBackground">#aa009688</color>
     <color name="colorLightWhite">#aaffffff</color>
+    <color name="colorBlueTitle">#1E90FF</color>
+    <color name="colorSubTitle">#8c8c8c</color>
+    <color name="colorIcon">#8c8c8c</color>
 </resources>

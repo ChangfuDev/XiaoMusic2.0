@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/WaterEffect"
     android:layout_width="match_parent"
     android:layout_height="50dp">
 
     <LinearLayout
-        style="@style/WaterEffect"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -22,8 +22,8 @@
             android:paddingEnd="16dp"
             android:textColor="@color/colorTitle"
             android:textSize="12sp"
-            tools:text="搜索历史"
-            tools:ignore="SmallSp" />
+            tools:ignore="SmallSp"
+            tools:text="搜索历史" />
 
         <ImageView
             android:id="@+id/iv_delete"

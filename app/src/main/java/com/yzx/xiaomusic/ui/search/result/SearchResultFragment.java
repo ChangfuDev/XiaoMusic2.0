@@ -1,0 +1,188 @@
+package com.yzx.xiaomusic.ui.search.result;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.kingja.loadsir.callback.Callback;
+import com.kingja.loadsir.core.LoadService;
+import com.kingja.loadsir.core.LoadSir;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.yzx.commonlibrary.base.mvp.CommonBaseMvpFragment;
+import com.yzx.commonlibrary.utils.LogUtils;
+import com.yzx.commonlibrary.utils.ToastUtils;
+import com.yzx.xiaomusic.R;
+import com.yzx.xiaomusic.base.BaseFragment;
+import com.yzx.xiaomusic.base.LoadMoreView;
+import com.yzx.xiaomusic.model.entity.MusicInfo;
+import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
+import com.yzx.xiaomusic.model.entity.eventbus.SearchContent;
+import com.yzx.xiaomusic.network.ApiConstant;
+import com.yzx.xiaomusic.ui.adapter.SearchResultAdapter;
+import com.yzx.xiaomusic.ui.search.SearchFragment;
+import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
+
+import butterknife.BindView;
+
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SEARCH_CONTENT;
+
+/**
+ * 展示搜索结果页面
+ */
+
+public class SearchResultFragment extends BaseFragment<SearchResultPresenter> implements LoadMoreView {
+
+    /**
+     * search_type	含义
+     * 1	单曲
+     * 10	专辑
+     * 100	歌手
+     * 1000	歌单
+     * 1002	用户
+     * 1004	mv
+     * 1006	歌词
+     * 1009	主播电台
+     */
+    public static final int TYPE_SEARCH_MUSIC = 1;
+    public static final int TYPE_SEARCH_ALBUM = 10;
+    public static final int TYPE_SEARCH_SINGER = 100;
+    public static final int TYPE_SEARCH_SONG_SHEET = 1000;
+    public static final int TYPE_SEARCH_USER = 1002;
+    public static final int TYPE_SEARCH_MV = 1004;
+    public static final int TYPE_SEARCH_LYRICS = 1006;
+    public static final int TYPE_SEARCH_RADIO = 1009;
+
+    public static final String SEARCH_TYPE = "searchType";
+    public static final String SEARCH_CONTENT = "searchContent";
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.smartRefreshLayout)
+    SmartRefreshLayout smartRefreshLayout;
+    private String searchContent;
+    private int searchType;
+
+    int offset;
+    private SearchResultAdapter adapter;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected int initContentViewId() {
+        return R.layout.fragment_search_result;
+    }
+
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+        super.initData(savedInstanceState);
+        Bundle arguments = getArguments();
+
+        if (arguments != null) {
+            searchType = arguments.getInt(SEARCH_TYPE);
+        } else {
+            showToast(R.string.error_get_data);
+        }
+    }
+
+    @Override
+    protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
+
+
+        smartRefreshLayout.setEnablePureScrollMode(false);
+        smartRefreshLayout.setEnableRefresh(false);
+        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getContext()));
+
+        smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> {
+            search(offset);
+        });
+
+        adapter = new SearchResultAdapter(searchType);
+
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void lazyLoadData() {
+        super.lazyLoadData();
+
+        SearchFragment searchFragment = (SearchFragment) getParentFragment();
+        searchContent = searchFragment.getSearchContent();
+
+        search(0);
+        LogUtils.d(SearchResultFragment.class.getSimpleName(), "lazyLoadData: " + searchType + this.searchContent);
+    }
+
+    @Override
+    protected SearchResultPresenter getPresenter() {
+        return new SearchResultPresenter();
+    }
+
+    public void search(int offset) {
+        LogUtils.d(SearchResultFragment.class.getSimpleName(), "search: " + offset);
+        mPresenter.getSearchResult(searchType, offset * ApiConstant.LIMIT, searchContent);
+    }
+
+    @Override
+    public void onLoadMoreSuccess(List datas) {
+        smartRefreshLayout.finishLoadMore();
+        if (datas != null && datas.size() > 0) {
+            adapter.addData(datas);
+            offset++;
+        } else {
+            if (offset == 0) {
+                loadService.showCallback(EmptyCallback.class);
+            }
+        }
+    }
+
+    @Override
+    public void onLoadMoreFail(String errorMsg) {
+        smartRefreshLayout.finishLoadMore();
+        showToast(errorMsg, ToastUtils.TYPE_FAIL);
+    }
+
+    @Override
+    public void reload(View v) {
+        super.reload(v);
+        search(offset);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        switch (event.getType()) {
+            case TYPE_SEARCH_CONTENT:
+
+                SearchContent content = (SearchContent) event.getContent();
+                searchContent = content.getSearchContent();
+                if (searchType == content.getSearchType()) {
+                    search(0);
+                    LogUtils.d(SearchResultFragment.class.getSimpleName(), "lazyLoadData: " + searchType + content.getSearchContent());
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+}

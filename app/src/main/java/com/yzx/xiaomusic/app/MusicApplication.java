@@ -1,9 +1,15 @@
 package com.yzx.xiaomusic.app;
 
+import com.kingja.loadsir.core.LoadSir;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.yzx.commonlibrary.base.CommonBaseApplication;
+import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
+import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
+import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
+
+import static com.yzx.xiaomusic.Constant.BASE_URL;
 
 /**
  * Created by yzx on 2018/5/14.
@@ -24,10 +30,17 @@ public class MusicApplication extends CommonBaseApplication {
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
         UMConfigure.setLogEnabled(true);
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+
+        LoadSir.beginBuilder()
+                .addCallback(new ErrorCallback())//添加各种状态页
+                .addCallback(new EmptyCallback())
+                .addCallback(new LoadingCallback())
+                .setDefaultCallback(LoadingCallback.class)//设置默认状态页
+                .commit();
     }
 
     @Override
     public String initBaseUrl() {
-        return null;
+        return BASE_URL;
     }
 }

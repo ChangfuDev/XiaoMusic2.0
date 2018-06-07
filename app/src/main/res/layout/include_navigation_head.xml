@@ -15,8 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_head"
@@ -46,15 +46,15 @@
                 android:id="@+id/stv_account_grade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="3dp"
-                android:paddingEnd="8dp"
                 android:paddingStart="8dp"
                 android:paddingTop="3dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="3dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="10sp"
                 android:typeface="serif"
                 app:strokeColor="@color/colorWhite"
-                app:strokeWidth="1dp"
+                app:strokeWidth="0.25dp"
                 tools:ignore="SmallSp"
                 tools:text="Lv 5" />
 
@@ -70,15 +70,15 @@
                 android:drawableEnd="@drawable/a2i"
                 android:drawablePadding="5dp"
                 android:gravity="center_vertical"
-                android:paddingBottom="3dp"
-                android:paddingEnd="8dp"
                 android:paddingStart="8dp"
                 android:paddingTop="3dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="3dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="12sp"
                 android:typeface="monospace"
                 app:strokeColor="@color/colorWhite"
-                app:strokeWidth="1dp"
+                app:strokeWidth="0.25dp"
                 tools:text="签到" />
         </LinearLayout>
     </LinearLayout>

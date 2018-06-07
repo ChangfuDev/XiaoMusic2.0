@@ -68,7 +68,6 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation project(':commonLibrary')
     implementation 'com.android.support:design:27.1.1'
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
 
     //圆形头像
     implementation 'de.hdodenhof:circleimageview:2.2.0'
@@ -79,4 +78,28 @@ dependencies {
     implementation 'com.hyman:flowlayout-lib:1.1.2'
     //新控件
 //    implementation 'com.google.android.material:material:1.0.0-alpha1'
+
+    // Room
+    implementation 'android.arch.persistence.room:runtime:1.1.0'
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.0"
+    // RxJava support for Room
+    implementation 'android.arch.persistence.room:rxjava2:1.1.0'
+
+    //rxjava rxandroid retrofit
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'com.squareup.retrofit2:retrofit-adapters:2.3.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
+
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
+    implementation 'com.kingja.loadsir:loadsir:1.3.6'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    implementation 'jp.wasabeef:glide-transformations:3.3.0'
 }

@@ -87,7 +87,7 @@ public class MainFragment extends CommonBaseFragment implements ViewPager.OnPage
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_search:
-//                showToast(R.string.search);
+//                showToast(R.string.SearchMusicResult);
 
                 NavOptions options = new NavOptions.Builder()
                         .setEnterAnim(R.anim.slide_in_bottom)

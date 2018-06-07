@@ -11,11 +11,13 @@ import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
+import com.yzx.xiaomusic.db.DBUtils;
+import com.yzx.xiaomusic.db.entity.SearchHistory;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SearchHistoryAdapter extends CommonBaseAdapter<SearchHistoryAdapter.Holder, String> {
+public class SearchHistoryAdapter extends CommonBaseAdapter<SearchHistoryAdapter.Holder, SearchHistory> {
 
 
     @NonNull
@@ -27,8 +29,15 @@ public class SearchHistoryAdapter extends CommonBaseAdapter<SearchHistoryAdapter
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         super.onBindViewHolder(holder, position);
-        holder.tvTitle.setText(datas.get(position));
-        holder.ivDelete.setOnClickListener(v -> ToastUtils.showToast("删除"));
+        SearchHistory searchHistory = datas.get(position);
+        holder.tvTitle.setText(searchHistory.getTitle());
+        holder.ivDelete.setOnClickListener(v -> {
+            DBUtils.getSearchHistoryDao().deleteSearchHistory(searchHistory);
+            datas.remove(searchHistory);
+            notifyItemRangeRemoved(position, 1);
+        });
+
+
     }
 
     class Holder extends RecyclerView.ViewHolder {
