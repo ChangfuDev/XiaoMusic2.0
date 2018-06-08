@@ -53,8 +53,8 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         switch (searchType) {
-            case TYPE_SEARCH_MUSIC:
-                return new MusicHolder(ResourceUtils.parseLayout(parent.getContext(), R.layout.item_search_result_music, parent));
+//            case TYPE_SEARCH_MUSIC:
+//                return new MusicHolder(ResourceUtils.parseLayout(parent.getContext(), R.layout.item_search_result_music, parent));
             case TYPE_SEARCH_MV:
                 return new MvHolder(ResourceUtils.parseLayout(parent.getContext(), R.layout.item_search_result_video, parent));
             case TYPE_SEARCH_SINGER:
@@ -79,9 +79,9 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
 
         Context context = holder.itemView.getContext();
         switch (searchType) {
-            case TYPE_SEARCH_MUSIC:
-                dealMusicResult(context, (MusicHolder) holder, position);
-                break;
+//            case TYPE_SEARCH_MUSIC:
+//                dealMusicResult(context, (MusicHolder) holder, position);
+//                break;
             case TYPE_SEARCH_MV:
                 dealMvResult((MvHolder) holder, position);
                 break;
@@ -100,6 +100,9 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
             case TYPE_SEARCH_USER:
                 dealUserResult(context, (UserHolder) holder, position);
                 break;
+            default:
+                dealMusicResult(context, (MusicHolder) holder, position);
+                break;
         }
 
     }
@@ -109,7 +112,18 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
         SearchUserResult.ResultBean.UserprofilesBean userprofilesBean = (SearchUserResult.ResultBean.UserprofilesBean) datas.get(position);
         GlideUtils.loadImg(context, userprofilesBean.getAvatarUrl(), holder.ivHead);
         holder.tvTitle.setText(userprofilesBean.getNickname());
-        holder.tvSubTitle.setText(userprofilesBean.getSignature());
+        String signature = userprofilesBean.getSignature();
+        holder.tvSubTitle.setText(signature);
+        holder.tvSubTitle.setVisibility(TextUtils.isEmpty(signature) ? View.GONE : View.VISIBLE);
+        holder.ivSex.setImageResource(userprofilesBean.getGender() == 1 ? R.drawable.yp : R.drawable.yy);
+        holder.ivUserType.setVisibility(View.VISIBLE);
+        if (userprofilesBean.getUserType() > 0) {
+            holder.ivUserType.setImageResource(R.drawable.z2);
+        } else if (userprofilesBean.getVipType() > 0) {
+            holder.ivUserType.setImageResource(R.drawable.z7);
+        } else {
+            holder.ivUserType.setVisibility(View.GONE);
+        }
     }
 
     private void dealRadioResult(Context context, RadioHolder holder, int position) {
@@ -260,6 +274,8 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
     class UserHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_head)
         CircleImageView ivHead;
+        @BindView(R.id.iv_sex)
+        ImageView ivSex;
         @BindView(R.id.iv_user_type)
         ImageView ivUserType;
         @BindView(R.id.tv_title)

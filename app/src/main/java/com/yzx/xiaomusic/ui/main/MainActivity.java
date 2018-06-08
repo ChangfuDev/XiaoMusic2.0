@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity {
         navigationMenuTitles.add(R.string.driveMode);
         navigationMenuTitles.add(R.string.musicCloudDisk);
         navigationMenuTitles.add(R.string.coupon);
+
         //menuIcon
         navigationMenuIcons = new ArrayList<>();
         navigationMenuIcons.add(R.drawable.ak4);
@@ -99,8 +100,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         initNavigationView();
-
-//        Navigation.setViewNavController();
+        
         NavHostFragment host = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.hostFragment);
         if (host != null) {
             navController = host.getNavController();
@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onNavigateUp() {
-//        NavigationUi.
+
         return NavigationUI.navigateUp(drawerLayout, navController);
     }
 

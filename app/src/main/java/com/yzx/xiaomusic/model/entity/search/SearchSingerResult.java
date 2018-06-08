@@ -2,6 +2,7 @@ package com.yzx.xiaomusic.model.entity.search;
 
 import com.yzx.commonlibrary.base.BaseResposeBody;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class SearchSingerResult extends BaseResposeBody {
@@ -45,7 +46,7 @@ public class SearchSingerResult extends BaseResposeBody {
             this.artists = artists;
         }
 
-        public static class ArtistsBean {
+        public static class ArtistsBean implements Serializable {
             /**
              * id : 122455
              * name : 群星

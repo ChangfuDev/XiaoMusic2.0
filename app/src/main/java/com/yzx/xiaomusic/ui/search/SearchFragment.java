@@ -31,6 +31,7 @@ import com.yzx.xiaomusic.ui.adapter.HotSearchAdapter;
 import com.yzx.xiaomusic.ui.adapter.SearchAdapter;
 import com.yzx.xiaomusic.ui.adapter.SearchHistoryAdapter;
 import com.yzx.xiaomusic.ui.adapter.SearchResultPagerAdapter;
+import com.yzx.xiaomusic.ui.main.MainActivity;
 import com.yzx.xiaomusic.ui.search.result.SearchResultFragment;
 import com.yzx.xiaomusic.widget.simplelistenner.SimpleTextWathcer;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -132,6 +133,10 @@ public class SearchFragment extends CommonBaseFragment implements TagFlowLayout.
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
 
+
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setSupportActionBar(tb);
+        
         llSearch.setVisibility(View.VISIBLE);
         llSearchResult.setVisibility(View.GONE);
         //搜索页面

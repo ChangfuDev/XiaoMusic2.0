@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_search_mv"
     style="@style/WaterEffect"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -32,6 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
                 android:layout_margin="5dp"
                 android:drawableStart="@drawable/note_btn_play_ms"
                 android:drawableTint="@color/colorWhite"
@@ -92,6 +94,6 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="120dp"
         android:background="@color/colorDivider" />
 </RelativeLayout>

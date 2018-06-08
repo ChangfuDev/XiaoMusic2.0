@@ -8,7 +8,20 @@
         android:id="@+id/mainFragment"
         android:name="com.yzx.xiaomusic.ui.main.MainFragment"
         android:label="MainFragment"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_musicFragment"
+            app:destination="@id/musicFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_discoverFragment"
+            app:destination="@id/discoverFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/musicFragment"
         android:name="com.yzx.xiaomusic.ui.main.MusicFragment"
@@ -28,5 +41,23 @@
         android:id="@+id/searchFragment"
         android:name="com.yzx.xiaomusic.ui.search.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_search_result"
+        android:id="@+id/searchResultFragment"
+        android:name="com.yzx.xiaomusic.ui.search.result.SearchResultFragment"
+        android:label="SearchResultFragment" >
+        <action
+            android:id="@+id/action_searchResultFragment_to_singerDetailsFragment"
+            app:destination="@id/singerDetailsFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_detail_singer"
+        android:id="@+id/singerDetailsFragment"
+        android:name="com.yzx.xiaomusic.ui.singer.SingerDetailsFragment"
+        android:label="SingerDetailsFragment" />
 </navigation>

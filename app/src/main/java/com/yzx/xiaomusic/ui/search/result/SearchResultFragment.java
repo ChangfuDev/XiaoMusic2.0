@@ -2,29 +2,22 @@ package com.yzx.xiaomusic.ui.search.result;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.kingja.loadsir.callback.Callback;
-import com.kingja.loadsir.core.LoadService;
-import com.kingja.loadsir.core.LoadSir;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.yzx.commonlibrary.base.mvp.CommonBaseMvpFragment;
+import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.LogUtils;
 import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
-import com.yzx.xiaomusic.base.BaseFragment;
+import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.base.LoadMoreView;
-import com.yzx.xiaomusic.model.entity.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.model.entity.eventbus.SearchContent;
+import com.yzx.xiaomusic.model.entity.search.SearchSingerResult;
+import com.yzx.xiaomusic.model.entity.search.SearchSingerResult.ResultBean.ArtistsBean;
 import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.ui.adapter.SearchResultAdapter;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
@@ -39,12 +32,13 @@ import java.util.List;
 import butterknife.BindView;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SEARCH_CONTENT;
+import static com.yzx.xiaomusic.ui.singer.SingerDetailsFragment.KEY_INFO_SINGER;
 
 /**
  * 展示搜索结果页面
  */
 
-public class SearchResultFragment extends BaseFragment<SearchResultPresenter> implements LoadMoreView {
+public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter> implements LoadMoreView, CommonBaseAdapter.OnItemClickListener {
 
     /**
      * search_type	含义
@@ -115,6 +109,7 @@ public class SearchResultFragment extends BaseFragment<SearchResultPresenter> im
         });
 
         adapter = new SearchResultAdapter(searchType);
+        adapter.setOnItemClickListener(this);
 
         recyclerView.setAdapter(adapter);
     }
@@ -184,5 +179,30 @@ public class SearchResultFragment extends BaseFragment<SearchResultPresenter> im
     public void onDestroyView() {
         EventBus.getDefault().unregister(this);
         super.onDestroyView();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+
+        Bundle bundle = new Bundle();
+        switch (view.getId()) {
+            case R.id.rl_search_music:
+                break;
+            case R.id.rl_search_mv:
+                break;
+            case R.id.rl_search_singer:
+                bundle.clear();
+                bundle.putSerializable(KEY_INFO_SINGER, (ArtistsBean) adapter.datas.get(position));
+                navigate(R.id.singerDetailsFragment, bundle);
+                break;
+            case R.id.rl_search_album:
+                break;
+            case R.id.rl_search_song_sheet:
+                break;
+            case R.id.rl_search_radio:
+                break;
+            case R.id.rl_search_user:
+                break;
+        }
     }
 }

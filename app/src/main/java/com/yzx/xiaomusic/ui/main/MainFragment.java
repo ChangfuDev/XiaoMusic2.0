@@ -12,17 +12,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.yzx.commonlibrary.base.CommonBaseFragment;
 import com.yzx.commonlibrary.base.adapter.CommonBaseFragmentPagerAdapter;
+import com.yzx.commonlibrary.base.mvp.CommonBasePresenter;
 import com.yzx.xiaomusic.R;
+import com.yzx.xiaomusic.base.BaseFragment;
+import com.yzx.xiaomusic.base.BaseMvpFragment;
 
 import java.util.ArrayList;
 
-import androidx.navigation.NavOptions;
-import androidx.navigation.Navigation;
 import butterknife.BindView;
 
-public class MainFragment extends CommonBaseFragment implements ViewPager.OnPageChangeListener, TabLayout.OnTabSelectedListener {
+public class MainFragment extends BaseFragment implements ViewPager.OnPageChangeListener, TabLayout.OnTabSelectedListener {
     @BindView(R.id.tl)
     TabLayout tl;
     @BindView(R.id.tb)
@@ -87,16 +87,7 @@ public class MainFragment extends CommonBaseFragment implements ViewPager.OnPage
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_search:
-//                showToast(R.string.SearchMusicResult);
-
-                NavOptions options = new NavOptions.Builder()
-                        .setEnterAnim(R.anim.slide_in_bottom)
-                        .setExitAnim(R.anim.slide_out_top)
-                        .setPopEnterAnim(R.anim.slide_in_top)
-                        .setPopExitAnim(R.anim.slide_out_bottom)
-                        .build();
-
-                Navigation.findNavController(viewPager).navigate(R.id.searchFragment, null, options);
+                navigate(R.id.searchFragment);
                 return true;
             case android.R.id.home:
                 activity.drawerLayout.openDrawer(Gravity.START);
