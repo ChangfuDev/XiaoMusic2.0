@@ -5,12 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/iv_head"
+    <RelativeLayout
+        android:id="@+id/rl_headContainer"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/zhanweitu" />
+        android:layout_height="300dp">
+
+        <ImageView
+            android:id="@+id/iv_head"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/zhanweitu" />
+
+        <View
+            android:id="@+id/iv_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#aa000000" />
+
+    </RelativeLayout>
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/smartRefreshLayout"
@@ -33,18 +46,59 @@
                 <android.support.design.widget.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:contentScrim="@color/colorTransparent"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="210dp"
+                        android:layout_height="300dp"
                         android:background="@color/colorTransparent"
                         app:layout_collapseMode="parallax" />
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_extra_operate"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_gravity="bottom"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_collapseMode="pin">
+
+                        <com.yzx.xiaomusic.widget.ShapeTextView
+                            android:id="@+id/stv_collect"
+                            android:layout_width="80dp"
+                            android:layout_height="25dp"
+                            android:gravity="center"
+                            android:text="@string/collect"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="10sp"
+                            app:strokeColor="@color/colorWhite"
+                            app:strokeWidth="0.4dp"
+                            tools:ignore="SmallSp" />
+
+                        <com.yzx.xiaomusic.widget.ShapeTextView
+                            android:id="@+id/stv_personal_pager"
+                            android:layout_width="80dp"
+                            android:layout_height="25dp"
+                            android:layout_marginStart="20dp"
+                            android:gravity="center"
+                            android:text="@string/personalPager"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="10sp"
+                            app:strokeColor="@color/colorWhite"
+                            app:strokeWidth="0.4dp"
+                            tools:ignore="SmallSp" />
+                    </LinearLayout>
+
+                    <android.support.v7.widget.Toolbar
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        app:layout_collapseMode="pin" />
                 </android.support.design.widget.CollapsingToolbarLayout>
 
 
                 <android.support.design.widget.TabLayout
-                    android:layout_marginTop="80dp"
                     android:id="@+id/tl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

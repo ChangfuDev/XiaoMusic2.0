@@ -1,17 +1,18 @@
 package com.yzx.xiaomusic.ui.singer;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -20,16 +21,19 @@ import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
 import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
-import com.yzx.xiaomusic.model.entity.search.SearchSingerResult;
 import com.yzx.xiaomusic.model.entity.search.SearchSingerResult.ResultBean.ArtistsBean;
 import com.yzx.xiaomusic.ui.adapter.SingerDetailPagerAdapter;
 import com.yzx.xiaomusic.ui.main.MainActivity;
 import com.yzx.xiaomusic.ui.singer.top.Top50Fragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
+import com.yzx.xiaomusic.widget.ShapeTextView;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class SingerDetailsFragment extends BaseFragment {
     @BindView(R.id.iv_head)
@@ -46,12 +50,24 @@ public class SingerDetailsFragment extends BaseFragment {
     Toolbar tb;
     @BindView(R.id.smartRefreshLayout)
     SmartRefreshLayout smartRefreshLayout;
+    @BindView(R.id.iv_cover)
+    View ivCover;
+    @BindView(R.id.rl_headContainer)
+    RelativeLayout rlHeadContainer;
+    @BindView(R.id.stv_collect)
+    ShapeTextView stvCollect;
+    @BindView(R.id.stv_personal_pager)
+    ShapeTextView stvPersonalPager;
+    @BindView(R.id.ll_extra_operate)
+    LinearLayout llExtraOperate;
     private ArrayList<String> tabTitles;
     private ArrayList<Fragment> fragments;
     private SingerDetailPagerAdapter adapter;
 
     public static final String KEY_INFO_SINGER = "singerInfo";
     private ArtistsBean singerInfo;
+    private ColorDrawable forgroundDrawable;
+    private ViewGroup.LayoutParams layoutParams;
 
     @Override
     protected int initContentViewId() {
@@ -96,17 +112,21 @@ public class SingerDetailsFragment extends BaseFragment {
         viewPager.setAdapter(adapter);
         tl.setupWithViewPager(viewPager);
 
-        ViewGroup.LayoutParams layoutParams = ivHead.getLayoutParams();
+//        ViewGroup.LayoutParams layoutParams = ivHead.getLayoutParams();
 
-        int px = DensityUtils.dip2px(getContext(), 300);
+        layoutParams = rlHeadContainer.getLayoutParams();
+        int headPx = DensityUtils.dip2px(getContext(), 300);
+        int coverPx = DensityUtils.dip2px(getContext(), 220);
+
+        forgroundDrawable = new ColorDrawable();
         smartRefreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
             @Override
             public void onHeaderPulling(RefreshHeader header, float percent, int offset, int headerHeight, int extendHeight) {
                 super.onHeaderPulling(header, percent, offset, headerHeight, extendHeight);
                 if (offset > 0) {
-                    float rate = ((float) offset) / ((float) px);
-                    layoutParams.height = (int) (px * (1f + rate));
-                    ivHead.setLayoutParams(layoutParams);
+                    float rate = ((float) offset) / ((float) headPx);
+                    layoutParams.height = (int) (headPx * (1f + rate));
+                    rlHeadContainer.setLayoutParams(layoutParams);
                 }
             }
 
@@ -114,19 +134,32 @@ public class SingerDetailsFragment extends BaseFragment {
             public void onHeaderReleasing(RefreshHeader header, float percent, int offset, int footerHeight, int extendHeight) {
                 super.onHeaderReleasing(header, percent, offset, footerHeight, extendHeight);
                 if (offset > 0) {
-                    float rate = ((float) offset) / ((float) px);
-                    layoutParams.height = (int) (px * (1f + rate));
-                    ivHead.setLayoutParams(layoutParams);
+                    float rate = ((float) offset) / ((float) headPx);
+                    layoutParams.height = (int) (headPx * (1f + rate));
+                    rlHeadContainer.setLayoutParams(layoutParams);
                 }
             }
         });
 
         appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             if (verticalOffset <= 0) {
-                layoutParams.height = px + verticalOffset;
-                ivHead.setLayoutParams(layoutParams);
+                layoutParams.height = headPx + verticalOffset;
+                rlHeadContainer.setLayoutParams(layoutParams);
+                float alpha = -((float) verticalOffset) / ((float) coverPx);
+                ivCover.setAlpha(alpha);
+                llExtraOperate.setAlpha(1 - alpha);
             }
         });
     }
 
+
+    @OnClick({R.id.stv_collect, R.id.stv_personal_pager})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.stv_collect:
+                break;
+            case R.id.stv_personal_pager:
+                break;
+        }
+    }
 }

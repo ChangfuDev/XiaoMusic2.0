@@ -3,11 +3,13 @@
     <color name="colorPrimary">#FF009688</color>
     <color name="colorPrimaryDark">#FF009688</color>
     <color name="colorAccent">#FF009688</color>
+
+
     <color name="colorDivider">#e1e2e4</color>
     <color name="colorTitle">#2f2e3e</color>
     <color name="colorPressed">#e1e2e4</color>
     <!--<color name="colorTransparent">#33ffffff</color>-->
-    <color name="windowBackground">#aa009688</color>
+    <color name="windowBackground">@color/colorTransparent</color>
     <color name="colorLightWhite">#aaffffff</color>
     <color name="colorBlueTitle">#1E90FF</color>
     <color name="colorSubTitle">#8c8c8c</color>

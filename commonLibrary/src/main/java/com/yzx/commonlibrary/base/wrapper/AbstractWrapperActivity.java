@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.yzx.commonlibrary.base.mvp.ICommonBaseView;
 import com.yzx.commonlibrary.utils.ToastUtils;
 
+import me.yokeyword.fragmentation.SupportActivity;
+
 import static com.yzx.commonlibrary.utils.ResourceUtils.parseString;
 
 /**
@@ -17,7 +19,7 @@ import static com.yzx.commonlibrary.utils.ResourceUtils.parseString;
  * @date 2018/4/24
  * Description  封装了Toast，Loading的Activity
  */
-public abstract class AbstractWrapperActivity extends AppCompatActivity implements ICommonBaseView {
+public abstract class AbstractWrapperActivity extends SupportActivity implements ICommonBaseView {
 
     private ProgressDialog progressDialog;
 

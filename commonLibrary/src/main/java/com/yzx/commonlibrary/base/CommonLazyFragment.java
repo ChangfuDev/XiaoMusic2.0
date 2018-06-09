@@ -6,12 +6,14 @@ import android.support.v4.app.Fragment;
 
 import java.util.List;
 
+import me.yokeyword.fragmentation.SupportFragment;
+
 /**
  * @author yzx
  * @date 2018/4/25
  * Description Fragment懒加载（一层或两层嵌套，更多未测试）
  */
-public class CommonLazyFragment extends Fragment {
+public class CommonLazyFragment extends SupportFragment {
 
     private boolean isFirstCreate;
 

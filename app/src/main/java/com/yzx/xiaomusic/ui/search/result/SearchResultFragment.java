@@ -16,11 +16,11 @@ import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.base.LoadMoreView;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.model.entity.eventbus.SearchContent;
-import com.yzx.xiaomusic.model.entity.search.SearchSingerResult;
 import com.yzx.xiaomusic.model.entity.search.SearchSingerResult.ResultBean.ArtistsBean;
 import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.ui.adapter.SearchResultAdapter;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
+import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 
 import org.greenrobot.eventbus.EventBus;
@@ -118,11 +118,18 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
     protected void lazyLoadData() {
         super.lazyLoadData();
 
-        SearchFragment searchFragment = (SearchFragment) getParentFragment();
-        searchContent = searchFragment.getSearchContent();
+        getSearchContent();
 
         search(0);
         LogUtils.d(SearchResultFragment.class.getSimpleName(), "lazyLoadData: " + searchType + this.searchContent);
+    }
+
+    //    /**
+//     * 获取父布局
+//     */
+    private void getSearchContent() {
+        SearchFragment searchFragment = (SearchFragment) getParentFragment();
+        searchContent = searchFragment.getSearchContent();
     }
 
     @Override
@@ -132,6 +139,7 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
 
     public void search(int offset) {
         LogUtils.d(SearchResultFragment.class.getSimpleName(), "search: " + offset);
+
         mPresenter.getSearchResult(searchType, offset * ApiConstant.LIMIT, searchContent);
     }
 
@@ -193,7 +201,7 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
             case R.id.rl_search_singer:
                 bundle.clear();
                 bundle.putSerializable(KEY_INFO_SINGER, (ArtistsBean) adapter.datas.get(position));
-                navigate(R.id.singerDetailsFragment, bundle);
+                easyStart(new SingerDetailsFragment(), bundle);
                 break;
             case R.id.rl_search_album:
                 break;

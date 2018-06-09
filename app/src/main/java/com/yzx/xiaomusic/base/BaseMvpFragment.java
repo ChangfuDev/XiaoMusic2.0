@@ -28,4 +28,10 @@ public abstract class BaseMvpFragment<P extends CommonBasePresenter> extends Bas
      * @return
      */
     protected abstract P getPresenter();
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.onDestroy();
+        super.onDestroyView();
+    }
 }

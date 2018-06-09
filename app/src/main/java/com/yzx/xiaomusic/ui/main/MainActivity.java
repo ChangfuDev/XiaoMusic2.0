@@ -4,14 +4,9 @@ import android.annotation.SuppressLint;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +18,6 @@ import com.yzx.xiaomusic.base.BaseActivity;
 import com.yzx.xiaomusic.ui.adapter.NavigationHeadAdapter;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -35,17 +29,10 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.navigationView)
     NavigationView navigationView;
-    //    @BindView(R.id.tl)
-//    TabLayout tl;
-//    @BindView(R.id.tb)
-//    Toolbar tb;
-//    @BindView(R.id.viewPager)
-//    ViewPager viewPager;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
     private ArrayList<Integer> navigationMenuTitles;
     private ArrayList<Integer> navigationMenuIcons;
-    public NavController navController;
 
 
     @Override
@@ -100,12 +87,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         initNavigationView();
-        
-        NavHostFragment host = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.hostFragment);
-        if (host != null) {
-            navController = host.getNavController();
-            navController.navigate(R.id.mainFragment);
-        }
+
+        loadRootFragment(R.id.fragmentContainer, new MainFragment());
+
     }
 
 
@@ -136,28 +120,28 @@ public class MainActivity extends BaseActivity {
 
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressedSupport() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
+//            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+//            super.onBackPressed();
+            super.onBackPressedSupport();
         }
     }
 
-    @Override
-    public boolean onNavigateUp() {
-
-        return NavigationUI.navigateUp(drawerLayout, navController);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return NavigationUI.onNavDestinationSelected(item, navController);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        return NavigationUI.navigateUp(drawerLayout,
-                Navigation.findNavController(this, R.id.hostFragment));
-    }
+//    @Override
+//    public boolean onNavigateUp() {
+//        return NavigationUI.navigateUp(drawerLayout, navController);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        return NavigationUI.onNavDestinationSelected(item, navController);
+//    }
+//
+//    @Override
+//    public boolean onSupportNavigateUp() {
+//        return NavigationUI.navigateUp(drawerLayout,
+//                Navigation.findNavController(this, R.id.fragmentContainer));
+//    }
 }

@@ -1,7 +1,6 @@
 package com.yzx.xiaomusic.base;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,14 +11,16 @@ import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadService;
 import com.kingja.loadsir.core.LoadSir;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
-import com.yzx.xiaomusic.R;
+import com.yzx.commonlibrary.utils.LogUtils;
+import com.yzx.xiaomusic.ui.main.MainFragment;
 
 import androidx.navigation.NavOptions;
-import androidx.navigation.fragment.NavHostFragment;
+import me.yokeyword.fragmentation.SupportFragment;
 
 public abstract class BaseFragment extends CommonBaseFragment {
 
     public LoadService loadService;
+    private NavOptions navOptions;
 
     @Nullable
     @Override
@@ -28,28 +29,27 @@ public abstract class BaseFragment extends CommonBaseFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         loadService = LoadSir.getDefault().register(view, (Callback.OnReloadListener) v -> reload(v));
         loadService.showSuccess();
+
+        LogUtils.d(this.getClass().getSimpleName(), "onCreateView");
         return loadService.getLoadLayout();
     }
 
-    public void navigate(@IdRes int resId) {
 
-        navigate(resId, null);
+    public void easyStart(SupportFragment fragment) {
+        easyStart(fragment, null);
     }
 
-    public void navigate(@IdRes int resId, Bundle bundle) {
+    public void easyStart(SupportFragment fragment, Bundle args) {
+        if (args != null) {
+            fragment.setArguments(args);
+        }
 
-        NavOptions navOptions = new NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_bottom)
-                .setExitAnim(R.anim.slide_out_top)
-                .setPopEnterAnim(R.anim.slide_in_top)
-                .setPopExitAnim(R.anim.slide_out_bottom)
-                .build();
-        navigate(resId, bundle, navOptions);
-    }
-
-    public void navigate(@IdRes int resId, Bundle bundle, NavOptions navOptions) {
-
-        NavHostFragment.findNavController(this).navigate(resId, bundle, navOptions);
+        if (this instanceof MainFragment) {
+            start(fragment);
+        } else {
+            SupportFragment parentFragment = (SupportFragment) this.getParentFragment();
+            parentFragment.start(fragment);
+        }
     }
 
     /**

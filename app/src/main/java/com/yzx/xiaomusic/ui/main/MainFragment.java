@@ -13,16 +13,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.yzx.commonlibrary.base.adapter.CommonBaseFragmentPagerAdapter;
-import com.yzx.commonlibrary.base.mvp.CommonBasePresenter;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
-import com.yzx.xiaomusic.base.BaseMvpFragment;
+import com.yzx.xiaomusic.ui.search.SearchFragment;
+import com.yzx.xiaomusic.widget.simplelistenner.SimpleTabChangeListener;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 
-public class MainFragment extends BaseFragment implements ViewPager.OnPageChangeListener, TabLayout.OnTabSelectedListener {
+public class MainFragment extends BaseFragment {
     @BindView(R.id.tl)
     TabLayout tl;
     @BindView(R.id.tb)
@@ -61,8 +61,18 @@ public class MainFragment extends BaseFragment implements ViewPager.OnPageChange
         CommonBaseFragmentPagerAdapter pagerAdapter = new CommonBaseFragmentPagerAdapter(getChildFragmentManager());
         pagerAdapter.setFragments(fragments);
         viewPager.setAdapter(pagerAdapter);
-        viewPager.addOnPageChangeListener(this);
-        tl.addOnTabSelectedListener(this);
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                tl.getTabAt(position).select();
+            }
+        });
+        tl.addOnTabSelectedListener(new SimpleTabChangeListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+        });
     }
 
     private void initToolbar() {
@@ -87,7 +97,7 @@ public class MainFragment extends BaseFragment implements ViewPager.OnPageChange
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_search:
-                navigate(R.id.searchFragment);
+                easyStart(new SearchFragment());
                 return true;
             case android.R.id.home:
                 activity.drawerLayout.openDrawer(Gravity.START);
@@ -96,33 +106,4 @@ public class MainFragment extends BaseFragment implements ViewPager.OnPageChange
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        tl.getTabAt(position).select();
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        viewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-
-    }
 }

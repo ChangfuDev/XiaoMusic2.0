@@ -22,6 +22,7 @@ import android.widget.ListPopupWindow;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.xiaomusic.R;
+import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.db.DBUtils;
 import com.yzx.xiaomusic.db.dao.SearchHistoryDao;
 import com.yzx.xiaomusic.db.entity.SearchHistory;
@@ -50,7 +51,7 @@ import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SEARCH_C
 import static com.yzx.xiaomusic.ui.search.result.SearchResultFragment.SEARCH_TYPE;
 
 
-public class SearchFragment extends CommonBaseFragment implements TagFlowLayout.OnTagClickListener, CommonBaseAdapter.OnItemClickListener, AdapterView.OnItemClickListener {
+public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagClickListener, CommonBaseAdapter.OnItemClickListener, AdapterView.OnItemClickListener {
     @BindView(R.id.et_search)
     EditText etSearch;
     @BindView(R.id.tb)
@@ -136,7 +137,7 @@ public class SearchFragment extends CommonBaseFragment implements TagFlowLayout.
 
         MainActivity activity = (MainActivity) getActivity();
         activity.setSupportActionBar(tb);
-        
+
         llSearch.setVisibility(View.VISIBLE);
         llSearchResult.setVisibility(View.GONE);
         //搜索页面
@@ -203,7 +204,7 @@ public class SearchFragment extends CommonBaseFragment implements TagFlowLayout.
         adapter.setFragments(fragments);
         viewPager.setAdapter(adapter);
         tl.setupWithViewPager(viewPager);
-
+        
     }
 
     @Override
