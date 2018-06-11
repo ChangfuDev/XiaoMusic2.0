@@ -30,7 +30,6 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.yzx.xiaomusic.ui.search.result.SearchResultFragment.TYPE_SEARCH_ALBUM;
-import static com.yzx.xiaomusic.ui.search.result.SearchResultFragment.TYPE_SEARCH_MUSIC;
 import static com.yzx.xiaomusic.ui.search.result.SearchResultFragment.TYPE_SEARCH_MV;
 import static com.yzx.xiaomusic.ui.search.result.SearchResultFragment.TYPE_SEARCH_RADIO;
 import static com.yzx.xiaomusic.ui.search.result.SearchResultFragment.TYPE_SEARCH_SINGER;
@@ -62,7 +61,7 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
             case TYPE_SEARCH_ALBUM:
                 return new AlbumHolder(ResourceUtils.parseLayout(parent.getContext(), R.layout.item_search_result_album, parent));
             case TYPE_SEARCH_SONG_SHEET:
-                return new SongSheetHolder(ResourceUtils.parseLayout(parent.getContext(), R.layout.item_search_result_song_sheet, parent));
+                return new SongSheetHolder(ResourceUtils.parseLayout(parent.getContext(), R.layout.item_common_song_sheet, parent));
             case TYPE_SEARCH_RADIO:
                 return new RadioHolder(ResourceUtils.parseLayout(parent.getContext(), R.layout.item_search_result_radio, parent));
             case TYPE_SEARCH_USER:

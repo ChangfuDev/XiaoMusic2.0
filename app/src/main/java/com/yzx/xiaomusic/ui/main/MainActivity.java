@@ -7,7 +7,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -19,10 +18,6 @@ import com.yzx.xiaomusic.ui.adapter.NavigationHeadAdapter;
 
 import java.util.ArrayList;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity {
@@ -122,26 +117,9 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressedSupport() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//            drawerLayout.closeDrawer(GravityCompat.START);
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-//            super.onBackPressed();
             super.onBackPressedSupport();
         }
     }
-
-//    @Override
-//    public boolean onNavigateUp() {
-//        return NavigationUI.navigateUp(drawerLayout, navController);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        return NavigationUI.onNavDestinationSelected(item, navController);
-//    }
-//
-//    @Override
-//    public boolean onSupportNavigateUp() {
-//        return NavigationUI.navigateUp(drawerLayout,
-//                Navigation.findNavController(this, R.id.fragmentContainer));
-//    }
 }

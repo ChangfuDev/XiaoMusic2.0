@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="width_common">55dp</dimen>
+    <dimen name="height_common">55dp</dimen>
+    <dimen name="dividerHeight">0.5dp</dimen>
+</resources>

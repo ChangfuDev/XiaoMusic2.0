@@ -1,9 +1,12 @@
 package com.yzx.xiaomusic.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,6 +15,7 @@ import com.kingja.loadsir.core.LoadService;
 import com.kingja.loadsir.core.LoadSir;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
 import com.yzx.commonlibrary.utils.LogUtils;
+import com.yzx.xiaomusic.ui.main.MainActivity;
 import com.yzx.xiaomusic.ui.main.MainFragment;
 
 import androidx.navigation.NavOptions;
@@ -20,7 +24,12 @@ import me.yokeyword.fragmentation.SupportFragment;
 public abstract class BaseFragment extends CommonBaseFragment {
 
     public LoadService loadService;
-    private NavOptions navOptions;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        setHasOptionsMenu(true);
+    }
 
     @Nullable
     @Override
@@ -30,13 +39,30 @@ public abstract class BaseFragment extends CommonBaseFragment {
         loadService = LoadSir.getDefault().register(view, (Callback.OnReloadListener) v -> reload(v));
         loadService.showSuccess();
 
-        LogUtils.d(this.getClass().getSimpleName(), "onCreateView");
         return loadService.getLoadLayout();
     }
 
 
+    public void setToolBar(Toolbar toolbar) {
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
     public void easyStart(SupportFragment fragment) {
         easyStart(fragment, null);
+    }
+
+    public void easyParentStart(SupportFragment fragment) {
+        easyParentStart(fragment, null);
+    }
+
+    public void easyParentStart(SupportFragment fragment, Bundle args) {
+        if (args != null) {
+            fragment.setArguments(args);
+        }
+        SupportFragment parentFragment = (SupportFragment) this.getParentFragment();
+        parentFragment.start(fragment);
     }
 
     public void easyStart(SupportFragment fragment, Bundle args) {
@@ -44,13 +70,9 @@ public abstract class BaseFragment extends CommonBaseFragment {
             fragment.setArguments(args);
         }
 
-        if (this instanceof MainFragment) {
-            start(fragment);
-        } else {
-            SupportFragment parentFragment = (SupportFragment) this.getParentFragment();
-            parentFragment.start(fragment);
-        }
+        start(fragment);
     }
+
 
     /**
      * 重试
@@ -59,5 +81,14 @@ public abstract class BaseFragment extends CommonBaseFragment {
      */
     public void reload(View v) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            pop();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

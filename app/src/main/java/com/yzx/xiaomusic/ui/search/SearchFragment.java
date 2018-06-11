@@ -207,14 +207,6 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
         
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Navigation.findNavController(etSearch).popBackStack(R.id.mainFragment, false);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onPause() {

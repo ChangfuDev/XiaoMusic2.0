@@ -17,10 +17,12 @@ import com.yzx.xiaomusic.base.LoadMoreView;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.model.entity.eventbus.SearchContent;
 import com.yzx.xiaomusic.model.entity.search.SearchSingerResult.ResultBean.ArtistsBean;
+import com.yzx.xiaomusic.model.entity.search.SearchUserResult;
 import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.ui.adapter.SearchResultAdapter;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
 import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
+import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,6 +35,7 @@ import butterknife.BindView;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SEARCH_CONTENT;
 import static com.yzx.xiaomusic.ui.singer.SingerDetailsFragment.KEY_INFO_SINGER;
+import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
 /**
  * 展示搜索结果页面
@@ -201,7 +204,7 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
             case R.id.rl_search_singer:
                 bundle.clear();
                 bundle.putSerializable(KEY_INFO_SINGER, (ArtistsBean) adapter.datas.get(position));
-                easyStart(new SingerDetailsFragment(), bundle);
+                easyParentStart(new SingerDetailsFragment(), bundle);
                 break;
             case R.id.rl_search_album:
                 break;
@@ -210,6 +213,10 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
             case R.id.rl_search_radio:
                 break;
             case R.id.rl_search_user:
+                bundle.clear();
+                SearchUserResult.ResultBean.UserprofilesBean userprofilesBean = (SearchUserResult.ResultBean.UserprofilesBean) adapter.datas.get(position);
+                bundle.putString(KEY_USER_ID, userprofilesBean.getUserId());
+                easyParentStart(new UserCenterFragment(), bundle);
                 break;
         }
     }
