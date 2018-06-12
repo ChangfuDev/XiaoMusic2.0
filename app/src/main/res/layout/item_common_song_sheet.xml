@@ -86,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dividerHeight"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="80dp"
+        android:layout_marginStart="75dp"
         android:background="@color/colorDivider" />
 
 </RelativeLayout>

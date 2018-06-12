@@ -16,4 +16,5 @@
     <color name="colorIcon">#8c8c8c</color>
     <color name="colorLightDark">#55000000</color>
     <color name="colorTransparent">#00000000</color>
+    <color name="colorDarkAccent">#aa009688</color>
 </resources>

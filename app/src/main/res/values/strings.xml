@@ -37,4 +37,8 @@
     <string name="music">音乐</string>
     <string name="aboutTa">关于TA</string>
     <string name="dynamic">动态</string>
+    <string name="download">下载</string>
+    <string name="multiSelection">多选</string>
+    <string name="playAll">播放全部</string>
+    <string name="save">保存</string>
 </resources>

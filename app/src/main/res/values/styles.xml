@@ -25,4 +25,11 @@
         <item name="colorControlNormal">@color/colorLightWhite</item>
         <item name="colorControlActivated">@color/colorWhite</item>
     </style>
+
+    <!--SmartRefreshLayout禁止刷新样式-->
+    <style name="StyleForbidRefresh">
+        <!--禁止回弹-->
+        <item name="srlEnableOverScrollDrag">false</item>
+        <item name="srlEnableRefresh">false</item>
+    </style>
 </resources>

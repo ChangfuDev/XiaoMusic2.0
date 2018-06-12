@@ -119,7 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="65dp"
         android:background="@color/colorDivider" />
 
 </RelativeLayout>

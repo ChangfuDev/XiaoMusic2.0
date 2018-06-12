@@ -36,6 +36,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * @author yzx
+ */
 public class UserCenterFragment extends BaseFragment {
     @BindView(R.id.iv_bg)
     ImageView ivBg;
@@ -118,6 +121,7 @@ public class UserCenterFragment extends BaseFragment {
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
         setToolBar(tb);
 
+        viewPager.setOffscreenPageLimit(3);
         UserCenterPagerAdapter adapter = new UserCenterPagerAdapter(getChildFragmentManager());
         adapter.setFragments(fragments);
         adapter.setTitles(tabTitles);

@@ -14,6 +14,7 @@ import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.base.LoadMoreView;
+import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.model.entity.eventbus.SearchContent;
 import com.yzx.xiaomusic.model.entity.search.SearchSingerResult.ResultBean.ArtistsBean;
@@ -22,6 +23,7 @@ import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.ui.adapter.SearchResultAdapter;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
 import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
+import com.yzx.xiaomusic.ui.songsheet.SongSheetDetailFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 
@@ -35,6 +37,7 @@ import butterknife.BindView;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SEARCH_CONTENT;
 import static com.yzx.xiaomusic.ui.singer.SingerDetailsFragment.KEY_INFO_SINGER;
+import static com.yzx.xiaomusic.ui.songsheet.SongSheetDetailFragment.KEY_INFO_SONG_SHEET;
 import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
 /**
@@ -102,14 +105,8 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
 
-
-        smartRefreshLayout.setEnablePureScrollMode(false);
-        smartRefreshLayout.setEnableRefresh(false);
         smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getContext()));
-
-        smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> {
-            search(offset);
-        });
+        smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> search(offset));
 
         adapter = new SearchResultAdapter(searchType);
         adapter.setOnItemClickListener(this);
@@ -122,14 +119,12 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
         super.lazyLoadData();
 
         getSearchContent();
-
         search(0);
-        LogUtils.d(SearchResultFragment.class.getSimpleName(), "lazyLoadData: " + searchType + this.searchContent);
     }
 
-    //    /**
-//     * 获取父布局
-//     */
+    /**
+     * 获取父布局
+     */
     private void getSearchContent() {
         SearchFragment searchFragment = (SearchFragment) getParentFragment();
         searchContent = searchFragment.getSearchContent();
@@ -141,8 +136,6 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
     }
 
     public void search(int offset) {
-        LogUtils.d(SearchResultFragment.class.getSimpleName(), "search: " + offset);
-
         mPresenter.getSearchResult(searchType, offset * ApiConstant.LIMIT, searchContent);
     }
 
@@ -209,6 +202,9 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
             case R.id.rl_search_album:
                 break;
             case R.id.rl_search_song_sheet:
+                bundle.clear();
+                bundle.putSerializable(KEY_INFO_SONG_SHEET, (SongSheetInfo) adapter.datas.get(position));
+                easyParentStart(new SongSheetDetailFragment(), bundle);
                 break;
             case R.id.rl_search_radio:
                 break;
@@ -217,6 +213,8 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
                 SearchUserResult.ResultBean.UserprofilesBean userprofilesBean = (SearchUserResult.ResultBean.UserprofilesBean) adapter.datas.get(position);
                 bundle.putString(KEY_USER_ID, userprofilesBean.getUserId());
                 easyParentStart(new UserCenterFragment(), bundle);
+                break;
+            default:
                 break;
         }
     }

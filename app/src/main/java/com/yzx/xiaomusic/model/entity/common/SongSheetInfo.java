@@ -1,12 +1,24 @@
 package com.yzx.xiaomusic.model.entity.common;
 
-public class SongSheet {
+import java.io.Serializable;
+
+/**
+ * @author yzx
+ * 统一的歌单信息，便于统一处理
+ */
+public class SongSheetInfo implements Serializable {
 
     String id;
     String coverUrl;
     String title;
     String des;
     String playCount;
+    String musicCount;
+
+    String creatorId;
+    String creatorCoverUrl;
+    String creatorBgUrl;
+    String creatorNickName;
 
     public String getPlayCount() {
         return playCount;
@@ -23,13 +35,6 @@ public class SongSheet {
     public void setMusicCount(String musicCount) {
         this.musicCount = musicCount;
     }
-
-    String musicCount;
-
-    String creatorId;
-    String creatorCoverUrl;
-    String creatorBgUrl;
-    String creatorNickName;
 
     public String getCreatorBgUrl() {
         return creatorBgUrl;

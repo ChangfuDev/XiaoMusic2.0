@@ -4,26 +4,17 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.yzx.xiaomusic.R;
-import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
-import com.yzx.xiaomusic.model.entity.common.SongSheet;
+import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.model.entity.user.UserSongSheet;
 import com.yzx.xiaomusic.ui.adapter.SongSheetAdapter;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 
-import java.util.List;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
@@ -54,7 +45,7 @@ public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPres
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-
+        smartRefreshLayout.setEnableOverScrollDrag(false);
         adapter = new SongSheetAdapter();
         recyclerView.setAdapter(adapter);
     }
@@ -77,7 +68,7 @@ public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPres
                     .fromIterable(userSongSheet.getPlaylist())
                     .map(playlistBean -> {
 
-                        SongSheet songSheet = new SongSheet();
+                        SongSheetInfo songSheet = new SongSheetInfo();
                         songSheet.setId(playlistBean.getId());
                         songSheet.setCoverUrl(playlistBean.getCoverImgUrl());
                         songSheet.setDes(playlistBean.getDescription());

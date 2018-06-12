@@ -1,12 +1,12 @@
 package com.yzx.xiaomusic.ui.search.result;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import com.yzx.commonlibrary.base.mvp.CommonBasePresenter;
 import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;
 import com.yzx.xiaomusic.model.entity.MusicInfo;
 import com.yzx.xiaomusic.model.entity.SingerInfo;
+import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.model.entity.search.SearchAlbumResult;
 import com.yzx.xiaomusic.model.entity.search.SearchMusicResult;
 import com.yzx.xiaomusic.model.entity.search.SearchMvResult;
@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.yzx.xiaomusic.ui.search.result.SearchResultFragment.TYPE_SEARCH_ALBUM;
 import static com.yzx.xiaomusic.ui.search.result.SearchResultFragment.TYPE_SEARCH_MUSIC;
@@ -107,8 +109,31 @@ public class SearchResultPresenter extends CommonBasePresenter<SearchResultFragm
 
             @Override
             protected void onSuccess(SearchSongSheetResult searchSongSheetResult) {
-                mView.loadService.showSuccess();
-                mView.onLoadMoreSuccess(searchSongSheetResult.getResult().getPlaylists());
+
+                Observable
+                        .fromIterable(searchSongSheetResult.getResult().getPlaylists())
+                        .map(playlistsBean -> {
+                            SongSheetInfo songSheetInfo = new SongSheetInfo();
+                            songSheetInfo.setId(playlistsBean.getId());
+                            songSheetInfo.setTitle(playlistsBean.getName());
+                            songSheetInfo.setCoverUrl(playlistsBean.getCoverImgUrl());
+                            songSheetInfo.setMusicCount(String.valueOf(playlistsBean.getTrackCount()));
+                            songSheetInfo.setPlayCount(String.valueOf(playlistsBean.getPlayCount()));
+
+                            SearchSongSheetResult.ResultBean.PlaylistsBean.CreatorBean creator = playlistsBean.getCreator();
+                            if (creator != null) {
+                                songSheetInfo.setCreatorId(String.valueOf(creator.getUserId()));
+                                songSheetInfo.setCreatorNickName(creator.getNickname());
+                            }
+                            return songSheetInfo;
+                        })
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .toList()
+                        .subscribe(songSheetInfos -> {
+                            mView.onLoadMoreSuccess(songSheetInfos);
+                            mView.loadService.showSuccess();
+                        });
             }
 
             @Override

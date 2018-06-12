@@ -14,11 +14,11 @@ import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.model.entity.MusicInfo;
+import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.model.entity.search.SearchAlbumResult;
 import com.yzx.xiaomusic.model.entity.search.SearchMvResult;
 import com.yzx.xiaomusic.model.entity.search.SearchRadioResult;
 import com.yzx.xiaomusic.model.entity.search.SearchSingerResult;
-import com.yzx.xiaomusic.model.entity.search.SearchSongSheetResult;
 import com.yzx.xiaomusic.model.entity.search.SearchUserResult;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
@@ -52,8 +52,6 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         switch (searchType) {
-//            case TYPE_SEARCH_MUSIC:
-//                return new MusicHolder(ResourceUtils.parseLayout(parent.getContext(), R.layout.item_search_result_music, parent));
             case TYPE_SEARCH_MV:
                 return new MvHolder(ResourceUtils.parseLayout(parent.getContext(), R.layout.item_search_result_video, parent));
             case TYPE_SEARCH_SINGER:
@@ -133,11 +131,11 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
     }
 
     private void dealSongSheetResult(Context context, SongSheetHolder holder, int position) {
-        SearchSongSheetResult.ResultBean.PlaylistsBean songSheetBean = (SearchSongSheetResult.ResultBean.PlaylistsBean) datas.get(position);
-        GlideUtils.loadImg(context, songSheetBean.getCoverImgUrl(), holder.ivHead);
-        holder.tvTitle.setText(songSheetBean.getName());
-        holder.tvSubTitle.setText(String.format("%s首", songSheetBean.getTrackCount()));
-        holder.tvAuthor.setText(String.format("by %s，播放了%s次", songSheetBean.getCreator().getNickname(), songSheetBean.getPlayCount()));
+        SongSheetInfo songSheetInfo = (SongSheetInfo) datas.get(position);
+        GlideUtils.loadImg(context, songSheetInfo.getCoverUrl(), holder.ivHead);
+        holder.tvTitle.setText(songSheetInfo.getTitle());
+        holder.tvSubTitle.setText(String.format("%s首", songSheetInfo.getMusicCount()));
+        holder.tvAuthor.setText(String.format("by %s，播放了%s次", songSheetInfo.getCreatorNickName(), songSheetInfo.getPlayCount()));
     }
 
     private void dealAlbumResult(Context context, AlbumHolder holder, int position) {
