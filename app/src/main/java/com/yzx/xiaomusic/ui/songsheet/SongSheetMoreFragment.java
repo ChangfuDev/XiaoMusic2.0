@@ -3,7 +3,6 @@ package com.yzx.xiaomusic.ui.songsheet;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +14,6 @@ import com.yzx.xiaomusic.widget.ShapeTextView;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
@@ -54,19 +52,6 @@ public class SongSheetMoreFragment extends BaseFragment {
         GlideUtils.loadImg(getContext(), resultBean.getCoverImgUrl(), ivLittleBg);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 
     @OnClick({R.id.iv_close, R.id.stv_save})
     public void onViewClicked(View view) {
