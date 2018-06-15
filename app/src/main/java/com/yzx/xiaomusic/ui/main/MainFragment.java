@@ -23,6 +23,9 @@ import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.ui.adapter.NavigationHeadAdapter;
+import com.yzx.xiaomusic.ui.main.discover.DiscoverFragment;
+import com.yzx.xiaomusic.ui.main.music.MusicFragment;
+import com.yzx.xiaomusic.ui.main.video.VideoFragment;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
 import com.yzx.xiaomusic.widget.simplelistenner.SimpleTabChangeListener;
 

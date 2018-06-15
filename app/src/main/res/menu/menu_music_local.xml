@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_search"
+        android:icon="@drawable/pf"
+        android:title="@string/search"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/menu_scan_local"
+        android:icon="@drawable/pb"
+        android:title="@string/scanLocalMusic" />
+
+    <item
+        android:id="@+id/menu_sort"
+        android:icon="@drawable/p_"
+        android:title="@string/selectSortMethod" />
+    <item
+        android:id="@+id/menu_get_cover"
+        android:icon="@drawable/p7"
+        android:title="@string/getCoverLyric" />
+    <item
+        android:id="@+id/menu_update_music_quality"
+        android:icon="@drawable/pc"
+        android:title="@string/updateMusicQuality" />
+</menu>

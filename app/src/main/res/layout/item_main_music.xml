@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/WaterEffect"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="6dp"
+    tools:ignore="RtlSymmetry">
+
+    <ImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_music"
+        android:tint="@color/colorAccent" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="6dp"
+        android:layout_toEndOf="@id/iv_cover"
+        android:textColor="@color/colorTitle"
+        android:textSize="12sp"
+        tools:text="标题" />
+
+    <TextView
+        android:id="@+id/tv_subTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/tv_title"
+        android:textColor="@color/colorSubTitle"
+        android:textSize="8sp"
+        tools:ignore="SmallSp"
+        tools:text="(10)" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dividerHeight"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="56dp"
+        android:background="@color/colorDivider" />
+
+</RelativeLayout>

@@ -44,4 +44,13 @@
     <string name="tag">标签：</string>
     <string name="saveCover">保存封面</string>
     <string name="wait">请稍后</string>
+    <string name="localMusic">本地音乐</string>
+    <string name="recentPlay">最近播放</string>
+    <string name="downloadManager">下载管理</string>
+    <string name="myCollection">我的收藏</string>
+    <string name="myRadio">我的电台</string>
+    <string name="scanLocalMusic">扫描本地音乐</string>
+    <string name="selectSortMethod">选择排序方法</string>
+    <string name="updateMusicQuality">升级音质</string>
+    <string name="getCoverLyric">获取封面歌词</string>
 </resources>

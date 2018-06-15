@@ -1,4 +1,4 @@
-package com.yzx.xiaomusic.ui.main;
+package com.yzx.xiaomusic.ui.main.video;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
 import com.yzx.xiaomusic.R;
 
-public class DiscoverFragment extends CommonBaseFragment {
+public class VideoFragment extends CommonBaseFragment {
     @Override
     protected int initContentViewId() {
-        return R.layout.fragment_discover;
+        return R.layout.fragment_video;
     }
 
     @Override
