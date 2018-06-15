@@ -10,32 +10,20 @@
     app:navigationIcon="@drawable/oq">
 
     <LinearLayout
-        android:translationX="-20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:translationX="-20dp">
 
         <TextView
-            android:lines="1"
-            android:ellipsize="end"
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
             android:textColor="@color/colorWhite"
             android:textSize="14sp"
             tools:text="标题" />
-
-        <TextView
-            android:id="@+id/tv_subTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:lines="1"
-            android:ellipsize="end"
-            android:textColor="@color/colorLightWhite"
-            android:textSize="8sp"
-            tools:ignore="SmallSp"
-            tools:text="副标题" />
     </LinearLayout>
 </android.support.v7.widget.Toolbar>

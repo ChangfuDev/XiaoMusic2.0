@@ -4,8 +4,9 @@ import android.annotation.SuppressLint;
 
 import com.yzx.commonlibrary.base.mvp.CommonBasePresenter;
 import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;
-import com.yzx.xiaomusic.model.entity.MusicInfo;
-import com.yzx.xiaomusic.model.entity.SingerInfo;
+import com.yzx.xiaomusic.model.entity.common.AlbumInfo;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.model.entity.common.SingerInfo;
 import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.model.entity.search.SearchAlbumResult;
 import com.yzx.xiaomusic.model.entity.search.SearchMusicResult;
@@ -149,7 +150,29 @@ public class SearchResultPresenter extends CommonBasePresenter<SearchResultFragm
             @Override
             protected void onSuccess(SearchAlbumResult searchAlbumResult) {
                 mView.loadService.showSuccess();
-                mView.onLoadMoreSuccess(searchAlbumResult.getResult().getAlbums());
+                List<SearchAlbumResult.ResultBean.AlbumsBean> albums = searchAlbumResult.getResult().getAlbums();
+                if (albums != null && albums.size() > 0) {
+                    Observable
+                            .fromIterable(searchAlbumResult.getResult().getAlbums())
+                            .map(albumsBean -> {
+                                AlbumInfo albumInfo = new AlbumInfo();
+                                albumInfo.setId(String.valueOf(albumsBean.getId()));
+                                albumInfo.setName(albumsBean.getName());
+                                albumInfo.setCover(albumsBean.getPicUrl());
+                                albumInfo.setDate(albumsBean.getPublishTime());
+                                albumInfo.setSongCount(albumsBean.getSize());
+                                SearchAlbumResult.ResultBean.AlbumsBean.ArtistBean artist = albumsBean.getArtist();
+                                if (artist != null) {
+                                    albumInfo.setSingerId(String.valueOf(artist.getId()));
+                                    albumInfo.setSingName(artist.getName());
+                                }
+                                return albumInfo;
+                            })
+                            .toList()
+                            .subscribe(albumInfos -> mView.onLoadMoreSuccess(albumInfos));
+                } else {
+                    mView.smartRefreshLayout.finishLoadMoreWithNoMoreData();
+                }
             }
 
             @Override

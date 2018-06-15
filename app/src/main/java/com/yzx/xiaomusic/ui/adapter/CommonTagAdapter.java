@@ -14,16 +14,16 @@ import java.util.List;
  * @author yzx
  * 标签Adapter
  */
-public class HotSearchAdapter extends TagAdapter<String> {
+public class CommonTagAdapter extends TagAdapter<String> {
 
-    public HotSearchAdapter(List<String> datas) {
+    public CommonTagAdapter(List<String> datas) {
         super(datas);
     }
 
     @Override
     public View getView(FlowLayout parent, int position, String s) {
 
-        ShapeTextView view = (ShapeTextView) ResourceUtils.parseLayout(parent.getContext(), R.layout.item_hot_search);
+        ShapeTextView view = (ShapeTextView) ResourceUtils.parseLayout(parent.getContext(), R.layout.item_common_tag);
         view.setText(s);
         return view;
     }

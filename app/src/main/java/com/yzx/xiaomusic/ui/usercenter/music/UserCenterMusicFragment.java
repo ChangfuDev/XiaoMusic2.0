@@ -4,21 +4,27 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.model.entity.user.UserSongSheet;
 import com.yzx.xiaomusic.ui.adapter.SongSheetAdapter;
+import com.yzx.xiaomusic.ui.songsheet.SongSheetDetailFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 
 import butterknife.BindView;
 import io.reactivex.Observable;
 
+import static com.yzx.xiaomusic.Constant.KEY_COVER;
+import static com.yzx.xiaomusic.Constant.KEY_ID;
+import static com.yzx.xiaomusic.Constant.KEY_NAME;
 import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
-public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPresenter> {
+public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPresenter> implements CommonBaseAdapter.OnItemClickListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.smartRefreshLayout)
@@ -47,6 +53,7 @@ public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPres
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
         smartRefreshLayout.setEnableOverScrollDrag(false);
         adapter = new SongSheetAdapter();
+        adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -87,5 +94,15 @@ public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPres
                     .toList()
                     .subscribe(songSheets -> adapter.setData(songSheets));
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        SongSheetInfo songSheetInfo = adapter.datas.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_ID, songSheetInfo.getId());
+        bundle.putString(KEY_NAME, songSheetInfo.getTitle());
+        bundle.putString(KEY_COVER, songSheetInfo.getCoverUrl());
+        easyParentStart(new SongSheetDetailFragment(), bundle);
     }
 }

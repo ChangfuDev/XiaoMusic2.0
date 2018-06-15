@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
-import com.yzx.xiaomusic.model.entity.MusicInfo;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 
 import butterknife.BindView;

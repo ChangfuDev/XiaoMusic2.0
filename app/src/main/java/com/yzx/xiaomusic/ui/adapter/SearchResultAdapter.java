@@ -13,9 +13,9 @@ import android.widget.TextView;
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
-import com.yzx.xiaomusic.model.entity.MusicInfo;
+import com.yzx.xiaomusic.model.entity.common.AlbumInfo;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
-import com.yzx.xiaomusic.model.entity.search.SearchAlbumResult;
 import com.yzx.xiaomusic.model.entity.search.SearchMvResult;
 import com.yzx.xiaomusic.model.entity.search.SearchRadioResult;
 import com.yzx.xiaomusic.model.entity.search.SearchSingerResult;
@@ -139,11 +139,11 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
     }
 
     private void dealAlbumResult(Context context, AlbumHolder holder, int position) {
-        SearchAlbumResult.ResultBean.AlbumsBean albumsBean = (SearchAlbumResult.ResultBean.AlbumsBean) datas.get(position);
-        GlideUtils.loadImg(context, albumsBean.getPicUrl(), holder.ivHead);
-        holder.tvTitle.setText(albumsBean.getName());
-        holder.tvSubTitle.setText(albumsBean.getArtist() == null ? null : albumsBean.getArtist().getName());
-        holder.tvDate.setText(TimeUtils.getFormatData(albumsBean.getPublishTime(), "yyyy.MM.dd"));
+        AlbumInfo albumInfo = (AlbumInfo) datas.get(position);
+        GlideUtils.loadImg(context, albumInfo.getCover(), holder.ivHead);
+        holder.tvTitle.setText(albumInfo.getName());
+        holder.tvSubTitle.setText(albumInfo.getSingName());
+        holder.tvDate.setText(TimeUtils.getFormatData(albumInfo.getDate(), "yyyy.MM.dd"));
     }
 
     private void dealSingerResult(Context context, SingerHolder holder, int position) {

@@ -1,4 +1,4 @@
-package com.yzx.xiaomusic.model.entity;
+package com.yzx.xiaomusic.model.entity.common;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;

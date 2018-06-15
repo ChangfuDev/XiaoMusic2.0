@@ -1,4 +1,4 @@
-package com.yzx.xiaomusic.ui.songsheet;
+package com.yzx.xiaomusic.ui.album;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -21,14 +21,14 @@ import android.widget.TextView;
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadSir;
 import com.yzx.commonlibrary.utils.DensityUtils;
+import com.yzx.commonlibrary.utils.LogUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
+import com.yzx.xiaomusic.model.entity.album.AlbumDetail;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SingerInfo;
-import com.yzx.xiaomusic.model.entity.songsheet.SongSheetDetail;
 import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.common.CoverInfoFragment;
-import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
 
 import java.util.ArrayList;
@@ -43,16 +43,14 @@ import static com.yzx.xiaomusic.Constant.KEY_COVER;
 import static com.yzx.xiaomusic.Constant.KEY_DES;
 import static com.yzx.xiaomusic.Constant.KEY_ID;
 import static com.yzx.xiaomusic.Constant.KEY_NAME;
-import static com.yzx.xiaomusic.Constant.KEY_TAG;
 import static com.yzx.xiaomusic.Constant.KEY_TITLE;
-import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
 /**
  * @author yzx
  * @date 2018/6/12
  * Description 歌单详情
  */
-public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPresenter> {
+public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> {
     @BindView(R.id.iv_bg)
     ImageView ivBg;
     @BindView(R.id.tv_play_count)
@@ -99,15 +97,15 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     AppBarLayout appBarLayout;
     private MusicAdapter adapter;
     private Bundle arguments;
-    private SongSheetDetail.ResultBean result;
 
     private String name;
     private String cover;
-    private String songSheetId;
+    private String id;
+    private AlbumDetail.AlbumBean album;
 
     @Override
     protected int initContentViewId() {
-        return R.layout.fragment_detail_song_sheet;
+        return R.layout.fragment_detail_album;
     }
 
     @Nullable
@@ -117,13 +115,13 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         //重新注册到View里
         loadService = LoadSir
                 .getDefault()
-                .register(recyclerView, (Callback.OnReloadListener) v -> mPresenter.getSongSheetDetail(songSheetId));
+                .register(recyclerView, (Callback.OnReloadListener) v -> mPresenter.getAlbumDetail(id));
         return view;
     }
 
     @Override
-    protected SongSheetDetailPresenter getPresenter() {
-        return new SongSheetDetailPresenter();
+    protected AlbumDetailPresenter getPresenter() {
+        return new AlbumDetailPresenter();
     }
 
     @Override
@@ -134,7 +132,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
 
         name = arguments.getString(KEY_NAME);
         cover = arguments.getString(KEY_COVER);
-        songSheetId = arguments.getString(KEY_ID);
+        id = arguments.getString(KEY_ID);
 
     }
 
@@ -172,41 +170,42 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
 
-        mPresenter.getSongSheetDetail(songSheetId);
+        mPresenter.getAlbumDetail(id);
     }
 
     @SuppressLint("CheckResult")
-    public void setData(SongSheetDetail songSheetDetail) {
-        result = songSheetDetail.getResult();
-        SongSheetDetail.ResultBean.CreatorBean creator = result.getCreator();
-        GlideUtils.loadImg(getContext(), creator.getAvatarUrl(), ivHead);
-        tvCreatorName.setText(creator.getNickname());
-        tvEvaluationNum.setText(String.valueOf(result.getCommentCount()));
-        tvShareNum.setText(String.valueOf(result.getShareCount()));
-        tvPlayCount.setText(String.valueOf(result.getPlayCount()));
+    public void setData(AlbumDetail albumDetail) {
 
+        album = albumDetail.getAlbum();
+//        result = songSheetDetail.getResult();
+//        SongSheetDetail.ResultBean.CreatorBean creator = result.getCreator();
+//        GlideUtils.loadImg(getContext(), creator.getAvatarUrl(), ivHead);
+//        tvCreatorName.setText(creator.getNickname());
+//        tvEvaluationNum.setText(String.valueOf(result.getCommentCount()));
+//        tvShareNum.setText(String.valueOf(result.getShareCount()));
+//        tvPlayCount.setText(String.valueOf(result.getPlayCount()));
+//
         Observable
-                .fromIterable(songSheetDetail.getResult().getTracks())
-                .map(tracksBean -> {
+                .fromIterable(albumDetail.getSongs())
+                .map(songsBean -> {
                     MusicInfo musicInfo = new MusicInfo();
-                    musicInfo.setMusicId(String.valueOf(tracksBean.getId()));
-                    musicInfo.setMusicName(tracksBean.getName());
+                    musicInfo.setMusicId(String.valueOf(songsBean.getId()));
+                    musicInfo.setMusicName(songsBean.getName());
 
-                    musicInfo.setMvId(String.valueOf(tracksBean.getMvid()));
-                    SongSheetDetail.ResultBean.TracksBean.AlbumBean album = tracksBean.getAlbum();
+                    musicInfo.setMvId(String.valueOf(songsBean.getMv()));
+                    AlbumDetail.SongsBean.AlBean album = songsBean.getAl();
                     if (album != null) {
                         musicInfo.setAlbumId(String.valueOf(album.getId()));
                         musicInfo.setAlbumName(album.getName());
                     }
 
-                    List<SongSheetDetail.ResultBean.TracksBean.ArtistsBeanX> artists = tracksBean.getArtists();
+                    List<AlbumDetail.SongsBean.ArBean> artists = songsBean.getAr();
                     ArrayList<SingerInfo> singerInfos = new ArrayList<>();
                     for (int i = 0; i < artists.size(); i++) {
                         SingerInfo singerInfo = new SingerInfo();
-                        SongSheetDetail.ResultBean.TracksBean.ArtistsBeanX artistsBeanX = artists.get(i);
-                        singerInfo.setSingerId(String.valueOf(artistsBeanX.getId()));
-                        singerInfo.setSingerName(artistsBeanX.getName());
-                        singerInfo.setSingerCoverPath(artistsBeanX.getPicUrl());
+                        AlbumDetail.SongsBean.ArBean arBean = artists.get(i);
+                        singerInfo.setSingerId(String.valueOf(arBean.getId()));
+                        singerInfo.setSingerName(arBean.getName());
                         singerInfos.add(singerInfo);
                     }
 
@@ -237,9 +236,9 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_user_info:
-                arguments.clear();
-                arguments.putString(KEY_USER_ID, String.valueOf(result.getCreator().getUserId()));
-                easyStart(new UserCenterFragment(), arguments);
+//                arguments.clear();
+//                arguments.putString(KEY_USER_ID, String.valueOf(result.getCreator().getUserId()));
+//                easyStart(new UserCenterFragment(), arguments);
                 break;
             case R.id.tv_evaluation_num:
                 break;
@@ -253,13 +252,12 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
                 break;
             case R.id.iv_little_bg:
                 arguments.clear();
-                if (result == null) {
+                if (album == null) {
                     showToast(R.string.wait);
                 } else {
-                    arguments.putString(KEY_COVER, result.getCoverImgUrl());
-                    arguments.putString(KEY_TITLE, result.getName());
-                    arguments.putStringArrayList(KEY_TAG, (ArrayList<String>) result.getTags());
-                    arguments.putString(KEY_DES, result.getDescription());
+                    arguments.putString(KEY_COVER, album.getPicUrl());
+                    arguments.putString(KEY_TITLE, album.getName());
+                    arguments.putString(KEY_DES, album.getDescription());
                     easyStart(new CoverInfoFragment(), arguments);
                 }
                 break;

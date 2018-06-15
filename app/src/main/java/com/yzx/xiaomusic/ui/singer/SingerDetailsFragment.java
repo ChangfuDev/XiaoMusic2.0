@@ -1,6 +1,5 @@
 package com.yzx.xiaomusic.ui.singer;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -26,7 +25,6 @@ import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.model.entity.search.SearchSingerResult.ResultBean.ArtistsBean;
 import com.yzx.xiaomusic.ui.adapter.SingerDetailPagerAdapter;
-import com.yzx.xiaomusic.ui.main.MainActivity;
 import com.yzx.xiaomusic.ui.singer.top.Top50Fragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
@@ -35,9 +33,7 @@ import com.yzx.xiaomusic.widget.ShapeTextView;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
@@ -71,6 +67,7 @@ public class SingerDetailsFragment extends BaseFragment {
 
     public static final String KEY_INFO_SINGER = "singerInfo";
     private ArtistsBean singerInfo;
+    private SingerDetailPagerAdapter adapter;
 
     @Override
     protected int initContentViewId() {
@@ -80,7 +77,6 @@ public class SingerDetailsFragment extends BaseFragment {
     @Override
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
-
         Bundle arguments = getArguments();
         if (arguments != null) {
             singerInfo = (ArtistsBean) arguments.getSerializable(KEY_INFO_SINGER);
@@ -92,22 +88,16 @@ public class SingerDetailsFragment extends BaseFragment {
         tabTitles.add("视频");
         tabTitles.add("歌手信息");
 
-        fragments = new ArrayList<>();
-        fragments.add(new Top50Fragment());
-        fragments.add(new AlbumFragment());
-        fragments.add(new VideoFragment());
-        fragments.add(new InfoFragment());
     }
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-        setToolBar(tb);
+        initToolBar(tb);
 
         //初始化信息
         GlideUtils.loadImg(getContext(), singerInfo.getPicUrl(), ivHead);
         tvTitle.setText(singerInfo.getName());
-        SingerDetailPagerAdapter adapter = new SingerDetailPagerAdapter(getChildFragmentManager());
-        adapter.setFragments(fragments);
+        adapter = new SingerDetailPagerAdapter(getChildFragmentManager());
         adapter.setTitles(tabTitles);
         viewPager.setAdapter(adapter);
         tl.setupWithViewPager(viewPager);
@@ -152,7 +142,18 @@ public class SingerDetailsFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onEnterAnimationEnd(Bundle savedInstanceState) {
+        super.onEnterAnimationEnd(savedInstanceState);
 
+        fragments = new ArrayList<>();
+        fragments.add(new Top50Fragment());
+        fragments.add(new AlbumFragment());
+        fragments.add(new VideoFragment());
+        fragments.add(new InfoFragment());
+
+        adapter.setFragments(fragments);
+    }
     @OnClick({R.id.stv_collect, R.id.stv_personal_pager})
     public void onViewClicked(View view) {
         switch (view.getId()) {

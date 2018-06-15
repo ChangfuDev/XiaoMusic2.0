@@ -1,7 +1,7 @@
 package com.yzx.xiaomusic.utils;
 
-import com.yzx.xiaomusic.model.entity.MusicInfo;
-import com.yzx.xiaomusic.model.entity.SingerInfo;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.model.entity.common.SingerInfo;
 import com.yzx.xiaomusic.model.entity.search.SearchMvResult;
 
 import java.util.List;

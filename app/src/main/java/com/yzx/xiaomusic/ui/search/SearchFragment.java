@@ -11,7 +11,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 
-import com.yzx.commonlibrary.base.CommonBaseFragment;
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
@@ -32,7 +30,6 @@ import com.yzx.xiaomusic.ui.adapter.HotSearchAdapter;
 import com.yzx.xiaomusic.ui.adapter.SearchAdapter;
 import com.yzx.xiaomusic.ui.adapter.SearchHistoryAdapter;
 import com.yzx.xiaomusic.ui.adapter.SearchResultPagerAdapter;
-import com.yzx.xiaomusic.ui.main.MainActivity;
 import com.yzx.xiaomusic.ui.search.result.SearchResultFragment;
 import com.yzx.xiaomusic.widget.simplelistenner.SimpleTextWathcer;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -43,7 +40,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -134,9 +130,7 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
 
-
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setSupportActionBar(tb);
+        tb.setNavigationOnClickListener(v -> pop());
 
         llSearch.setVisibility(View.VISIBLE);
         llSearchResult.setVisibility(View.GONE);
@@ -204,7 +198,7 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
         adapter.setFragments(fragments);
         viewPager.setAdapter(adapter);
         tl.setupWithViewPager(viewPager);
-        
+
     }
 
 

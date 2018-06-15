@@ -26,9 +26,12 @@ public class ApiConstant {
      */
     public static final String TYPE_SEARCH = "search";
 
+    public static final String TYPE_ALBUM = "album";
 
     /**
      * 分页时，每页加载数量
      */
     public static final int LIMIT = 10;
+
+
 }

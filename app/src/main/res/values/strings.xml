@@ -41,4 +41,7 @@
     <string name="multiSelection">多选</string>
     <string name="playAll">播放全部</string>
     <string name="save">保存</string>
+    <string name="tag">标签：</string>
+    <string name="saveCover">保存封面</string>
+    <string name="wait">请稍后</string>
 </resources>

@@ -32,8 +32,6 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -78,11 +76,11 @@ public class UserCenterFragment extends BaseFragment {
     ImageView ivSendMessage;
     @BindView(R.id.iv_follow)
     ImageView ivFollow;
-    Unbinder unbinder;
     private ArrayList<String> tabTitles;
     private ArrayList<Fragment> fragments;
 
     public static final String KEY_USER_ID = "userId";
+    private UserCenterPagerAdapter adapter;
 
 
     @Override
@@ -93,37 +91,19 @@ public class UserCenterFragment extends BaseFragment {
     @Override
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
-
-
-        Bundle arguments = getArguments();
-
         tabTitles = new ArrayList<>();
         tabTitles.add(ResourceUtils.parseString(getContext(), R.string.music));
         tabTitles.add(ResourceUtils.parseString(getContext(), R.string.dynamic));
         tabTitles.add(ResourceUtils.parseString(getContext(), R.string.aboutTa));
-
-        fragments = new ArrayList<>();
-        UserCenterMusicFragment musicFragment = new UserCenterMusicFragment();
-        musicFragment.setArguments(arguments);
-        fragments.add(musicFragment);
-
-        UserCenterDynamicFragment dynamicFragment = new UserCenterDynamicFragment();
-        musicFragment.setArguments(arguments);
-        fragments.add(dynamicFragment);
-
-        UserCenterAboutFragment aboutFragment = new UserCenterAboutFragment();
-        aboutFragment.setArguments(arguments);
-        fragments.add(aboutFragment);
-
     }
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-        setToolBar(tb);
+        initToolBar(tb);
 
         viewPager.setOffscreenPageLimit(3);
-        UserCenterPagerAdapter adapter = new UserCenterPagerAdapter(getChildFragmentManager());
-        adapter.setFragments(fragments);
+        adapter = new UserCenterPagerAdapter(getChildFragmentManager());
+
         adapter.setTitles(tabTitles);
         viewPager.setAdapter(adapter);
         tl.setupWithViewPager(viewPager);
@@ -164,6 +144,26 @@ public class UserCenterFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onEnterAnimationEnd(Bundle savedInstanceState) {
+        super.onEnterAnimationEnd(savedInstanceState);
+        Bundle arguments = getArguments();
+
+        fragments = new ArrayList<>();
+        UserCenterMusicFragment musicFragment = new UserCenterMusicFragment();
+        musicFragment.setArguments(arguments);
+        fragments.add(musicFragment);
+
+        UserCenterDynamicFragment dynamicFragment = new UserCenterDynamicFragment();
+        musicFragment.setArguments(arguments);
+        fragments.add(dynamicFragment);
+
+        UserCenterAboutFragment aboutFragment = new UserCenterAboutFragment();
+        aboutFragment.setArguments(arguments);
+        fragments.add(aboutFragment);
+        adapter.setFragments(fragments);
+    }
+
     /**
      * 更新用户信息
      *
@@ -180,17 +180,4 @@ public class UserCenterFragment extends BaseFragment {
         tvFansCount.setText(String.format("粉丝 %s", "未知"));
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 }

@@ -1,20 +1,28 @@
 package com.yzx.xiaomusic.ui.main;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.yzx.commonlibrary.base.adapter.CommonBaseFragmentPagerAdapter;
+import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
+import com.yzx.xiaomusic.ui.adapter.NavigationHeadAdapter;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
 import com.yzx.xiaomusic.widget.simplelistenner.SimpleTabChangeListener;
 
@@ -22,21 +30,23 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 
-public class MainFragment extends BaseFragment {
+/**
+ * @author yzx
+ */
+public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClickListener {
     @BindView(R.id.tl)
     TabLayout tl;
     @BindView(R.id.tb)
     Toolbar tb;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
+    @BindView(R.id.navigationView)
+    NavigationView navigationView;
+    @BindView(R.id.drawerLayout)
+    DrawerLayout drawerLayout;
+    private ArrayList<Integer> navigationMenuTitles;
+    private ArrayList<Integer> navigationMenuIcons;
     private ArrayList<Fragment> fragments;
-    private MainActivity activity;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        setHasOptionsMenu(true);
-    }
 
     @Override
     protected int initContentViewId() {
@@ -47,6 +57,46 @@ public class MainFragment extends BaseFragment {
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
 
+        //menu文案
+        navigationMenuTitles = new ArrayList<>();
+        navigationMenuTitles.add(R.string.myMessage);
+        navigationMenuTitles.add(R.string.vip);
+        navigationMenuTitles.add(R.string.shoppingMall);
+        navigationMenuTitles.add(R.string.gameRecommend);
+        navigationMenuTitles.add(R.string.listenOnLine);
+
+        navigationMenuTitles.add(R.string.myFriend);
+        navigationMenuTitles.add(R.string.nearbyPerson);
+
+        navigationMenuTitles.add(R.string.personalSkin);
+        navigationMenuTitles.add(R.string.findSongByListen);
+        navigationMenuTitles.add(R.string.stopPlayTimely);
+        navigationMenuTitles.add(R.string.scan);
+        navigationMenuTitles.add(R.string.musicAlarm);
+        navigationMenuTitles.add(R.string.driveMode);
+        navigationMenuTitles.add(R.string.musicCloudDisk);
+        navigationMenuTitles.add(R.string.coupon);
+
+        //menuIcon
+        navigationMenuIcons = new ArrayList<>();
+        navigationMenuIcons.add(R.drawable.ak4);
+        navigationMenuIcons.add(R.drawable.akc);
+        navigationMenuIcons.add(R.drawable.ak_);
+        navigationMenuIcons.add(R.drawable.ak1);
+        navigationMenuIcons.add(R.drawable.ajz);
+
+        navigationMenuIcons.add(R.drawable.ak0);
+        navigationMenuIcons.add(R.drawable.ak6);
+
+        navigationMenuIcons.add(R.drawable.ak9);
+        navigationMenuIcons.add(R.drawable.ak2);
+        navigationMenuIcons.add(R.drawable.aka);
+        navigationMenuIcons.add(R.drawable.ak6);
+        navigationMenuIcons.add(R.drawable.akb);
+        navigationMenuIcons.add(R.drawable.aju);
+        navigationMenuIcons.add(R.drawable.ajv);
+        navigationMenuIcons.add(R.drawable.ajx);
+
         fragments = new ArrayList<>();
         fragments.add(new MusicFragment());
         fragments.add(new DiscoverFragment());
@@ -56,7 +106,20 @@ public class MainFragment extends BaseFragment {
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
 
-        initToolbar();
+        initNavigationView();
+        tb.setNavigationOnClickListener(v -> {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                drawerLayout.openDrawer(Gravity.START);
+            }
+        });
+
+        tb.inflateMenu(R.menu.menu_main);
+        tb.setOnMenuItemClickListener(this);
+        tl.addTab(tl.newTab().setIcon(R.drawable.ic_music));
+        tl.addTab(tl.newTab().setIcon(R.drawable.ic_discover));
+        tl.addTab(tl.newTab().setIcon(R.drawable.ic_video));
 
         CommonBaseFragmentPagerAdapter pagerAdapter = new CommonBaseFragmentPagerAdapter(getChildFragmentManager());
         pagerAdapter.setFragments(fragments);
@@ -75,35 +138,50 @@ public class MainFragment extends BaseFragment {
         });
     }
 
-    private void initToolbar() {
 
-        activity = (MainActivity) getActivity();
+    /**
+     * 初始化NavigationView
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    private void initNavigationView() {
 
-        activity.setSupportActionBar(tb);
-        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        LinearLayout navigationViewHeaderView = (LinearLayout) navigationView.getHeaderView(0);
+        ViewGroup.LayoutParams layoutParams = navigationViewHeaderView.getLayoutParams();
+        layoutParams.height = getResources().getDisplayMetrics().heightPixels;
+        navigationViewHeaderView.setLayoutParams(layoutParams);
 
-        tl.addTab(tl.newTab().setIcon(R.drawable.ic_music));
-        tl.addTab(tl.newTab().setIcon(R.drawable.ic_discover));
-        tl.addTab(tl.newTab().setIcon(R.drawable.ic_video));
-
+        RecyclerView recyclerView = (RecyclerView) navigationViewHeaderView.findViewById(R.id.recyclerView);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                if (recyclerView.getChildLayoutPosition(view) == 4 || recyclerView.getChildLayoutPosition(view) == 6) {
+                    outRect.bottom = DensityUtils.dip2px(getContext(), 5);
+                }
+            }
+        });
+        NavigationHeadAdapter adapter = new NavigationHeadAdapter();
+        adapter.setData(navigationMenuIcons, navigationMenuTitles);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_search:
                 easyStart(new SearchFragment());
                 return true;
-            case android.R.id.home:
-                activity.drawerLayout.openDrawer(Gravity.START);
-                return true;
+            default:
+                return false;
         }
-        return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onBackPressedSupport() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        } else {
+            return super.onBackPressedSupport();
+        }
+    }
 }

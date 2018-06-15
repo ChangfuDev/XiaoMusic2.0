@@ -28,6 +28,7 @@ public abstract class CommonBaseApplication extends Application {
                 // 显示悬浮球 ; 其他Mode:SHAKE: 摇一摇唤出   NONE：隐藏
                 .stackViewMode(Fragmentation.BUBBLE)
                 .debug(BuildConfig.DEBUG)
+                .debug(true)
 //             ... // 更多查看wiki或demo
                 .install();
     }

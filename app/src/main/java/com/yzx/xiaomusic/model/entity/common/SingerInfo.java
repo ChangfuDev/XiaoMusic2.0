@@ -1,4 +1,4 @@
-package com.yzx.xiaomusic.model.entity;
+package com.yzx.xiaomusic.model.entity.common;
 
 public class SingerInfo {
 

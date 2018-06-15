@@ -4,4 +4,5 @@
     <dimen name="height_common">55dp</dimen>
     <dimen name="dividerHeight">0.5dp</dimen>
     <dimen name="head_radius">10dp</dimen>
+    <dimen name="toolbarHeight">90dp</dimen>
 </resources>

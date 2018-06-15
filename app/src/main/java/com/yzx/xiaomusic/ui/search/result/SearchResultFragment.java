@@ -14,6 +14,7 @@ import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.base.LoadMoreView;
+import com.yzx.xiaomusic.model.entity.common.AlbumInfo;
 import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.model.entity.eventbus.SearchContent;
@@ -21,6 +22,7 @@ import com.yzx.xiaomusic.model.entity.search.SearchSingerResult.ResultBean.Artis
 import com.yzx.xiaomusic.model.entity.search.SearchUserResult;
 import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.ui.adapter.SearchResultAdapter;
+import com.yzx.xiaomusic.ui.album.AlbumDetailFragment;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
 import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
 import com.yzx.xiaomusic.ui.songsheet.SongSheetDetailFragment;
@@ -35,9 +37,11 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.yzx.xiaomusic.Constant.KEY_COVER;
+import static com.yzx.xiaomusic.Constant.KEY_ID;
+import static com.yzx.xiaomusic.Constant.KEY_NAME;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SEARCH_CONTENT;
 import static com.yzx.xiaomusic.ui.singer.SingerDetailsFragment.KEY_INFO_SINGER;
-import static com.yzx.xiaomusic.ui.songsheet.SongSheetDetailFragment.KEY_INFO_SONG_SHEET;
 import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
 /**
@@ -145,6 +149,9 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
         if (datas != null && datas.size() > 0) {
             adapter.addData(datas);
             offset++;
+            if (datas.size() < ApiConstant.LIMIT) {
+//                smartRefreshLayout.finishLoadMoreWithNoMoreData();
+            }
         } else {
             if (offset == 0) {
                 loadService.showCallback(EmptyCallback.class);
@@ -200,10 +207,19 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
                 easyParentStart(new SingerDetailsFragment(), bundle);
                 break;
             case R.id.rl_search_album:
+                bundle.clear();
+                AlbumInfo albumInfo = (AlbumInfo) adapter.datas.get(position);
+                bundle.putString(KEY_ID, albumInfo.getId());
+                bundle.putString(KEY_NAME, albumInfo.getName());
+                bundle.putString(KEY_COVER, albumInfo.getCover());
+                easyParentStart(new AlbumDetailFragment(), bundle);
                 break;
             case R.id.rl_search_song_sheet:
                 bundle.clear();
-                bundle.putSerializable(KEY_INFO_SONG_SHEET, (SongSheetInfo) adapter.datas.get(position));
+                SongSheetInfo songSheetInfo = (SongSheetInfo) adapter.datas.get(position);
+                bundle.putString(KEY_ID, songSheetInfo.getId());
+                bundle.putString(KEY_NAME, songSheetInfo.getTitle());
+                bundle.putString(KEY_COVER, songSheetInfo.getCoverUrl());
                 easyParentStart(new SongSheetDetailFragment(), bundle);
                 break;
             case R.id.rl_search_radio:
