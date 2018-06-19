@@ -3,19 +3,77 @@ package com.yzx.xiaomusic.model.entity.common;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author yzx
+ * 音乐信息
+ */
 @Entity
-public class MusicInfo {
+public class MusicInfo implements Serializable {
 
 
     @PrimaryKey(autoGenerate = true)
     long id;
+    /**
+     * 是否是本地音乐
+     **/
+    boolean isLocal;
 
-    //音乐
+    public boolean isLocal() {
+        return isLocal;
+    }
+
+    public void setLocal(boolean local) {
+        isLocal = local;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    /**
+     * 本地音乐路径
+     */
+    String path;
+
+    /**
+     * 音乐
+     */
     String musicId;
     String musicName;
+    long duration;
+    long size;
+    String poster;
 
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
 
     public List<SingerInfo> getSingerInfos() {
         return singerInfos;
@@ -27,7 +85,9 @@ public class MusicInfo {
 
     List<SingerInfo> singerInfos;
 
-    //专辑
+    /**
+     * 专辑
+     */
     String albumId;
     String albumName;
     String albumCoverPath;
@@ -44,7 +104,10 @@ public class MusicInfo {
     //SQ音质
     String ringTone;
 
-    //mv
+    /**
+     * mv
+     **/
+
     String mvId;
     String mvName;
     String mvCoverPath;

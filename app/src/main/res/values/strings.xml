@@ -53,4 +53,12 @@
     <string name="selectSortMethod">选择排序方法</string>
     <string name="updateMusicQuality">升级音质</string>
     <string name="getCoverLyric">获取封面歌词</string>
+    <string name="appreciateMusic">赞赏该曲</string>
+    <string name="collectToSongSheet">收藏到歌单</string>
+    <string name="evaluate">评论</string>
+    <string name="singer">歌手</string>
+    <string name="album">专辑</string>
+    <string name="MusicQuality">音质</string>
+    <string name="video">视频</string>
+    <string name="timeStopPlay">定时停止播放</string>
 </resources>

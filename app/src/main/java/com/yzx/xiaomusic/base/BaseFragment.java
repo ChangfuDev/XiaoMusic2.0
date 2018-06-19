@@ -1,5 +1,6 @@
 package com.yzx.xiaomusic.base;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,8 @@ import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadService;
 import com.kingja.loadsir.core.LoadSir;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
+import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
+import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
 
 import java.lang.reflect.Method;
 
@@ -54,11 +57,11 @@ public abstract class BaseFragment extends CommonBaseFragment {
         if (menu != null) {
             if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
                 try {
+                    @SuppressLint("PrivateApi")
                     Method m = menu.getClass().getDeclaredMethod(
                             "setOptionalIconsVisible", Boolean.TYPE);
                     m.setAccessible(true);
                     m.invoke(menu, true);
-                } catch (NoSuchMethodException e) {
                 } catch (Exception e) {
                 }
             }
@@ -138,4 +141,23 @@ public abstract class BaseFragment extends CommonBaseFragment {
     public void reload(View v) {
 
     }
+
+    public void showErrorLayout() {
+        if (loadService != null) {
+            loadService.showCallback(ErrorCallback.class);
+        }
+    }
+
+    public void showLoadingLayout() {
+        if (loadService != null) {
+            loadService.showCallback(LoadingCallback.class);
+        }
+    }
+
+    public void showSuccessLayout() {
+        if (loadService != null) {
+            loadService.showSuccess();
+        }
+    }
+
 }

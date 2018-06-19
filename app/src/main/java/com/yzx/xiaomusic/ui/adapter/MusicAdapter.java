@@ -1,7 +1,9 @@
 package com.yzx.xiaomusic.ui.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +15,7 @@ import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.ui.dialog.BottomMusicInfoDialog;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 
 import butterknife.BindView;
@@ -23,6 +26,13 @@ import butterknife.ButterKnife;
  * 音乐适配器
  */
 public class MusicAdapter extends CommonBaseAdapter<MusicAdapter.Holder, MusicInfo> {
+
+    private final FragmentManager fragmentManager;
+    public static final String KEY_MUSIC_INFO = "musicInfo";
+
+    public MusicAdapter(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
+    }
 
     @NonNull
     @Override
@@ -38,8 +48,19 @@ public class MusicAdapter extends CommonBaseAdapter<MusicAdapter.Holder, MusicIn
         MusicInfo musicInfo = datas.get(position);
         holder.tvSort.setText(String.valueOf(position + 1));
         holder.tvTitle.setText(musicInfo.getMusicName());
-        holder.tvSubTitle.setText(String.format("%s -- %s", MusicDataUtils.getSingers(musicInfo), musicInfo.getAlbumName()));
-        holder.ivMv.setVisibility(TextUtils.equals("0", musicInfo.getMvId()) ? View.GONE : View.VISIBLE);
+        if (TextUtils.isEmpty(musicInfo.getAlbumName())) {
+            holder.tvSubTitle.setText(String.format("%s", MusicDataUtils.getSingers(musicInfo)));
+        } else {
+            holder.tvSubTitle.setText(String.format("%s -- %s", MusicDataUtils.getSingers(musicInfo), musicInfo.getAlbumName()));
+        }
+        holder.ivMv.setVisibility(musicInfo.isLocal() || TextUtils.equals("0", musicInfo.getMvId()) ? View.GONE : View.VISIBLE);
+        holder.ivMore.setOnClickListener(v -> {
+            BottomMusicInfoDialog bottomMusicInfoDialog = new BottomMusicInfoDialog();
+            Bundle args = new Bundle();
+            args.putSerializable(KEY_MUSIC_INFO, musicInfo);
+            bottomMusicInfoDialog.setArguments(args);
+            bottomMusicInfoDialog.show(fragmentManager, MusicAdapter.class.getSimpleName());
+        });
     }
 
     class Holder extends RecyclerView.ViewHolder {

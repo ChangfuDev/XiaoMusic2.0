@@ -6,8 +6,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionOverflowButtonStyle">@style/Action_OverflowButtonStyle</item>
     </style>
 
+    <!--修改menu更多的图标-->
+    <style name="Action_OverflowButtonStyle" parent="@android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/p9</item>
+    </style>
     <style name="AppTheme.Transparent" parent="AppTheme">
         <item name="windowNoTitle">true</item>
         <!--<item name="android:windowIsTranslucent">true</item>-->

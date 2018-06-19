@@ -158,7 +158,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         GlideUtils.loadImg(getContext(), cover, GlideUtils.TYPE_TRANSFORM_BLUR, tbBg);
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
 
-        adapter = new MusicAdapter();
+        adapter = new MusicAdapter(getFragmentManager());
         recyclerView.setAdapter(adapter);
     }
 

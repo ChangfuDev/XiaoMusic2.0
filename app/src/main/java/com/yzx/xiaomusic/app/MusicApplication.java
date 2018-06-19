@@ -1,10 +1,18 @@
 package com.yzx.xiaomusic.app;
 
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+
 import com.kingja.loadsir.core.LoadSir;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.yzx.commonlibrary.base.CommonBaseApplication;
+import com.yzx.xiaomusic.service.MusicService;
+import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
@@ -32,11 +40,31 @@ public class MusicApplication extends CommonBaseApplication {
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
         LoadSir.beginBuilder()
-                .addCallback(new ErrorCallback())//添加各种状态页
+                //添加各种状态页
+                .addCallback(new ErrorCallback())
                 .addCallback(new EmptyCallback())
                 .addCallback(new LoadingCallback())
-                .setDefaultCallback(LoadingCallback.class)//设置默认状态页
+                //设置默认状态页
+                .setDefaultCallback(LoadingCallback.class)
                 .commit();
+
+        //绑定服务
+        Intent serviceIntent = new Intent(this, MusicService.class);
+        ServiceConnection conn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                //获取服务
+                MusicService.MusicBinder musicBinder = (MusicService.MusicBinder) service;
+                //设置服务管理类
+                ServiceManager.getInstance().setService(musicBinder.getService());
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+        bindService(serviceIntent, conn, Service.BIND_AUTO_CREATE);
     }
 
     @Override

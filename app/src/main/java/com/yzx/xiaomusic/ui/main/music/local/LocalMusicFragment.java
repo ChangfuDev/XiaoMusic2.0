@@ -1,23 +1,34 @@
 package com.yzx.xiaomusic.ui.main.music.local;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kingja.loadsir.callback.Callback;
+import com.kingja.loadsir.core.LoadSir;
 import com.yzx.xiaomusic.R;
-import com.yzx.xiaomusic.base.BaseFragment;
+import com.yzx.xiaomusic.base.BaseMvpFragment;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
+
+import java.util.List;
 
 import butterknife.BindView;
+import butterknife.Unbinder;
 
 /**
  * @author yzx
  * @date 2018/6/15
  * Description 本地歌曲
  */
-public class LocalMusicFragment extends BaseFragment implements Toolbar.OnMenuItemClickListener {
+public class LocalMusicFragment extends BaseMvpFragment<LocalMusicPresenter> implements Toolbar.OnMenuItemClickListener {
 
     @BindView(R.id.tv_title)
     TextView tvTitle;
@@ -25,6 +36,26 @@ public class LocalMusicFragment extends BaseFragment implements Toolbar.OnMenuIt
     Toolbar tb;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.tv_des)
+    TextView tvDes;
+    Unbinder unbinder;
+    private MusicAdapter adapter;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        //重新注册到View里
+        loadService = LoadSir
+                .getDefault()
+                .register(recyclerView, (Callback.OnReloadListener) v -> mPresenter.getLocalMusics());
+        return view;
+    }
+
+    @Override
+    protected LocalMusicPresenter getPresenter() {
+        return new LocalMusicPresenter();
+    }
 
     @Override
     protected int initContentViewId() {
@@ -37,6 +68,15 @@ public class LocalMusicFragment extends BaseFragment implements Toolbar.OnMenuIt
         tvTitle.setText(R.string.localMusic);
         tb.inflateMenu(R.menu.menu_music_local);
         tb.setOnMenuItemClickListener(this);
+
+        adapter = new MusicAdapter(getChildFragmentManager());
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onEnterAnimationEnd(Bundle savedInstanceState) {
+        super.onEnterAnimationEnd(savedInstanceState);
+        mPresenter.getLocalMusics();
     }
 
     @Override
@@ -60,6 +100,10 @@ public class LocalMusicFragment extends BaseFragment implements Toolbar.OnMenuIt
             default:
                 return false;
         }
+    }
+
+    public void setData(List<MusicInfo> musicInfos) {
+        adapter.setData(musicInfos);
     }
 
 }

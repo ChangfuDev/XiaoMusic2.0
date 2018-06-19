@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadSir;
 import com.yzx.commonlibrary.utils.DensityUtils;
-import com.yzx.commonlibrary.utils.LogUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.model.entity.album.AlbumDetail;
@@ -156,7 +155,7 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> {
         GlideUtils.loadImg(getContext(), cover, GlideUtils.TYPE_TRANSFORM_BLUR, tbBg);
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
 
-        adapter = new MusicAdapter();
+        adapter = new MusicAdapter(getFragmentManager());
         recyclerView.setAdapter(adapter);
     }
 
