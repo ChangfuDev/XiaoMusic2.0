@@ -64,12 +64,26 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         this.songSheet = songSheet;
     }
 
+    public List<MusicInfo> getSongSheet() {
+        return songSheet;
+    }
+
     public MusicInfo getMusicInfo() {
         return musicInfo;
     }
 
     public void setPlayMode(int playMode) {
         this.playMode = playMode;
+    }
+
+    public void setMusicIndex(int position) {
+        this.index = position;
+        musicInfo = songSheet.get(position);
+        Log.i(TAG, "setMusicIndex: " + musicInfo.getMusicName() + position);
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     /**
@@ -260,11 +274,6 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         return new MusicBinder();
     }
 
-    public void setMusicIndex(int position) {
-        this.index = position;
-        musicInfo = songSheet.get(position);
-        Log.i(TAG, "setMusicIndex: " + musicInfo.getMusicName() + position);
-    }
 
     public class MusicBinder extends Binder {
         public MusicService getService() {

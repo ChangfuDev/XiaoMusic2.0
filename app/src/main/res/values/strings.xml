@@ -61,4 +61,7 @@
     <string name="MusicQuality">音质</string>
     <string name="video">视频</string>
     <string name="timeStopPlay">定时停止播放</string>
+    <string name="recommend">推荐</string>
+    <string name="friend">朋友</string>
+    <string name="radio">电台</string>
 </resources>
