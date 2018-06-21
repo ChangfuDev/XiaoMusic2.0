@@ -20,14 +20,18 @@ import android.widget.TextView;
 
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadSir;
+import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SingerInfo;
 import com.yzx.xiaomusic.model.entity.songsheet.SongSheetDetail;
+import com.yzx.xiaomusic.service.MusicService;
+import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.common.CoverInfoFragment;
+import com.yzx.xiaomusic.ui.play.PlayFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
 
@@ -52,7 +56,7 @@ import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
  * @date 2018/6/12
  * Description 歌单详情
  */
-public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPresenter> {
+public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPresenter> implements CommonBaseAdapter.OnItemClickListener {
     @BindView(R.id.iv_bg)
     ImageView ivBg;
     @BindView(R.id.tv_play_count)
@@ -159,6 +163,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
 
         adapter = new MusicAdapter(getFragmentManager());
+        adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -191,12 +196,13 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
                     MusicInfo musicInfo = new MusicInfo();
                     musicInfo.setMusicId(String.valueOf(tracksBean.getId()));
                     musicInfo.setMusicName(tracksBean.getName());
-
+                    musicInfo.setDuration(tracksBean.getDuration());
                     musicInfo.setMvId(String.valueOf(tracksBean.getMvid()));
                     SongSheetDetail.ResultBean.TracksBean.AlbumBean album = tracksBean.getAlbum();
                     if (album != null) {
                         musicInfo.setAlbumId(String.valueOf(album.getId()));
                         musicInfo.setAlbumName(album.getName());
+                        musicInfo.setAlbumCoverPath(album.getBlurPicUrl());
                     }
 
                     List<SongSheetDetail.ResultBean.TracksBean.ArtistsBeanX> artists = tracksBean.getArtists();
@@ -264,5 +270,14 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        MusicService service = ServiceManager.getInstance().getService();
+        service.setSongSheet(adapter.datas);
+        service.setMusicIndex(position);
+        service.realPlay();
+        start(new PlayFragment(), SINGLETASK);
     }
 }

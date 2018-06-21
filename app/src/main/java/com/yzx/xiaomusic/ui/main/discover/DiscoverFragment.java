@@ -6,6 +6,10 @@ import android.view.LayoutInflater;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
 import com.yzx.xiaomusic.R;
 
+/**
+ * @author yzx
+ * 发现页面
+ */
 public class DiscoverFragment extends CommonBaseFragment {
     @Override
     protected int initContentViewId() {

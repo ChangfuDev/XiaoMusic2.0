@@ -5,6 +5,9 @@ import android.annotation.SuppressLint;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * @author yzx
+ */
 public class TimeUtils {
 
     public static final String FORMAT_MM_SS = "mm:ss";

@@ -13,10 +13,14 @@ import android.widget.TextView;
 
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadSir;
+import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.service.MusicService;
+import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
+import com.yzx.xiaomusic.ui.play.PlayFragment;
 
 import java.util.List;
 
@@ -28,7 +32,7 @@ import butterknife.Unbinder;
  * @date 2018/6/15
  * Description 本地歌曲
  */
-public class LocalMusicFragment extends BaseMvpFragment<LocalMusicPresenter> implements Toolbar.OnMenuItemClickListener {
+public class LocalMusicFragment extends BaseMvpFragment<LocalMusicPresenter> implements Toolbar.OnMenuItemClickListener, CommonBaseAdapter.OnItemClickListener {
 
     @BindView(R.id.tv_title)
     TextView tvTitle;
@@ -70,6 +74,7 @@ public class LocalMusicFragment extends BaseMvpFragment<LocalMusicPresenter> imp
         tb.setOnMenuItemClickListener(this);
 
         adapter = new MusicAdapter(getChildFragmentManager());
+        adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -106,4 +111,12 @@ public class LocalMusicFragment extends BaseMvpFragment<LocalMusicPresenter> imp
         adapter.setData(musicInfos);
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        MusicService service = ServiceManager.getInstance().getService();
+        service.setSongSheet(adapter.datas);
+        service.setMusicIndex(position);
+        service.realPlay();
+        start(new PlayFragment(), SINGLETASK);
+    }
 }

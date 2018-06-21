@@ -27,5 +27,22 @@
             android:textColor="@color/colorWhite"
             android:textSize="14sp"
             tools:text="标题" />
+
+        <TextView
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            android:drawablePadding="5dp"
+            android:drawableEnd="@drawable/a2i"
+            android:paddingTop="5dp"
+            android:id="@+id/tv_subTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/colorLightWhite"
+            android:textSize="10sp"
+            tools:text="副标题"
+            tools:ignore="SmallSp" />
+
     </LinearLayout>
 </android.support.v7.widget.Toolbar>

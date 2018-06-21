@@ -37,6 +37,9 @@ import butterknife.OnClick;
 
 import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
+/**
+ * @author yzx
+ */
 public class SingerDetailsFragment extends BaseFragment {
     @BindView(R.id.iv_head)
     ImageView ivHead;

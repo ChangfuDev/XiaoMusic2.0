@@ -94,4 +94,11 @@ public class GlideUtils {
 
         apply.into(imageView);
     }
+
+    public static void loadBlurImg(Context context, Object resource, ImageView imageView) {
+        RequestOptions requestOptions = new RequestOptions();
+        Glide.with(context).load(resource)
+                .apply(requestOptions.transform(new BlurTransformation(10, 40)))
+                .transition(DrawableTransitionOptions.withCrossFade(300)).into(imageView);
+    }
 }

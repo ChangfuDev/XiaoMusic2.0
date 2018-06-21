@@ -28,6 +28,10 @@ public class ApiConstant {
 
     public static final String TYPE_ALBUM = "album";
 
+    public static final String TYPE_SONG = "song";
+
+    public static final String BR_320 ="320000";
+
     /**
      * 分页时，每页加载数量
      */
