@@ -1,5 +1,6 @@
 package com.yzx.xiaomusic.service;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -14,15 +15,27 @@ import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.app.MusicApplication;
 import com.yzx.xiaomusic.model.entity.MusicAddress;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.network.api.MusicApi;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_BUFFER;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_PROGRESS;
 import static com.yzx.xiaomusic.network.ApiConstant.BR_320;
 
 /**
@@ -37,6 +50,8 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     public static final int PLAY_MODE_SINGLE = 2;
     public static final int PLAY_MODE_RANDOM = 3;
     private int playMode = PLAY_MODE_LOOP;
+
+    CompositeDisposable mDisposable = new CompositeDisposable();
     MusicInfo musicInfo;
     /**
      * 歌单
@@ -46,6 +61,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     private int index;
     private boolean prepared;
     private Random random;
+    private Disposable disposable;
 
 
     @Override
@@ -79,6 +95,8 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     public void setMusicIndex(int position) {
         this.index = position;
         musicInfo = songSheet.get(position);
+        //TODO EventBus 歌曲改变
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.TYPE_MUSIC_CHANGED, musicInfo));
         Log.i(TAG, "setMusicIndex: " + musicInfo.getMusicName() + position);
     }
 
@@ -97,12 +115,51 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 //        缓存不足时，先暂停
         if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 1) {
             mp.pause();
+            sendPauseEvent();
         } else {
             if (!mp.isPlaying()) {
                 mp.start();
+                sendPlayingEvent();
             }
         }
+        EventBus.getDefault().post(new MessageEvent(TYPE_MUSIC_UPDATE_BUFFER, percent));
         Log.i(TAG, musicInfo.getMusicName() + "onBufferingUpdate: " + percent + "---" + (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration())));
+    }
+
+    @SuppressLint("CheckResult")
+    private void sendPlayingEvent() {
+        EventBus.getDefault().post(new MessageEvent(TYPE_MUSIC_PLAYING));
+        Log.i(TAG, "sendPlayingEvent: ");
+        Observable
+                .interval(500, TimeUnit.MILLISECONDS)
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+//                        Log.i(TAG, "onNext: " + mediaPlayer.getCurrentPosition());
+                        EventBus.getDefault().post(new MessageEvent(TYPE_MUSIC_UPDATE_PROGRESS, mediaPlayer.getCurrentPosition()));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private void sendPauseEvent() {
+        EventBus.getDefault().post(new MessageEvent(TYPE_MUSIC_PAUSE));
+        disposable.dispose();
+//        mDisposable.dispose();
     }
 
     /**
@@ -115,6 +172,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         prepared = true;
         if (!mediaPlayer.isPlaying()) {
             mp.start();
+            sendPlayingEvent();
         }
     }
 
@@ -126,6 +184,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     @Override
     public void onCompletion(MediaPlayer mp) {
         Log.i(TAG, musicInfo.getMusicName() + "onCompletion: 播放完成");
+        sendPauseEvent();
         index++;
         setMusicIndex(index);
         next();
@@ -139,8 +198,10 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     public void playPause() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
+            sendPauseEvent();
         } else if (prepared) {
             mediaPlayer.start();
+            sendPlayingEvent();
         } else {
             realPlay();
         }
@@ -154,7 +215,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                 case PLAY_MODE_LOOP:
                 case PLAY_MODE_SINGLE:
                     //最后一首
-                    if (index == songSheet.size() - 1) {
+                    if (index == songSheet.size() - 2) {
                         setMusicIndex(0);
                     } else {
                         index++;
@@ -255,7 +316,6 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
             ToastUtils.showToast("播放失败");
             Log.e(TAG, "onFail: " + e.toString());
         }
-
     }
 
     public void getMusicAddress(String id, CommonMvpObserver<MusicAddress> observer) {

@@ -1,9 +1,9 @@
 package com.yzx.xiaomusic.ui.main.discover.recommend;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -61,7 +61,6 @@ public class RecommendFragment extends BaseMvpFragment<RecommendPresenter> imple
         recyclerView.addItemDecoration(new GridItemDecoration(3, (int) DensityUtils.dip2px(3), true));
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((view, position) -> {
-            Log.i("ygl", "initView: 点击了");
             Bundle bundle = new Bundle();
             SongSheetList.PlaylistsBean playlistsBean = adapter.datas.get(position);
             bundle.putString(KEY_ID, String.valueOf(playlistsBean.getId()));
@@ -79,9 +78,10 @@ public class RecommendFragment extends BaseMvpFragment<RecommendPresenter> imple
         mPresenter.getSongSheet(0);
     }
 
+
     @Override
-    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-        super.onEnterAnimationEnd(savedInstanceState);
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         mPresenter.getSongSheet(0);
     }
 

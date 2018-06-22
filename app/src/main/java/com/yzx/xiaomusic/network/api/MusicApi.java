@@ -1,5 +1,6 @@
 package com.yzx.xiaomusic.network.api;
 
+import com.yzx.xiaomusic.model.entity.Lyric;
 import com.yzx.xiaomusic.model.entity.MusicAddress;
 
 import io.reactivex.Observable;
@@ -32,4 +33,13 @@ public interface MusicApi {
      */
     @GET("https://api.imjad.cn/cloudmusic")
     Observable<MusicAddress> getMusicAddress(@Query("type") String type, @Query("id") String id, @Query("br") String br);
+
+    /**
+     * 获取歌词
+     *
+     * @param id
+     * @return
+     */
+    @GET("https://api.imjad.cn/cloudmusic")
+    Observable<Lyric> getMusicLyrics(@Query("type") String type, @Query("id") String id);
 }

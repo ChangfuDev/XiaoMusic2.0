@@ -15,6 +15,7 @@ import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadService;
 import com.kingja.loadsir.core.LoadSir;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
+import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
 
@@ -28,6 +29,7 @@ import me.yokeyword.fragmentation.SupportFragment;
 public abstract class BaseFragment extends CommonBaseFragment {
 
     public LoadService loadService;
+    public MusicService service;
 
     @Override
     public void onAttach(Context context) {
@@ -42,7 +44,6 @@ public abstract class BaseFragment extends CommonBaseFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         loadService = LoadSir.getDefault().register(view, (Callback.OnReloadListener) v -> reload(v));
         loadService.showSuccess();
-
         return loadService.getLoadLayout();
     }
 
@@ -67,6 +68,7 @@ public abstract class BaseFragment extends CommonBaseFragment {
             }
         }
     }
+
 
     /**
      * 普通开启

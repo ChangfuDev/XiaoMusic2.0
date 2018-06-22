@@ -5,7 +5,9 @@ import com.umeng.socialize.UMShareAPI;
 import com.yzx.commonlibrary.base.CommonBaseActivity;
 
 /**
- * Created by yzx on 2018/5/15.
+ *
+ * @author yzx
+ * @date 2018/5/15
  * Description 做一些三方操作，例如友盟统计、内存泄漏检测等
  */
 public abstract class ThirdPartActivity extends CommonBaseActivity {

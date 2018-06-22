@@ -18,7 +18,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- *
  * @author yzx
  * @date 2018/6/21
  * Description 歌单列表Adapter
@@ -37,7 +36,8 @@ public class SongSheetListAdapter extends CommonBaseAdapter<SongSheetListAdapter
         Context context = holder.itemView.getContext();
         SongSheetList.PlaylistsBean playlistsBean = datas.get(position);
         GlideUtils.loadImg(context, playlistsBean.getCoverImgUrl(), GlideUtils.TYPE_TRANSFORM_DEFAULT, holder.ivCover);
-        holder.tvPlayCount.setText(String.valueOf(playlistsBean.getPlayCount()));
+        int playCount = playlistsBean.getPlayCount();
+        holder.tvPlayCount.setText(playCount > 10000 ? String.format("%s万", String.valueOf(playCount / 10000)) : String.valueOf(playCount));
         holder.tvSongSheetDes.setText(playlistsBean.getName());
     }
 

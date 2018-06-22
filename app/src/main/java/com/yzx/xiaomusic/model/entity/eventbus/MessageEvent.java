@@ -1,17 +1,43 @@
 package com.yzx.xiaomusic.model.entity.eventbus;
 
 /**
- * Created by yzx on 2018/5/17.
+ * @author yzx
+ * @date 2018/5/17
  * Description
  */
 public class MessageEvent {
+    public static final int TYPE_SEARCH_CONTENT = 1;
+    /**
+     * 歌曲改变
+     */
+    public static final int TYPE_MUSIC_CHANGED = 2;
+    /**
+     * 缓存进度
+     */
+    public static final int TYPE_MUSIC_UPDATE_BUFFER = 3;
+    /**
+     * 播放
+     */
+    public static final int TYPE_MUSIC_PLAYING = 4;
+    /**
+     * 暂停
+     */
+    public static final int TYPE_MUSIC_PAUSE = 5;
+
+    /**
+     * 更新歌曲播放进度
+     */
+    public static final int TYPE_MUSIC_UPDATE_PROGRESS = 6;
+
+    public MessageEvent(int type) {
+        this.type = type;
+    }
 
     public MessageEvent(int type, Object content) {
         this.type = type;
         this.content = content;
     }
 
-    public static final int TYPE_SEARCH_CONTENT = 1;
     int type;
     Object content;
 

@@ -1,11 +1,14 @@
 package com.yzx.xiaomusic.ui.play;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.play.card.PlayCardFragment;
@@ -21,8 +25,19 @@ import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.utils.TimeUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.Unbinder;
+
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_BUFFER;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_PROGRESS;
 
 /**
  * @author yzx
@@ -47,11 +62,20 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
     TextView tvDuration;
     @BindView(R.id.iv_bg)
     ImageView ivBg;
-    private int showPage;
+    @BindView(R.id.iv_play_pause)
+    ImageView ivPlayPause;
+    Unbinder unbinder;
     private MusicInfo musicInfo;
     private MusicService service;
-    private PlayCardFragment playCardFragment;
-    private LyricFragment lyricFragment;
+    public PlayCardFragment playCardFragment;
+    public LyricFragment lyricFragment;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
     @Override
     protected PlayPresenter getPresenter() {
@@ -86,6 +110,7 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         if (!musicInfo.isLocal()) {
             GlideUtils.loadBlurImg(getContext(), musicInfo.getAlbumCoverPath(), ivBg);
         }
+        tvCurrentProgress.setText("00:00");
         tvDuration.setText(TimeUtils.getFormatData(musicInfo.getDuration(), TimeUtils.FORMAT_MM_SS));
     }
 
@@ -108,6 +133,7 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 service.previous();
                 break;
             case R.id.iv_play_pause:
+                service.playPause();
                 break;
             case R.id.iv_next:
                 service.next();
@@ -125,6 +151,45 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 return true;
             default:
                 return false;
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        switch (event.getType()) {
+            case TYPE_MUSIC_CHANGED:
+                musicInfo = service.getMusicInfo();
+                tvTitle.setText(musicInfo.getMusicName());
+                tvSubTitle.setText(MusicDataUtils.getSingers(musicInfo));
+                seekBar.setMax((int) musicInfo.getDuration());
+                if (!musicInfo.isLocal()) {
+                    GlideUtils.loadBlurImg(getContext(), musicInfo.getAlbumCoverPath(), ivBg);
+                }
+                break;
+            case TYPE_MUSIC_UPDATE_BUFFER:
+                seekBar.setMax((int) musicInfo.getDuration());
+                seekBar.setSecondaryProgress((int) (musicInfo.getDuration() * ((int) event.getContent()) / 100));
+                break;
+            case TYPE_MUSIC_PLAYING:
+                ivPlayPause.setImageResource(R.drawable.acq);
+                break;
+            case TYPE_MUSIC_PAUSE:
+                ivPlayPause.setImageResource(R.drawable.acs);
+                break;
+            case TYPE_MUSIC_UPDATE_PROGRESS:
+                Integer content = (Integer) event.getContent();
+                seekBar.setMax((int) musicInfo.getDuration());
+//                Log.i(TAG, "onMessageEvent: " + seekBar.getMax() + content);
+                seekBar.setProgress(content);
+                tvCurrentProgress.setText(TimeUtils.getFormatData(content, TimeUtils.FORMAT_MM_SS));
+                break;
+
         }
     }
 }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <com.yzx.xiaomusic.widget.DarkerImageView
         android:id="@+id/iv_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +34,7 @@
 
             <TextView
                 android:id="@+id/tv_current_progress"
-                android:layout_width="30dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/colorLightWhite"
@@ -45,12 +45,13 @@
             <android.support.v7.widget.AppCompatSeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="0dp"
+                android:secondaryProgressTint="@color/colorLightWhite"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tv_duration"
-                android:layout_width="30dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/colorLightWhite"
