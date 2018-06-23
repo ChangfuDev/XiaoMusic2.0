@@ -13,7 +13,7 @@ import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.model.entity.user.UserSongSheet;
 import com.yzx.xiaomusic.ui.adapter.SongSheetAdapter;
-import com.yzx.xiaomusic.ui.songsheet.SongSheetDetailFragment;
+import com.yzx.xiaomusic.ui.songsheet.detail.SongSheetDetailFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 
 import butterknife.BindView;

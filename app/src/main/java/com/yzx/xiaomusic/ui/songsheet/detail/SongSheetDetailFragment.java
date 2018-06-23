@@ -1,4 +1,4 @@
-package com.yzx.xiaomusic.ui.songsheet;
+package com.yzx.xiaomusic.ui.songsheet.detail;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -27,11 +27,8 @@ import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SingerInfo;
 import com.yzx.xiaomusic.model.entity.songsheet.SongSheetDetail;
-import com.yzx.xiaomusic.service.MusicService;
-import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.common.CoverInfoFragment;
-import com.yzx.xiaomusic.ui.play.PlayFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
 
@@ -274,10 +271,6 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
 
     @Override
     public void onItemClick(View view, int position) {
-        MusicService service = ServiceManager.getInstance().getService();
-        service.setSongSheet(adapter.datas);
-        service.setMusicIndex(position);
-        service.realPlay();
-        start(new PlayFragment(), SINGLETASK);
+        playMusicWithStartFragment(adapter.datas, position);
     }
 }

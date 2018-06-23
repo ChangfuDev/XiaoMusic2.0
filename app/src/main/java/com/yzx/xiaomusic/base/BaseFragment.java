@@ -15,11 +15,15 @@ import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadService;
 import com.kingja.loadsir.core.LoadSir;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.service.MusicService;
+import com.yzx.xiaomusic.service.ServiceManager;
+import com.yzx.xiaomusic.ui.play.PlayFragment;
 import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import me.yokeyword.fragmentation.SupportFragment;
 
@@ -160,6 +164,26 @@ public abstract class BaseFragment extends CommonBaseFragment {
         if (loadService != null) {
             loadService.showSuccess();
         }
+    }
+
+    /**
+     * 播放音乐并开启播放页面
+     *
+     * @param songSheet
+     * @param position
+     */
+    public void playMusicWithStartFragment(List<MusicInfo> songSheet, int position) {
+        MusicService service = ServiceManager.getInstance().getService();
+        service.setSongSheet(songSheet);
+
+        //同一首歌
+        if (songSheet.get(position) != service.getMusicInfo()) {
+            service.setMusicIndex(position);
+            service.realPlay();
+        }
+//        service.setMusicIndex(position);
+//        service.realPlay();
+        start(new PlayFragment(), SINGLETASK);
     }
 
 }

@@ -3,6 +3,7 @@ package com.yzx.xiaomusic.service;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
@@ -44,7 +45,7 @@ import static com.yzx.xiaomusic.network.ApiConstant.BR_320;
  * Description 音乐服务
  */
 
-public class MusicService extends Service implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnSeekCompleteListener {
+public class MusicService extends Service implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnErrorListener {
     public static final String TAG = "ygl" + MusicService.class.getSimpleName();
     public static final int PLAY_MODE_LOOP = 1;
     public static final int PLAY_MODE_SINGLE = 2;
@@ -62,6 +63,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     private boolean prepared;
     private Random random;
     private Disposable disposable;
+    private int buffer;
 
 
     @Override
@@ -72,6 +74,12 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnSeekCompleteListener(this);
+        mediaPlayer.setOnErrorListener(this);
+        AudioAttributes attributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build();
+        mediaPlayer.setAudioAttributes(attributes);
         random = new Random();
         Log.d(TAG, "onCreate: ");
     }
@@ -104,6 +112,10 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         return index;
     }
 
+    public int getBuffer() {
+        return buffer;
+    }
+
     /**
      * 进度更新
      *
@@ -122,6 +134,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                 sendPlayingEvent();
             }
         }
+        buffer = percent;
         EventBus.getDefault().post(new MessageEvent(TYPE_MUSIC_UPDATE_BUFFER, percent));
         Log.i(TAG, musicInfo.getMusicName() + "onBufferingUpdate: " + percent + "---" + (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration())));
     }
@@ -162,6 +175,10 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 //        mDisposable.dispose();
     }
 
+    public boolean isPlaying() {
+        return mediaPlayer.isPlaying();
+    }
+
     /**
      * 准备好监听
      *
@@ -184,10 +201,19 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     @Override
     public void onCompletion(MediaPlayer mp) {
         Log.i(TAG, musicInfo.getMusicName() + "onCompletion: 播放完成");
+        //重置播放缓存
+        buffer = 0;
         sendPauseEvent();
-        index++;
-        setMusicIndex(index);
         next();
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        Log.i(TAG, "onError: " + what);
+        Log.i(TAG, "onError: " + extra);
+//        sendPauseEvent();
+//        next();
+        return false;
     }
 
     @Override
@@ -283,8 +309,11 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                     try {
                         mediaPlayer.setDataSource(getBaseContext(), Uri.parse(url));
                         mediaPlayer.prepareAsync();
+//                        sendPauseEvent();
+//                        mediaPlayer.pause();
                     } catch (Exception e) {
                         e.printStackTrace();
+                        next();
                         Log.e(TAG, "onSuccess: " + e.toString());
                     }
                 } else {
@@ -312,8 +341,11 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         try {
             mediaPlayer.setDataSource(musicInfo.getPath());
             mediaPlayer.prepareAsync();
+//            mediaPlayer.pause();
+//            sendPauseEvent();
         } catch (Exception e) {
             ToastUtils.showToast("播放失败");
+            next();
             Log.e(TAG, "onFail: " + e.toString());
         }
     }
@@ -333,7 +365,6 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     public IBinder onBind(Intent intent) {
         return new MusicBinder();
     }
-
 
     public class MusicBinder extends Binder {
         public MusicService getService() {

@@ -1,4 +1,4 @@
-package com.yzx.xiaomusic.ui.songsheet;
+package com.yzx.xiaomusic.ui.songsheet.detail;
 
 import com.yzx.commonlibrary.base.mvp.CommonBasePresenter;
 import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;

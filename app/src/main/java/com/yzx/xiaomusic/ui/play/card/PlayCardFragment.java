@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class PlayCardFragment extends BaseFragment {
                     if (targetSnapPosition != service.getIndex()) {
                         service.setMusicIndex(targetSnapPosition);
                         service.realPlay();
+                        Log.i(TAG, "onScrollStateChanged: " + service.getMusicInfo().getMusicName() + targetSnapPosition);
                     }
                 }
             }
@@ -83,6 +85,12 @@ public class PlayCardFragment extends BaseFragment {
             PlayFragment playFragment = (PlayFragment) getParentFragment();
             playFragment.showHideFragment(playFragment.lyricFragment, this);
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        recyclerView.scrollToPosition(service.getIndex());
     }
 
     @OnClick({R.id.iv_like, R.id.iv_download, R.id.iv_evaluate, R.id.iv_more})

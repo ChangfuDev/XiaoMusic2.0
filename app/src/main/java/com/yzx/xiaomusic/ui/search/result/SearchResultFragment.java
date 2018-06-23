@@ -25,7 +25,7 @@ import com.yzx.xiaomusic.ui.adapter.SearchResultAdapter;
 import com.yzx.xiaomusic.ui.album.AlbumDetailFragment;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
 import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
-import com.yzx.xiaomusic.ui.songsheet.SongSheetDetailFragment;
+import com.yzx.xiaomusic.ui.songsheet.detail.SongSheetDetailFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 

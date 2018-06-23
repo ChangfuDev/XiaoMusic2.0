@@ -107,11 +107,23 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         tvSubTitle.setVisibility(View.VISIBLE);
         tvTitle.setText(musicInfo.getMusicName());
         tvSubTitle.setText(MusicDataUtils.getSingers(musicInfo));
+
         if (!musicInfo.isLocal()) {
             GlideUtils.loadBlurImg(getContext(), musicInfo.getAlbumCoverPath(), ivBg);
         }
         tvCurrentProgress.setText("00:00");
         tvDuration.setText(TimeUtils.getFormatData(musicInfo.getDuration(), TimeUtils.FORMAT_MM_SS));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //更新缓存进度
+        seekBar.setMax((int) musicInfo.getDuration());
+        seekBar.setSecondaryProgress((int) (musicInfo.getDuration() * (service.getBuffer()) / 100));
+        //更新播放状态
+        ivPlayPause.setImageResource(service.isPlaying() ? R.drawable.acq : R.drawable.acs);
+
     }
 
     @OnClick({R.id.tv_subTitle, R.id.tb, R.id.iv_play_mode, R.id.iv_previous, R.id.iv_play_pause, R.id.iv_next, R.id.iv_song_sheet})

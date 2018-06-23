@@ -64,4 +64,11 @@
     <string name="recommend">推荐</string>
     <string name="friend">朋友</string>
     <string name="radio">电台</string>
+    <string name="privateFM">私人FM</string>
+    <string name="dayRecommend">每日推荐</string>
+    <string name="songSheet">歌单</string>
+    <string name="rank">排行榜</string>
+    <string name="fineSongSheet">精品歌单</string>
+    <string name="reommendSongSheet">推荐歌单</string>
+    <string name="allSongSheet">所有歌单</string>
 </resources>
