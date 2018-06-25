@@ -234,7 +234,7 @@
             android:scaleType="centerCrop"
             app:layout_collapseMode="pin" />
 
-        <include layout="@layout/include_toolbar" />
+        <include layout="@layout/include_toolbar_transparent" />
     </android.support.design.widget.CollapsingToolbarLayout>
 
 </android.support.design.widget.AppBarLayout>

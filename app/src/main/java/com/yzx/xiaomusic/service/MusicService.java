@@ -328,6 +328,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
             @Override
             protected void onFail(int code, String errorMsg) {
                 super.onFail(code, errorMsg);
+                next();
                 ToastUtils.showToast("播放失败");
                 Log.e(TAG, "onFail: " + code + errorMsg);
             }

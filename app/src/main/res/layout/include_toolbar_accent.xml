@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tb"
+    android:background="@color/colorAccent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="25dp"
+    android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:layout_collapseMode="pin"
+    app:navigationIcon="@drawable/oq"
+    app:popupTheme="@style/popMenu_under_actionBar">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:translationX="-20dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp"
+            tools:text="标题" />
+
+        <TextView
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            android:drawablePadding="5dp"
+            android:drawableEnd="@drawable/a2i"
+            android:paddingTop="5dp"
+            android:id="@+id/tv_subTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/colorLightWhite"
+            android:textSize="10sp"
+            tools:text="副标题"
+            tools:ignore="SmallSp" />
+
+    </LinearLayout>
+</android.support.v7.widget.Toolbar>

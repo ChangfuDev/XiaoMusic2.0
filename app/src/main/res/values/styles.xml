@@ -7,12 +7,15 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionOverflowButtonStyle">@style/Action_OverflowButtonStyle</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@color/colorTransparent</item>
     </style>
 
     <!--修改menu更多的图标-->
     <style name="Action_OverflowButtonStyle" parent="@android:style/Widget.Holo.Light.ActionButton.Overflow">
         <item name="android:src">@drawable/p9</item>
     </style>
+
     <style name="AppTheme.Transparent" parent="AppTheme">
         <item name="windowNoTitle">true</item>
         <!--<item name="android:windowIsTranslucent">true</item>-->
@@ -31,12 +34,12 @@
         <item name="colorControlActivated">@color/colorWhite</item>
     </style>
 
-    <!--SmartRefreshLayout禁止刷新样式-->
-    <style name="StyleForbidRefresh">
-        <!--禁止回弹-->
-        <item name="srlEnableOverScrollDrag">false</item>
-        <item name="srlEnableRefresh">false</item>
-    </style>
+    <!--SmartRefreshLayout禁止刷新样式--><style name="StyleForbidRefresh">
+    <!--禁止回弹-->
+    <item name="srlEnableOverScrollDrag">false</item>
+    <item name="srlEnableRefresh">false</item>
+</style>
+
     <style name="popMenu_under_actionBar" parent="@style/ThemeOverlay.AppCompat.Light">
         <!-- 是否覆盖锚点，默认为true，即盖住Toolbar -->
         <!--<item name="overlapAnchor">false</item>-->
