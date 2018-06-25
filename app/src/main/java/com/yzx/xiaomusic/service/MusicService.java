@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -125,15 +124,20 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
 //        缓存不足时，先暂停
-        if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 1) {
-            mp.pause();
-            sendPauseEvent();
-        } else {
-            if (!mp.isPlaying()) {
-                mp.start();
-                sendPlayingEvent();
-            }
-        }
+//        if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 1) {
+//            mp.pause();
+//            sendPauseEvent();
+//        } else {
+//            if (!mp.isPlaying()) {
+//                mp.start();
+//                sendPlayingEvent();
+//            }
+//        }
+
+//        if (percent == 100) {
+//            mp.start();
+//            sendPlayingEvent();
+//        }
         buffer = percent;
         EventBus.getDefault().post(new MessageEvent(TYPE_MUSIC_UPDATE_BUFFER, percent));
         Log.i(TAG, musicInfo.getMusicName() + "onBufferingUpdate: " + percent + "---" + (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration())));
@@ -172,7 +176,6 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     private void sendPauseEvent() {
         EventBus.getDefault().post(new MessageEvent(TYPE_MUSIC_PAUSE));
         disposable.dispose();
-//        mDisposable.dispose();
     }
 
     public boolean isPlaying() {
@@ -187,10 +190,12 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     @Override
     public void onPrepared(MediaPlayer mp) {
         prepared = true;
-        if (!mediaPlayer.isPlaying()) {
-            mp.start();
-            sendPlayingEvent();
-        }
+        mp.start();
+        sendPlayingEvent();
+//        if (!mediaPlayer.isPlaying()) {
+//            mp.start();
+//            sendPlayingEvent();
+//        }
     }
 
     /**
@@ -213,7 +218,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         Log.i(TAG, "onError: " + extra);
 //        sendPauseEvent();
 //        next();
-        return false;
+        return true;
     }
 
     @Override
@@ -241,7 +246,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                 case PLAY_MODE_LOOP:
                 case PLAY_MODE_SINGLE:
                     //最后一首
-                    if (index == songSheet.size() - 2) {
+                    if (index == songSheet.size() - 1) {
                         setMusicIndex(0);
                     } else {
                         index++;
@@ -307,13 +312,10 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                 String url = musicAddress.getData().get(0).getUrl();
                 if (url != null) {
                     try {
-                        mediaPlayer.setDataSource(getBaseContext(), Uri.parse(url));
+                        mediaPlayer.setDataSource(url);
                         mediaPlayer.prepareAsync();
-//                        sendPauseEvent();
-//                        mediaPlayer.pause();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        next();
                         Log.e(TAG, "onSuccess: " + e.toString());
                     }
                 } else {
@@ -345,7 +347,6 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 //            sendPauseEvent();
         } catch (Exception e) {
             ToastUtils.showToast("播放失败");
-            next();
             Log.e(TAG, "onFail: " + e.toString());
         }
     }
