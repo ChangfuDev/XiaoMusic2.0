@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.kingja.loadsir.core.LoadSir;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
@@ -21,6 +22,7 @@ import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
 
 import static com.yzx.xiaomusic.Constant.BASE_URL;
+import static com.yzx.xiaomusic.Constant.KEY_BUGLY;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SERVICE_CREATED;
 
 /**
@@ -35,6 +37,12 @@ public class MusicApplication extends CommonBaseApplication {
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
     }
 
+//    @Override
+//    protected void attachBaseContext(Context base) {
+//        super.attachBaseContext(context);
+//        Multidex.install(this);
+//    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -42,7 +50,7 @@ public class MusicApplication extends CommonBaseApplication {
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
         UMConfigure.setLogEnabled(true);
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-
+        CrashReport.initCrashReport(getApplicationContext(), KEY_BUGLY, true);
         LoadSir.beginBuilder()
                 //添加各种状态页
                 .addCallback(new ErrorCallback())

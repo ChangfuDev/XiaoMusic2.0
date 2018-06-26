@@ -11,6 +11,7 @@ public class Constant {
      * 友盟的Key
      */
     public static final String KEY_UMENG = "5af951658f4a9d5a42000040";
+    public static final String KEY_BUGLY = "48270824a9";
 
     /**
      * baseUrl

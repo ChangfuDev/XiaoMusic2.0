@@ -13,6 +13,11 @@ android {
         manifestPlaceholders = [qqappid: "你的qq appid"]
 //        manifestPlaceholders = [UMENG_CHANNEL: "你的qq appid"]
         flavorDimensions("channel")
+
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -104,4 +109,10 @@ dependencies {
     implementation files('libs/sun.misc.BASE64Decoder.jar')
 //    implementation 'com.github.Lauzy:LyricView:1.0.3'
 //    implementation 'com.sunfusheng:glideimageview:1.2.0'
+
+    //第三方
+    //bugly
+    implementation 'com.tencent.bugly:crashreport:2.6.6.1'
+//    implementation 'com.tencent.bugly:crashreport:2.6.6.1' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+//    implementation 'com.tencent.bugly:nativecrashreport:3.3.1'
 }

@@ -10,6 +10,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
         android:name=".app.MusicApplication"
@@ -29,6 +34,13 @@
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL}" />
 
+        <meta-data
+            android:name="BUGLY_APPID"
+            android:value="48270824a9" />
+        <meta-data
+            android:name="BUGLY_APP_CHANNEL"
+            android:value="${UMENG_CHANNEL}" />
+
         <activity
             android:name=".ui.main.MainActivity"
             android:theme="@style/AppTheme.Transparent">
@@ -39,7 +51,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.MusicService"/>
+        <service android:name=".service.MusicService" />
 
     </application>
 
