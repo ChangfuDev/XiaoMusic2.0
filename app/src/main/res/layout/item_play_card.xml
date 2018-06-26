@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:padding="70dp"
+        android:padding="80dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_default_song_sheet" />
 
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:padding="55dp"
+        android:padding="53dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ad4" />
 </RelativeLayout>

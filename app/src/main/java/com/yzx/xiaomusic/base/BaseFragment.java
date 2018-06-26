@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -93,7 +92,6 @@ public abstract class BaseFragment extends CommonBaseFragment {
      * @param musicController
      */
     public void initBottomMusicController(LinearLayout musicController) {
-        Log.i("yglmusicController", "initBottomMusicController: " + this.getClass().getSimpleName() + service);
         if (service != null) {
             MusicInfo musicInfo = service.getMusicInfo();
             ImageView musicCover = (ImageView) musicController.findViewById(R.id.iv_music_cover);
@@ -110,9 +108,7 @@ public abstract class BaseFragment extends CommonBaseFragment {
                 playPause.setMax((int) musicInfo.getDuration());
             }
         }
-        musicController.findViewById(R.id.iv_play_pause).setOnClickListener(v -> {
-            ServiceManager.getInstance().getService().playPause();
-        });
+        musicController.findViewById(R.id.iv_play_pause).setOnClickListener(v -> ServiceManager.getInstance().getService().playPause());
         musicController.findViewById(R.id.iv_song_sheet).setOnClickListener(v -> {
             BottomSongSheetDialog songSheetDialog = new BottomSongSheetDialog();
             songSheetDialog.show(getChildFragmentManager(), "songSheet");

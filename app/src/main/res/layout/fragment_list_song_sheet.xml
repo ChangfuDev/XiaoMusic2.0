@@ -120,6 +120,7 @@
         android:id="@+id/smartRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="50dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:srlEnableAutoLoadMore="true"
         app:srlEnableHeaderTranslationContent="false"
@@ -136,4 +137,5 @@
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
+    <include layout="@layout/include_bottom_music_controller" />
 </android.support.design.widget.CoordinatorLayout>
