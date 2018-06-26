@@ -65,7 +65,7 @@ public class PlayCardFragment extends BaseFragment {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (SCROLL_STATE_IDLE == newState) {
                     int targetSnapPosition = snapHelper.findTargetSnapPosition(recyclerView.getLayoutManager(), recyclerView.getScrollX(), recyclerView.getScrollY());
-                    if (targetSnapPosition != service.getIndex()) {
+                    if (targetSnapPosition != service.getIndex() && service.getSongSheet() != null) {
                         service.setMusicIndex(targetSnapPosition);
                         service.realPlay();
                         Log.i(TAG, "onScrollStateChanged: " + service.getMusicInfo().getMusicName() + targetSnapPosition);

@@ -6,19 +6,28 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadService;
 import com.kingja.loadsir.core.LoadSir;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
+import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.service.ServiceManager;
+import com.yzx.xiaomusic.ui.dialog.BottomSongSheetDialog;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
+import com.yzx.xiaomusic.utils.GlideUtils;
+import com.yzx.xiaomusic.utils.MusicDataUtils;
+import com.yzx.xiaomusic.widget.CircleProgress;
 import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
 
@@ -26,6 +35,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import me.yokeyword.fragmentation.SupportFragment;
+
+import static com.yzx.xiaomusic.widget.CircleProgress.STATE_PAUSE;
+import static com.yzx.xiaomusic.widget.CircleProgress.STATE_PLAY;
 
 /**
  * @author yzx
@@ -45,9 +57,11 @@ public abstract class BaseFragment extends CommonBaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        service = ServiceManager.getInstance().getService();
         View view = super.onCreateView(inflater, container, savedInstanceState);
         loadService = LoadSir.getDefault().register(view, (Callback.OnReloadListener) v -> reload(v));
         loadService.showSuccess();
+
         return loadService.getLoadLayout();
     }
 
@@ -73,6 +87,38 @@ public abstract class BaseFragment extends CommonBaseFragment {
         }
     }
 
+    /**
+     * 初始化底部音乐控件
+     *
+     * @param musicController
+     */
+    public void initBottomMusicController(LinearLayout musicController) {
+        Log.i("yglmusicController", "initBottomMusicController: " + this.getClass().getSimpleName() + service);
+        if (service != null) {
+            MusicInfo musicInfo = service.getMusicInfo();
+            ImageView musicCover = (ImageView) musicController.findViewById(R.id.iv_music_cover);
+            TextView musicName = (TextView) musicController.findViewById(R.id.tv_music_name);
+            TextView musicSinger = (TextView) musicController.findViewById(R.id.tv_music_singer);
+            CircleProgress playPause = (CircleProgress) musicController.findViewById(R.id.iv_play_pause);
+            if (musicInfo != null) {
+                musicName.setText(musicInfo.getMusicName());
+                musicSinger.setText(MusicDataUtils.getSingers(musicInfo));
+                if (!musicInfo.isLocal()) {
+                    GlideUtils.loadImg(getContext(), musicInfo.getAlbumCoverPath(), musicCover);
+                }
+                playPause.setState(service.isPlaying() ? STATE_PLAY : STATE_PAUSE);
+                playPause.setMax((int) musicInfo.getDuration());
+            }
+        }
+        musicController.findViewById(R.id.iv_play_pause).setOnClickListener(v -> {
+            ServiceManager.getInstance().getService().playPause();
+        });
+        musicController.findViewById(R.id.iv_song_sheet).setOnClickListener(v -> {
+            BottomSongSheetDialog songSheetDialog = new BottomSongSheetDialog();
+            songSheetDialog.show(getChildFragmentManager(), "songSheet");
+        });
+        musicController.setOnClickListener(v -> start(new PlayFragment(), SINGLETASK));
+    }
 
     /**
      * 普通开启
@@ -180,10 +226,10 @@ public abstract class BaseFragment extends CommonBaseFragment {
         if (songSheet.get(position) != service.getMusicInfo()) {
             service.setMusicIndex(position);
             service.realPlay();
+        } else {
+            service.playPause();
+            start(new PlayFragment(), SINGLETASK);
         }
-//        service.setMusicIndex(position);
-//        service.realPlay();
-        start(new PlayFragment(), SINGLETASK);
     }
 
 }

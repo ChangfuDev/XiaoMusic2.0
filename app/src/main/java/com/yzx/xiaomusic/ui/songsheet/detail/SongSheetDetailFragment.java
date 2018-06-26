@@ -26,11 +26,19 @@ import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SingerInfo;
+import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.model.entity.songsheet.SongSheetDetail;
+import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.common.CoverInfoFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
+import com.yzx.xiaomusic.utils.MusicDataUtils;
+import com.yzx.xiaomusic.widget.CircleProgress;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +54,10 @@ import static com.yzx.xiaomusic.Constant.KEY_ID;
 import static com.yzx.xiaomusic.Constant.KEY_NAME;
 import static com.yzx.xiaomusic.Constant.KEY_TAG;
 import static com.yzx.xiaomusic.Constant.KEY_TITLE;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_PROGRESS;
 import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
 /**
@@ -54,6 +66,7 @@ import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
  * Description 歌单详情
  */
 public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPresenter> implements CommonBaseAdapter.OnItemClickListener {
+    private static final String TAG = "yglSongSheetDetailFragment";
     @BindView(R.id.iv_bg)
     ImageView ivBg;
     @BindView(R.id.tv_play_count)
@@ -98,6 +111,16 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     LinearLayout llHead;
     @BindView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
+    @BindView(R.id.iv_music_cover)
+    ImageView ivMusicCover;
+    @BindView(R.id.tv_music_name)
+    TextView tvMusicName;
+    @BindView(R.id.tv_music_singer)
+    TextView tvMusicSinger;
+    @BindView(R.id.iv_play_pause)
+    CircleProgress ivPlayPause;
+    @BindView(R.id.layout_bottom_music_controller)
+    LinearLayout layoutBottomMusicController;
     private MusicAdapter adapter;
     private Bundle arguments;
     private SongSheetDetail.ResultBean result;
@@ -105,6 +128,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     private String name;
     private String cover;
     private String songSheetId;
+    private MusicInfo musicInfo;
 
     @Override
     protected int initContentViewId() {
@@ -119,6 +143,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         loadService = LoadSir
                 .getDefault()
                 .register(recyclerView, (Callback.OnReloadListener) v -> mPresenter.getSongSheetDetail(songSheetId));
+        EventBus.getDefault().register(this);
         return view;
     }
 
@@ -162,6 +187,13 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         adapter = new MusicAdapter(getFragmentManager());
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initBottomMusicController(layoutBottomMusicController);
+        musicInfo = service.getMusicInfo();
     }
 
     @Override
@@ -272,5 +304,37 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     @Override
     public void onItemClick(View view, int position) {
         playMusicWithStartFragment(adapter.datas, position);
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        switch (event.getType()) {
+            case TYPE_MUSIC_CHANGED:
+                service = ServiceManager.getInstance().getService();
+                musicInfo = service.getMusicInfo();
+                tvMusicName.setText(musicInfo.getMusicName());
+                tvMusicSinger.setText(MusicDataUtils.getSingers(musicInfo));
+                if (!musicInfo.isLocal()) {
+                    GlideUtils.loadImg(getContext(), musicInfo.getAlbumCoverPath(), ivMusicCover);
+                }
+                break;
+            case TYPE_MUSIC_PLAYING:
+                ivPlayPause.setState(CircleProgress.STATE_PLAY);
+                break;
+            case TYPE_MUSIC_PAUSE:
+                ivPlayPause.setState(CircleProgress.STATE_PAUSE);
+                break;
+            case TYPE_MUSIC_UPDATE_PROGRESS:
+                Integer content = (Integer) event.getContent();
+                ivPlayPause.setMax((int) musicInfo.getDuration());
+                ivPlayPause.setProgress(content);
+                break;
+        }
     }
 }

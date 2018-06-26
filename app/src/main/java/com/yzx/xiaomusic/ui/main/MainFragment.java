@@ -16,27 +16,46 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.yzx.commonlibrary.base.adapter.CommonBaseFragmentPagerAdapter;
 import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
+import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.NavigationHeadAdapter;
 import com.yzx.xiaomusic.ui.main.discover.DiscoverFragment;
 import com.yzx.xiaomusic.ui.main.music.MusicFragment;
 import com.yzx.xiaomusic.ui.main.video.VideoFragment;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
+import com.yzx.xiaomusic.utils.GlideUtils;
+import com.yzx.xiaomusic.utils.MusicDataUtils;
+import com.yzx.xiaomusic.widget.CircleProgress;
 import com.yzx.xiaomusic.widget.simplelistenner.SimpleTabChangeListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_PROGRESS;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SERVICE_CREATED;
+
 /**
  * @author yzx
  */
 public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClickListener {
+    private static final String TAG = "yglMainFragment";
     @BindView(R.id.tl)
     TabLayout tl;
     @BindView(R.id.tb)
@@ -47,9 +66,22 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
     NavigationView navigationView;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.iv_music_cover)
+    ImageView ivMusicCover;
+    @BindView(R.id.tv_music_name)
+    TextView tvMusicName;
+    @BindView(R.id.tv_music_singer)
+    TextView tvMusicSinger;
+    @BindView(R.id.iv_play_pause)
+    CircleProgress ivPlayPause;
+    @BindView(R.id.iv_song_sheet)
+    ImageView ivSongSheet;
+    @BindView(R.id.layout_bottom_music_controller)
+    LinearLayout layoutBottomMusicController;
     private ArrayList<Integer> navigationMenuTitles;
     private ArrayList<Integer> navigationMenuIcons;
     private ArrayList<Fragment> fragments;
+    private MusicInfo musicInfo;
 
     @Override
     protected int initContentViewId() {
@@ -104,11 +136,14 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
         fragments.add(new MusicFragment());
         fragments.add(new DiscoverFragment());
         fragments.add(new VideoFragment());
+
+        service = ServiceManager.getInstance().getService();
     }
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-
+        EventBus.getDefault().register(this);
+        initBottomMusicController(layoutBottomMusicController);
         initNavigationView();
         tb.setNavigationOnClickListener(v -> {
             if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -140,7 +175,6 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
             }
         });
     }
-
 
     /**
      * 初始化NavigationView
@@ -185,6 +219,42 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
             return true;
         } else {
             return super.onBackPressedSupport();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        switch (event.getType()) {
+            case TYPE_MUSIC_CHANGED:
+                musicInfo = service.getMusicInfo();
+                tvMusicName.setText(musicInfo.getMusicName());
+                tvMusicSinger.setText(MusicDataUtils.getSingers(musicInfo));
+                if (!musicInfo.isLocal()) {
+                    GlideUtils.loadImg(getContext(), musicInfo.getAlbumCoverPath(), ivMusicCover);
+                }
+                break;
+            case TYPE_MUSIC_PLAYING:
+                ivPlayPause.setState(CircleProgress.STATE_PLAY);
+                break;
+            case TYPE_MUSIC_PAUSE:
+                ivPlayPause.setState(CircleProgress.STATE_PAUSE);
+                break;
+            case TYPE_MUSIC_UPDATE_PROGRESS:
+                musicInfo = service.getMusicInfo();
+                Integer content = (Integer) event.getContent();
+                ivPlayPause.setMax((int) musicInfo.getDuration());
+                ivPlayPause.setProgress(content);
+                break;
+            case TYPE_SERVICE_CREATED:
+                service = ServiceManager.getInstance().getService();
+                initBottomMusicController(layoutBottomMusicController);
+                break;
         }
     }
 }

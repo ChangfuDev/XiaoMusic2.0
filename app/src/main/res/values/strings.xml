@@ -71,4 +71,6 @@
     <string name="fineSongSheet">精品歌单</string>
     <string name="reommendSongSheet">推荐歌单</string>
     <string name="allSongSheet">所有歌单</string>
+    <string name="listLoop">列表循环</string>
+    <string name="collectAll">收藏全部</string>
 </resources>

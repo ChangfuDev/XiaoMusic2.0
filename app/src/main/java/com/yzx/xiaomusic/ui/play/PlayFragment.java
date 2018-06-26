@@ -19,6 +19,7 @@ import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.service.ServiceManager;
+import com.yzx.xiaomusic.ui.dialog.BottomSongSheetDialog;
 import com.yzx.xiaomusic.ui.play.card.PlayCardFragment;
 import com.yzx.xiaomusic.ui.play.lyric.LyricFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
@@ -104,23 +105,28 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         tb.inflateMenu(R.menu.menu_share);
         tb.setOnMenuItemClickListener(this);
 
-        tvSubTitle.setVisibility(View.VISIBLE);
-        tvTitle.setText(musicInfo.getMusicName());
-        tvSubTitle.setText(MusicDataUtils.getSingers(musicInfo));
 
-        if (!musicInfo.isLocal()) {
-            GlideUtils.loadBlurImg(getContext(), musicInfo.getAlbumCoverPath(), ivBg);
+        if (musicInfo != null) {
+            tvSubTitle.setVisibility(View.VISIBLE);
+            tvTitle.setText(musicInfo.getMusicName());
+            tvSubTitle.setText(MusicDataUtils.getSingers(musicInfo));
+
+            if (!musicInfo.isLocal()) {
+                GlideUtils.loadBlurImg(getContext(), musicInfo.getAlbumCoverPath(), ivBg);
+            }
+            tvCurrentProgress.setText("00:00");
+            tvDuration.setText(TimeUtils.getFormatData(musicInfo.getDuration(), TimeUtils.FORMAT_MM_SS));
         }
-        tvCurrentProgress.setText("00:00");
-        tvDuration.setText(TimeUtils.getFormatData(musicInfo.getDuration(), TimeUtils.FORMAT_MM_SS));
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //更新缓存进度
-        seekBar.setMax((int) musicInfo.getDuration());
-        seekBar.setSecondaryProgress((int) (musicInfo.getDuration() * (service.getBuffer()) / 100));
+        if (musicInfo != null) {
+            seekBar.setMax((int) musicInfo.getDuration());
+            seekBar.setSecondaryProgress((int) (musicInfo.getDuration() * (service.getBuffer()) / 100));
+        }
         //更新播放状态
         ivPlayPause.setImageResource(service.isPlaying() ? R.drawable.acq : R.drawable.acs);
 
@@ -151,6 +157,9 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 service.next();
                 break;
             case R.id.iv_song_sheet:
+                BottomSongSheetDialog songSheetDialog = new BottomSongSheetDialog();
+//                songSheetDialog.setHostFragment(this);
+                songSheetDialog.show(getChildFragmentManager(), "songSheetDialog");
                 break;
         }
     }
@@ -197,7 +206,6 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
             case TYPE_MUSIC_UPDATE_PROGRESS:
                 Integer content = (Integer) event.getContent();
                 seekBar.setMax((int) musicInfo.getDuration());
-//                Log.i(TAG, "onMessageEvent: " + seekBar.getMax() + content);
                 seekBar.setProgress(content);
                 tvCurrentProgress.setText(TimeUtils.getFormatData(content, TimeUtils.FORMAT_MM_SS));
                 break;

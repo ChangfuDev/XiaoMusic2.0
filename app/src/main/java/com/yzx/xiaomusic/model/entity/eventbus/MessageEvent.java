@@ -29,6 +29,11 @@ public class MessageEvent {
      */
     public static final int TYPE_MUSIC_UPDATE_PROGRESS = 6;
 
+    /**
+     * 服务创建完成
+     */
+    public static final int TYPE_SERVICE_CREATED = 7;
+
     public MessageEvent(int type) {
         this.type = type;
     }

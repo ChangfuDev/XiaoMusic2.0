@@ -5,19 +5,23 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.kingja.loadsir.core.LoadSir;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.yzx.commonlibrary.base.CommonBaseApplication;
+import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.service.ServiceManager;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
 
 import static com.yzx.xiaomusic.Constant.BASE_URL;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SERVICE_CREATED;
 
 /**
  * Created by yzx on 2018/5/14.
@@ -57,6 +61,8 @@ public class MusicApplication extends CommonBaseApplication {
                 MusicService.MusicBinder musicBinder = (MusicService.MusicBinder) service;
                 //设置服务管理类
                 ServiceManager.getInstance().setService(musicBinder.getService());
+                EventBusUtils.post(new MessageEvent(TYPE_SERVICE_CREATED));
+                Log.i("ygl", "onServiceConnected: ");
             }
 
             @Override

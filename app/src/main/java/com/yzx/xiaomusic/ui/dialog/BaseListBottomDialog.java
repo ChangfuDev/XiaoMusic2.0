@@ -24,7 +24,7 @@ public abstract class BaseListBottomDialog extends BaseBottomDialog {
         View rootView = inflater.inflate(R.layout.dialog_base_bottom_list, container, false);
         LinearLayout llContent = (LinearLayout) rootView.findViewById(R.id.ll_content);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(setAdapter());
+        recyclerView.setAdapter(setAdapter(recyclerView));
         View head = setHead(llContent);
         if (head != null) {
             llContent.addView(head, 0, head.getLayoutParams());
@@ -37,8 +37,9 @@ public abstract class BaseListBottomDialog extends BaseBottomDialog {
      * 自定义Adapter
      *
      * @return
+     * @param recyclerView
      */
-    protected abstract RecyclerView.Adapter setAdapter();
+    protected abstract RecyclerView.Adapter setAdapter(RecyclerView recyclerView);
 
 
     /**

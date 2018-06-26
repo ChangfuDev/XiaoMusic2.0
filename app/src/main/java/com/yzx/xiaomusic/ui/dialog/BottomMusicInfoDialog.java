@@ -65,7 +65,7 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
     }
 
     @Override
-    protected RecyclerView.Adapter setAdapter() {
+    protected RecyclerView.Adapter setAdapter(RecyclerView recyclerView) {
 
         BottomMusicInfoDialogAdapter adapter = new BottomMusicInfoDialogAdapter(musicInfo);
         adapter.setOnItemClickListener(this);
