@@ -21,18 +21,33 @@ import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.model.entity.user.UserSongSheet;
+import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.UserCenterPagerAdapter;
 import com.yzx.xiaomusic.ui.usercenter.about.UserCenterAboutFragment;
 import com.yzx.xiaomusic.ui.usercenter.dynamic.UserCenterDynamicFragment;
 import com.yzx.xiaomusic.ui.usercenter.music.UserCenterMusicFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
+import com.yzx.xiaomusic.utils.MusicDataUtils;
+import com.yzx.xiaomusic.widget.CircleProgress;
 import com.zhy.view.flowlayout.TagFlowLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_PROGRESS;
 
 /**
  * @author yzx
@@ -76,11 +91,25 @@ public class UserCenterFragment extends BaseFragment {
     ImageView ivSendMessage;
     @BindView(R.id.iv_follow)
     ImageView ivFollow;
+    @BindView(R.id.iv_music_cover)
+    ImageView ivMusicCover;
+    @BindView(R.id.tv_music_name)
+    TextView tvMusicName;
+    @BindView(R.id.tv_music_singer)
+    TextView tvMusicSinger;
+    @BindView(R.id.iv_play_pause)
+    CircleProgress ivPlayPause;
+    @BindView(R.id.iv_song_sheet)
+    ImageView ivSongSheet;
+    @BindView(R.id.layout_bottom_music_controller)
+    LinearLayout layoutBottomMusicController;
+    Unbinder unbinder;
     private ArrayList<String> tabTitles;
     private ArrayList<Fragment> fragments;
 
     public static final String KEY_USER_ID = "userId";
     private UserCenterPagerAdapter adapter;
+    private MusicInfo musicInfo;
 
 
     @Override
@@ -179,4 +208,44 @@ public class UserCenterFragment extends BaseFragment {
         tvFansCount.setText(String.format("粉丝 %s", "未知"));
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+        initBottomMusicController(layoutBottomMusicController);
+        musicInfo = service.getMusicInfo();
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        switch (event.getType()) {
+            case TYPE_MUSIC_CHANGED:
+                service = ServiceManager.getInstance().getService();
+                musicInfo = service.getMusicInfo();
+                tvMusicName.setText(musicInfo.getMusicName());
+                tvMusicSinger.setText(MusicDataUtils.getSingers(musicInfo));
+                if (!musicInfo.isLocal()) {
+                    GlideUtils.loadImg(getContext(), musicInfo.getAlbumCoverPath(), ivMusicCover);
+                }
+                break;
+            case TYPE_MUSIC_PLAYING:
+                ivPlayPause.setState(CircleProgress.STATE_PLAY);
+                break;
+            case TYPE_MUSIC_PAUSE:
+                ivPlayPause.setState(CircleProgress.STATE_PAUSE);
+                break;
+            case TYPE_MUSIC_UPDATE_PROGRESS:
+                Integer content = (Integer) event.getContent();
+                ivPlayPause.setMax((int) musicInfo.getDuration());
+                ivPlayPause.setProgress(content);
+                break;
+        }
+    }
 }

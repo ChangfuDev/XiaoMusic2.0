@@ -65,6 +65,11 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
     }
 
     @Override
+    protected boolean canHeadScroll() {
+        return true;
+    }
+
+    @Override
     protected RecyclerView.Adapter setAdapter(RecyclerView recyclerView) {
 
         BottomMusicInfoDialogAdapter adapter = new BottomMusicInfoDialogAdapter(musicInfo);

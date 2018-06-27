@@ -29,6 +29,7 @@
         android:id="@+id/smartRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/bottomMusicControlHeight"
         app:srlEnableRefresh="false">
 
         <android.support.design.widget.CoordinatorLayout
@@ -114,8 +115,8 @@
                             <View
                                 android:layout_width="0.5dp"
                                 android:layout_height="10dp"
-                                android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
+                                android:layout_marginStart="10dp"
                                 android:background="@color/colorWhite" />
 
                             <TextView
@@ -205,4 +206,6 @@
             tools:text="杨子晓" />
 
     </android.support.v7.widget.Toolbar>
+
+    <include layout="@layout/include_bottom_music_controller" />
 </FrameLayout>

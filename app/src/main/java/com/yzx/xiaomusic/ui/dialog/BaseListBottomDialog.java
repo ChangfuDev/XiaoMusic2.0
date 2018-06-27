@@ -18,10 +18,18 @@ import com.yzx.xiaomusic.R;
  */
 public abstract class BaseListBottomDialog extends BaseBottomDialog {
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.dialog_base_bottom_list, container, false);
+        View rootView;
+
+        boolean callHeadScroll = canHeadScroll();
+        if (callHeadScroll) {
+            rootView = inflater.inflate(R.layout.dialog_base_bottom_list_scroll, container, false);
+        }else {
+            rootView = inflater.inflate(R.layout.dialog_base_bottom_list_unscroll, container, false);
+        }
         LinearLayout llContent = (LinearLayout) rootView.findViewById(R.id.ll_content);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(setAdapter(recyclerView));
@@ -33,11 +41,15 @@ public abstract class BaseListBottomDialog extends BaseBottomDialog {
         return rootView;
     }
 
+    protected boolean canHeadScroll() {
+        return false;
+    }
+
     /**
      * 自定义Adapter
      *
-     * @return
      * @param recyclerView
+     * @return
      */
     protected abstract RecyclerView.Adapter setAdapter(RecyclerView recyclerView);
 

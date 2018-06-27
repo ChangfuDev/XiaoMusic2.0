@@ -22,9 +22,9 @@
                 android:id="@+id/et_search"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_et_search"
                 android:gravity="center_vertical"
                 android:hint="@string/inputKeyWord"
@@ -51,6 +51,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/bottomMusicControlHeight"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <include
@@ -59,6 +60,8 @@
 
         <include layout="@layout/include_layout_search_result" />
     </RelativeLayout>
+
+    <include layout="@layout/include_bottom_music_controller" />
 
 
 </android.support.design.widget.CoordinatorLayout>
