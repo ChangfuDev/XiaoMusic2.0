@@ -73,4 +73,6 @@
     <string name="allSongSheet">所有歌单</string>
     <string name="listLoop">列表循环</string>
     <string name="collectAll">收藏全部</string>
+    <string name="singleLoop">单曲循环</string>
+    <string name="randomPlay">随机播放</string>
 </resources>

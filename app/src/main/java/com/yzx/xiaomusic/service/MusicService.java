@@ -101,6 +101,10 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         this.playMode = playMode;
     }
 
+    public int getPlayMode() {
+        return playMode;
+    }
+
     public void setMusicIndex(int position) {
         this.index = position;
 
@@ -251,8 +255,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                     }
                     break;
                 case PLAY_MODE_RANDOM:
-                    random.setSeed(songSheet.size());
-                    index = random.nextInt();
+                    index = random.nextInt(songSheet.size());
                     setMusicIndex(index);
                     break;
             }
@@ -276,8 +279,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                     }
                     break;
                 case PLAY_MODE_RANDOM:
-                    random.setSeed(songSheet.size());
-                    index = random.nextInt();
+                    index = random.nextInt(songSheet.size());
                     setMusicIndex(index);
                     break;
             }

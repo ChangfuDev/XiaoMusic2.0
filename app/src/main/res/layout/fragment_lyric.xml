@@ -23,8 +23,9 @@
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorSeekBarBg"
-            android:progressTint="@color/colorSeekBarProgressBg" />
+            android:progressTint="@color/colorSeekBarProgressBg"
+            android:secondaryProgressTint="@color/colorSeekBarBg"
+            android:thumb="@drawable/af3" />
     </LinearLayout>
 
     <com.yzx.xiaomusic.widget.lyric.LrcView

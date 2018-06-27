@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/zhanweitu" />
+            android:src="@drawable/ud" />
 
         <View
             android:id="@+id/iv_cover"
@@ -29,6 +29,7 @@
         android:id="@+id/smartRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/bottomMusicControlHeight"
         app:srlEnableRefresh="false">
 
         <android.support.design.widget.CoordinatorLayout
@@ -126,7 +127,6 @@
 
         </android.support.design.widget.CoordinatorLayout>
 
-
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <android.support.v7.widget.Toolbar
@@ -147,4 +147,7 @@
             tools:text="杨子晓" />
 
     </android.support.v7.widget.Toolbar>
+
+
+    <include layout="@layout/include_bottom_music_controller" />
 </FrameLayout>

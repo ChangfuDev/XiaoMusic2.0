@@ -45,9 +45,9 @@
             <android.support.v7.widget.AppCompatSeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="0dp"
-                android:secondaryProgressTint="@color/colorLightWhite"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:secondaryProgressTint="@color/colorLightWhite" />
 
             <TextView
                 android:id="@+id/tv_duration"

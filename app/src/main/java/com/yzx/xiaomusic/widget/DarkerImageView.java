@@ -28,6 +28,6 @@ public class DarkerImageView extends android.support.v7.widget.AppCompatImageVie
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawColor(0x55000000);
+        canvas.drawColor(0x88000000);
     }
 }

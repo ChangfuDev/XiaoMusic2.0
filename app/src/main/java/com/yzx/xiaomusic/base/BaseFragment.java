@@ -27,6 +27,7 @@ import com.yzx.xiaomusic.ui.play.PlayFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
+import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
 
@@ -113,7 +114,12 @@ public abstract class BaseFragment extends CommonBaseFragment {
             BottomSongSheetDialog songSheetDialog = new BottomSongSheetDialog();
             songSheetDialog.show(getChildFragmentManager(), "songSheet");
         });
-        musicController.setOnClickListener(v -> start(new PlayFragment(), SINGLETASK));
+        musicController.setOnClickListener(v -> {
+            PlayFragment playFragment = findFragment(PlayFragment.class);
+            if (playFragment != null)
+                playFragment.putNewBundle(null);
+            start(playFragment == null ? new PlayFragment() : playFragment, SINGLETASK);
+        });
     }
 
     /**
@@ -202,6 +208,12 @@ public abstract class BaseFragment extends CommonBaseFragment {
         }
     }
 
+    public void showEmptyLayout() {
+        if (loadService != null) {
+            loadService.showCallback(EmptyCallback.class);
+        }
+    }
+
     public void showSuccessLayout() {
         if (loadService != null) {
             loadService.showSuccess();
@@ -223,8 +235,38 @@ public abstract class BaseFragment extends CommonBaseFragment {
             service.setMusicIndex(position);
             service.realPlay();
         } else {
-            service.playPause();
-            start(new PlayFragment(), SINGLETASK);
+            if (!service.isPlaying()) {
+                service.playPause();
+            }
+            PlayFragment playFragment = findFragment(PlayFragment.class);
+            if (playFragment != null)
+                playFragment.putNewBundle(null);
+            start(playFragment == null ? new PlayFragment() : playFragment, SINGLETASK);
+        }
+    }
+
+    /**
+     * 播放音乐并开启播放页面
+     *
+     * @param songSheet
+     * @param position
+     */
+    public void playMusicWithStartFragment(SupportFragment parent, List<MusicInfo> songSheet, int position) {
+        MusicService service = ServiceManager.getInstance().getService();
+        service.setSongSheet(songSheet);
+
+        //同一首歌
+        if (songSheet.get(position) != service.getMusicInfo()) {
+            service.setMusicIndex(position);
+            service.realPlay();
+        } else {
+            if (!service.isPlaying()) {
+                service.playPause();
+            }
+            PlayFragment playFragment = findFragment(PlayFragment.class);
+            if (playFragment != null)
+                playFragment.putNewBundle(null);
+            parent.start(playFragment == null ? new PlayFragment() : playFragment, SINGLETASK);
         }
     }
 

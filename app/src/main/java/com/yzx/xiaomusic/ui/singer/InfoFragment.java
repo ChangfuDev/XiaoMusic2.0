@@ -8,6 +8,9 @@ import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.ui.singer.top.Top50Presenter;
 
+/**
+ * @author yzx
+ */
 public class InfoFragment extends BaseMvpFragment {
     @Override
     protected CommonBasePresenter getPresenter() {

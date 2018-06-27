@@ -103,7 +103,6 @@ public class UserCenterFragment extends BaseFragment {
 
         viewPager.setOffscreenPageLimit(3);
         adapter = new UserCenterPagerAdapter(getChildFragmentManager());
-
         adapter.setTitles(tabTitles);
         viewPager.setAdapter(adapter);
         tl.setupWithViewPager(viewPager);
@@ -171,7 +170,7 @@ public class UserCenterFragment extends BaseFragment {
      */
     public void upData(UserSongSheet.PlaylistBean.CreatorBean creatorBean) {
 
-        GlideUtils.loadImg(getContext(), creatorBean.getBackgroundUrl(), ivBg);
+        GlideUtils.loadImg(getContext(), creatorBean.getBackgroundUrl(), GlideUtils.TYPE_BG_USER, -1, ivBg, false);
         tvTitle.setText(creatorBean.getNickname());
         GlideUtils.loadImg(getContext(), creatorBean.getAvatarUrl(), ivHead);
         tvNickName.setText(creatorBean.getNickname());

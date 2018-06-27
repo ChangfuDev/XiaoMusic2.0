@@ -62,6 +62,7 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
         am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         seekBar.setMax(maxVolume);
+        seekBar.setSecondaryProgress(maxVolume);
     }
 
     @Override

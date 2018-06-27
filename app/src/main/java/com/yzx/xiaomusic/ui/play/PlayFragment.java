@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.dialog.BottomSongSheetDialog;
 import com.yzx.xiaomusic.ui.play.card.PlayCardFragment;
 import com.yzx.xiaomusic.ui.play.lyric.LyricFragment;
+import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.utils.TimeUtils;
@@ -32,13 +34,16 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_BUFFER;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_PROGRESS;
+import static com.yzx.xiaomusic.service.MusicService.PLAY_MODE_LOOP;
+import static com.yzx.xiaomusic.service.MusicService.PLAY_MODE_RANDOM;
+import static com.yzx.xiaomusic.service.MusicService.PLAY_MODE_SINGLE;
+import static com.yzx.xiaomusic.ui.singer.SingerDetailsFragment.KEY_ID_SINGER;
 
 /**
  * @author yzx
@@ -65,7 +70,8 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
     ImageView ivBg;
     @BindView(R.id.iv_play_pause)
     ImageView ivPlayPause;
-    Unbinder unbinder;
+    @BindView(R.id.iv_play_mode)
+    ImageView ivPlayMode;
     private MusicInfo musicInfo;
     private MusicService service;
     public PlayCardFragment playCardFragment;
@@ -75,6 +81,7 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
+        Log.i(TAG, "onCreateView: ");
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -96,6 +103,12 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
     }
 
     @Override
+    public void onNewBundle(Bundle args) {
+        super.onNewBundle(args);
+        Log.i(TAG, "onNewBundle: ");
+    }
+
+    @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
 
         playCardFragment = new PlayCardFragment();
@@ -104,7 +117,6 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         initToolBar(tb);
         tb.inflateMenu(R.menu.menu_share);
         tb.setOnMenuItemClickListener(this);
-
 
         if (musicInfo != null) {
             tvSubTitle.setVisibility(View.VISIBLE);
@@ -129,7 +141,17 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         }
         //更新播放状态
         ivPlayPause.setImageResource(service.isPlaying() ? R.drawable.acq : R.drawable.acs);
-
+        switch (service.getPlayMode()) {
+            case PLAY_MODE_LOOP:
+                ivPlayMode.setImageResource(R.drawable.ady);
+                break;
+            case PLAY_MODE_SINGLE:
+                ivPlayMode.setImageResource(R.drawable.ae6);
+                break;
+            case PLAY_MODE_RANDOM:
+                ivPlayMode.setImageResource(R.drawable.aej);
+                break;
+        }
     }
 
     @OnClick({R.id.tv_subTitle, R.id.tb, R.id.iv_play_mode, R.id.iv_previous, R.id.iv_play_pause, R.id.iv_next, R.id.iv_song_sheet})
@@ -137,15 +159,17 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
 
         switch (view.getId()) {
             case R.id.tv_subTitle:
-//                SingerDetailsFragment singerDetailsFragment = new SingerDetailsFragment();
-//                Bundle bundle = new Bundle();
-//                bundle.putString();
-//                singerDetailsFragment.setArguments(bundle);
-//                start(singerDetailsFragment,SINGLETASK);
+                MusicInfo musicInfo = service.getMusicInfo();
+                SingerDetailsFragment singerDetailsFragment = new SingerDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_ID_SINGER, musicInfo.getSingerInfos().get(0).getSingerId());
+                singerDetailsFragment.setArguments(bundle);
+                start(singerDetailsFragment, SINGLETASK);
                 break;
             case R.id.tb:
                 break;
             case R.id.iv_play_mode:
+                changePlayMode();
                 break;
             case R.id.iv_previous:
                 service.previous();
@@ -158,8 +182,27 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 break;
             case R.id.iv_song_sheet:
                 BottomSongSheetDialog songSheetDialog = new BottomSongSheetDialog();
-//                songSheetDialog.setHostFragment(this);
                 songSheetDialog.show(getChildFragmentManager(), "songSheetDialog");
+                break;
+        }
+    }
+
+    private void changePlayMode() {
+        switch (service.getPlayMode()) {
+            case PLAY_MODE_LOOP:
+                service.setPlayMode(PLAY_MODE_SINGLE);
+                ivPlayMode.setImageResource(R.drawable.ae6);
+                showToast(R.string.singleLoop);
+                break;
+            case PLAY_MODE_SINGLE:
+                service.setPlayMode(PLAY_MODE_RANDOM);
+                ivPlayMode.setImageResource(R.drawable.aej);
+                showToast(R.string.randomPlay);
+                break;
+            case PLAY_MODE_RANDOM:
+                service.setPlayMode(PLAY_MODE_LOOP);
+                ivPlayMode.setImageResource(R.drawable.ady);
+                showToast(R.string.listLoop);
                 break;
         }
     }
@@ -211,5 +254,11 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 break;
 
         }
+    }
+
+    @Override
+    public boolean onBackPressedSupport() {
+
+        return super.onBackPressedSupport();
     }
 }

@@ -41,7 +41,7 @@ import static com.yzx.xiaomusic.Constant.KEY_COVER;
 import static com.yzx.xiaomusic.Constant.KEY_ID;
 import static com.yzx.xiaomusic.Constant.KEY_NAME;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SEARCH_CONTENT;
-import static com.yzx.xiaomusic.ui.singer.SingerDetailsFragment.KEY_INFO_SINGER;
+import static com.yzx.xiaomusic.ui.singer.SingerDetailsFragment.KEY_ID_SINGER;
 import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
 /**
@@ -203,7 +203,8 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
                 break;
             case R.id.rl_search_singer:
                 bundle.clear();
-                bundle.putSerializable(KEY_INFO_SINGER, (ArtistsBean) adapter.datas.get(position));
+                ArtistsBean artistsBean = (ArtistsBean) adapter.datas.get(position);
+                bundle.putString(KEY_ID_SINGER, String.valueOf(artistsBean.getId()));
                 easyParentStart(new SingerDetailsFragment(), bundle);
                 break;
             case R.id.rl_search_album:

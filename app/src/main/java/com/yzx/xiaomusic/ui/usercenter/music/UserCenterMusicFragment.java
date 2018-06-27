@@ -24,6 +24,9 @@ import static com.yzx.xiaomusic.Constant.KEY_ID;
 import static com.yzx.xiaomusic.Constant.KEY_NAME;
 import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 
+/**
+ * @author yzx
+ */
 public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPresenter> implements CommonBaseAdapter.OnItemClickListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
