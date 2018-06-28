@@ -1,6 +1,7 @@
 package com.yzx.xiaomusic.widget.lyric;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -96,6 +97,7 @@ public class LrcHelper {
     }
 
     private static List<Lrc> parseLrc(String lrcLine) {
+        Log.i(TAG, "parseLrc: " + lrcLine);
         if (lrcLine.trim().isEmpty()) {
             return null;
         }

@@ -32,7 +32,7 @@ public class Constant {
     /**
      * App缓存路径
      */
-    public static final String PATH_APP = Environment.getExternalStorageDirectory().getAbsolutePath()+"/xiaoMusic";
+    public static final String PATH_APP = Environment.getExternalStorageDirectory().getAbsolutePath()+"/XiaoMusic";
 
     /**
      * 缓存

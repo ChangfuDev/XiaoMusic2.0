@@ -13,6 +13,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.yzx.commonlibrary.base.CommonBaseApplication;
+import com.yzx.xiaomusic.cache.CacheManager;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.service.ServiceManager;
@@ -50,7 +51,9 @@ public class MusicApplication extends CommonBaseApplication {
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
         UMConfigure.setLogEnabled(true);
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        //初始化崩溃日志
         CrashReport.initCrashReport(getApplicationContext(), KEY_BUGLY, true);
+        //初始化状态页
         LoadSir.beginBuilder()
                 //添加各种状态页
                 .addCallback(new ErrorCallback())
@@ -60,6 +63,7 @@ public class MusicApplication extends CommonBaseApplication {
                 .setDefaultCallback(LoadingCallback.class)
                 .commit();
 
+        CacheManager.getCacheManager().init();
         //绑定服务
         Intent serviceIntent = new Intent(this, MusicService.class);
         ServiceConnection conn = new ServiceConnection() {

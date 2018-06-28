@@ -7,21 +7,25 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
-import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.cache.CacheUtils;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
+import com.yzx.xiaomusic.widget.lyric.LrcHelper;
 import com.yzx.xiaomusic.widget.lyric.LrcView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -74,7 +78,7 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-
+        loadLyric();
     }
 
     @OnClick(R.id.lrcView)
@@ -87,8 +91,17 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
         myRegisterReceiver();
+    }
+
+    private void loadLyric() {
         service = ServiceManager.getInstance().getService();
-        mPresenter.getLrc(service.getMusicInfo().getMusicId());
+        String musicId = service.getMusicInfo().getMusicId();
+        String cacheLyric = CacheUtils.getCacheLyric(musicId);
+        if (TextUtils.isEmpty(cacheLyric)) {
+            mPresenter.getLrc(musicId);
+        } else {
+            lrcView.setLrcData(LrcHelper.parseLrcFromFile(new File(cacheLyric)));
+        }
     }
 
     /**
@@ -134,10 +147,8 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
                 lrcView.updateTime(content);
                 break;
             case TYPE_MUSIC_CHANGED:
-                service = ServiceManager.getInstance().getService();
-                MusicInfo musicInfo = service.getMusicInfo();
                 lrcView.setLrcData(null);
-                mPresenter.getLrc(musicInfo.getMusicId());
+                loadLyric();
                 break;
         }
     }

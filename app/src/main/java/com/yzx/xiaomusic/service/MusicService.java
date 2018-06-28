@@ -14,6 +14,7 @@ import android.util.Log;
 import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;
 import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.app.MusicApplication;
+import com.yzx.xiaomusic.cache.CacheUtils;
 import com.yzx.xiaomusic.model.entity.MusicAddress;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
@@ -297,26 +298,43 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
             return;
         }
         if (musicInfo.isLocal()) {
-            playLocalMusic(musicInfo);
+            playMusic(musicInfo);
         } else {
             playNetMusic(musicInfo);
         }
     }
 
+    /**
+     * 播放网络音乐
+     * 判断是否有缓存
+     * 有，利用缓存播放
+     * 无，获取地址、缓存、播放
+     *
+     * @param musicInfo
+     */
     private void playNetMusic(MusicInfo musicInfo) {
+
+        String cacheMusic = CacheUtils.getCacheMusic(musicInfo.getMusicId());
+        if (!TextUtils.isEmpty(cacheMusic)) {
+            musicInfo.setPath(cacheMusic);
+            playMusic(musicInfo);
+            Log.i(TAG, "playNetMusic: cache");
+        } else {
+            Log.i(TAG, "playNetMusic: noCache");
+            getNetMusicAddressAndPlay(musicInfo);
+        }
+    }
+
+    private void getNetMusicAddressAndPlay(MusicInfo musicInfo) {
         getMusicAddress(musicInfo.getMusicId(), new CommonMvpObserver<MusicAddress>() {
             @Override
             protected void onSuccess(MusicAddress musicAddress) {
-                Log.d(TAG, "onSuccess: 获取地址成功" + musicInfo.getMusicName());
+                Log.i(TAG, "onSuccess: 获取地址成功" + musicInfo.getMusicName());
                 String url = musicAddress.getData().get(0).getUrl();
                 if (!TextUtils.isEmpty(url)) {
-                    try {
-                        mediaPlayer.setDataSource(url);
-                        mediaPlayer.prepareAsync();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.e(TAG, "onSuccess: " + e.toString());
-                    }
+                    musicInfo.setPath(url);
+                    playMusic(musicInfo);
+                    CacheUtils.cacheMusic(musicInfo.getMusicId(), url);
                 } else {
                     ToastUtils.showToast("暂时无法获取" + musicInfo.getMusicName() + "自动跳过", ToastUtils.TYPE_NOTICE);
                     Log.e(TAG, "onSuccess: url为空" + musicInfo.getMusicName());
@@ -335,11 +353,11 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     }
 
     /**
-     * 播放本地音乐
+     * 播放音乐
      *
      * @param musicInfo
      */
-    private void playLocalMusic(MusicInfo musicInfo) {
+    private void playMusic(MusicInfo musicInfo) {
         try {
             mediaPlayer.setDataSource(musicInfo.getPath());
             mediaPlayer.prepareAsync();
