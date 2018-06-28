@@ -52,7 +52,7 @@ public class LrcHelper {
         return null;
     }
 
-    private static List<Lrc> parseInputStream(InputStream inputStream) {
+    public static List<Lrc> parseInputStream(InputStream inputStream) {
         List<Lrc> lrcs = new ArrayList<>();
         InputStreamReader isr = null;
         BufferedReader br = null;

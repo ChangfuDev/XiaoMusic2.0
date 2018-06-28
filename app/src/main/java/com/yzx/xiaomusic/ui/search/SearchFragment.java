@@ -161,7 +161,6 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-
         tb.setNavigationOnClickListener(v -> pop());
 
         llSearch.setVisibility(View.VISIBLE);
@@ -308,15 +307,20 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
     @Override
     public void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
         initBottomMusicController(layoutBottomMusicController);
         musicInfo = service.getMusicInfo();
     }
 
     @Override
-    public void onDestroyView() {
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         EventBus.getDefault().unregister(this);
-        super.onDestroyView();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

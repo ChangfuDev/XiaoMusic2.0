@@ -137,11 +137,6 @@ public class CacheUtils {
     }
 
     public static String getCacheMusic(String id) {
-//        try {
-//            DiskLruCache.Snapshot snapshot = CacheManager.getCacheManager().getMusicCache().get(id);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         File file = new File(PATH_ABSOLUTE_CACHE_MUSIC + "/" + id + ".0");
         if (file.exists()) {
             return PATH_ABSOLUTE_CACHE_MUSIC + "/" + id + ".0";

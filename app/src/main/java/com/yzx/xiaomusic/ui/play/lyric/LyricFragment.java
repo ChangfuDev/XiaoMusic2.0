@@ -8,16 +8,20 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
+import com.jakewharton.disklrucache.DiskLruCache;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
+import com.yzx.xiaomusic.cache.CacheManager;
 import com.yzx.xiaomusic.cache.CacheUtils;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
+import com.yzx.xiaomusic.widget.lyric.Lrc;
 import com.yzx.xiaomusic.widget.lyric.LrcHelper;
 import com.yzx.xiaomusic.widget.lyric.LrcView;
 
@@ -25,7 +29,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -39,6 +44,7 @@ import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UP
  * Description
  */
 public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
+    private static final String TAG = "yglLyricFragment";
     @BindView(R.id.seekBar)
     SeekBar seekBar;
     @BindView(R.id.lrcView)
@@ -100,7 +106,15 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
         if (TextUtils.isEmpty(cacheLyric)) {
             mPresenter.getLrc(musicId);
         } else {
-            lrcView.setLrcData(LrcHelper.parseLrcFromFile(new File(cacheLyric)));
+            try {
+                DiskLruCache.Snapshot snapshot = CacheManager.getCacheManager().getLyricCache().get(musicId);
+                List<Lrc> lrcData = LrcHelper.parseInputStream(snapshot.getInputStream(0));
+                lrcView.setLrcData(lrcData);
+            } catch (IOException e) {
+                e.printStackTrace();
+                mPresenter.getLrc(musicId);
+                Log.i(TAG, "loadLyric: 加载歌词缓存失败" + e.toString());
+            }
         }
     }
 

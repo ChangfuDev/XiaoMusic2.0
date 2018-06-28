@@ -17,7 +17,7 @@ import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadSir;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
@@ -93,7 +93,6 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
         View view = super.onCreateView(inflater, container, savedInstanceState);
         //重新注册到View里
         loadService = LoadSir
@@ -112,7 +111,7 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
 
         initToolBar(tb);
         tvTitle.setText(R.string.songSheet);
-        smartRefreshLayout.setRefreshFooter(new BallPulseFooter(getContext()));
+        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getContext()));
         smartRefreshLayout.setOnLoadMoreListener(this);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.addItemDecoration(new GridItemDecoration(2, DensityUtils.dip2px(getContext(), 3), false));
@@ -146,9 +145,15 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
     }
 
     @Override
-    public void onDestroyView() {
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         EventBus.getDefault().unregister(this);
-        super.onDestroyView();
     }
 
     @Override

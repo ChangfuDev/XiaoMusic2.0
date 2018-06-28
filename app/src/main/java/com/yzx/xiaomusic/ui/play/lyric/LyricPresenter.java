@@ -33,12 +33,7 @@ public class LyricPresenter extends CommonBasePresenter<LyricFragment, LyricMode
 
             @Override
             public void onNext(String s) {
-                mView.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mView.lrcView.setLrcData(LrcHelper.parseLrcFromFile(new File(s)));
-                    }
-                });
+                mView.getActivity().runOnUiThread(() -> mView.lrcView.setLrcData(LrcHelper.parseLrcFromFile(new File(s))));
             }
 
             @Override
