@@ -8,7 +8,7 @@
     android:paddingTop="25dp"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
     app:layout_collapseMode="pin"
-    app:navigationIcon="@drawable/oq"
+    app:navigationIcon="@drawable/ow"
     app:popupTheme="@style/popMenu_under_actionBar">
 
     <LinearLayout

@@ -8,20 +8,17 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
-import com.jakewharton.disklrucache.DiskLruCache;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
-import com.yzx.xiaomusic.cache.CacheManager;
 import com.yzx.xiaomusic.cache.CacheUtils;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
-import com.yzx.xiaomusic.widget.lyric.Lrc;
 import com.yzx.xiaomusic.widget.lyric.LrcHelper;
 import com.yzx.xiaomusic.widget.lyric.LrcView;
 
@@ -29,8 +26,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.IOException;
-import java.util.List;
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -96,24 +92,19 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        myRegisterReceiver();
     }
 
     private void loadLyric() {
         service = ServiceManager.getInstance().getService();
-        String musicId = service.getMusicInfo().getMusicId();
-        String cacheLyric = CacheUtils.getCacheLyric(musicId);
-        if (TextUtils.isEmpty(cacheLyric)) {
-            mPresenter.getLrc(musicId);
-        } else {
-            try {
-                DiskLruCache.Snapshot snapshot = CacheManager.getCacheManager().getLyricCache().get(musicId);
-                List<Lrc> lrcData = LrcHelper.parseInputStream(snapshot.getInputStream(0));
-                lrcView.setLrcData(lrcData);
-            } catch (IOException e) {
-                e.printStackTrace();
+
+        MusicInfo musicInfo = service.getMusicInfo();
+        if (musicInfo != null) {
+            String musicId = musicInfo.getMusicId();
+            String cacheLyric = CacheUtils.getCacheLyric(musicId);
+            if (TextUtils.isEmpty(cacheLyric)) {
                 mPresenter.getLrc(musicId);
-                Log.i(TAG, "loadLyric: 加载歌词缓存失败" + e.toString());
+            } else {
+                lrcView.setLrcData(LrcHelper.parseLrcFromFile(new File(cacheLyric)));
             }
         }
     }
@@ -121,7 +112,7 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
     /**
      * 注册当音量发生变化时接收的广播
      */
-    private void myRegisterReceiver() {
+    private void registerReceiver() {
         myVolumeReceiver = new MyVolumeReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
@@ -145,6 +136,18 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
                 }
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        registerReceiver();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        getContext().unregisterReceiver(myVolumeReceiver);
     }
 
     @Override

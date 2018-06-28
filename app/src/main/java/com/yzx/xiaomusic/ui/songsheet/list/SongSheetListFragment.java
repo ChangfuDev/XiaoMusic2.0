@@ -17,7 +17,6 @@ import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadSir;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
@@ -33,6 +32,7 @@ import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
 import com.yzx.xiaomusic.widget.GridItemDecoration;
+import com.yzx.xiaomusic.widget.MusicFooter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,7 +41,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.Unbinder;
 
 import static com.yzx.xiaomusic.Constant.KEY_COVER;
 import static com.yzx.xiaomusic.Constant.KEY_ID;
@@ -77,10 +76,8 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
     TextView tvMusicSinger;
     @BindView(R.id.iv_play_pause)
     CircleProgress ivPlayPause;
-    Unbinder unbinder;
     @BindView(R.id.layout_bottom_music_controller)
     LinearLayout layoutBottomMusicController;
-    Unbinder unbinder1;
     private SongSheetListAdapter adapter;
     private int offset;
     private MusicInfo musicInfo;
@@ -111,7 +108,7 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
 
         initToolBar(tb);
         tvTitle.setText(R.string.songSheet);
-        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getContext()));
+        smartRefreshLayout.setRefreshFooter(new MusicFooter(getContext()));
         smartRefreshLayout.setOnLoadMoreListener(this);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.addItemDecoration(new GridItemDecoration(2, DensityUtils.dip2px(getContext(), 3), false));

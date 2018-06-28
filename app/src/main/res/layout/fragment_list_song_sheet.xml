@@ -116,25 +116,31 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/smartRefreshLayout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="50dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:srlEnableHeaderTranslationContent="false"
-        app:srlEnableRefresh="false">
+        android:paddingBottom="@dimen/bottomMusicControlHeight"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/smartRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+            app:srlEnableHeaderTranslationContent="false"
+            app:srlEnableRefresh="false">
 
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    </FrameLayout>
 
     <include layout="@layout/include_bottom_music_controller" />
 </android.support.design.widget.CoordinatorLayout>
