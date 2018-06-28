@@ -38,7 +38,7 @@
         app:indicatorTextSize="12sp"
         app:lrcCurrentTextColor="@color/colorWhite"
         app:lrcNormalTextColor="@color/colorLightWhite"
-        app:lrcTextSize="10sp"
+        app:lrcTextSize="12sp"
         app:noLrcTextColor="@color/colorLightWhite"
         app:noLrcTextSize="12sp" />
 

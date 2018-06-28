@@ -16,7 +16,9 @@ import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
+import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.adapter.PlayCardAdapter;
+import com.yzx.xiaomusic.ui.dialog.BottomMusicInfoDialog;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,6 +30,7 @@ import butterknife.OnClick;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
+import static com.yzx.xiaomusic.ui.adapter.MusicAdapter.KEY_MUSIC_INFO;
 
 /**
  * @author yzx
@@ -97,12 +100,21 @@ public class PlayCardFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_like:
+                showToast(R.string.commingSoon);
                 break;
             case R.id.iv_download:
+                showToast(R.string.commingSoon);
                 break;
             case R.id.iv_evaluate:
+                showToast(R.string.commingSoon);
                 break;
             case R.id.iv_more:
+                musicInfo = service.getMusicInfo();
+                BottomMusicInfoDialog bottomMusicInfoDialog = new BottomMusicInfoDialog();
+                Bundle args = new Bundle();
+                args.putSerializable(KEY_MUSIC_INFO, musicInfo);
+                bottomMusicInfoDialog.setArguments(args);
+                bottomMusicInfoDialog.show(getChildFragmentManager(), MusicAdapter.class.getSimpleName());
                 break;
         }
     }
