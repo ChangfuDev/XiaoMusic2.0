@@ -2,12 +2,15 @@ package com.yzx.xiaomusic.app;
 
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.kingja.loadsir.core.LoadSir;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
@@ -38,6 +41,12 @@ public class MusicApplication extends CommonBaseApplication {
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
     }
 
+    private RefWatcher refWatcher;
+
+    public static RefWatcher getRefWatcher(Context context) {
+        MusicApplication application = (MusicApplication) context.getApplicationContext();
+        return application.refWatcher;
+    }
 //    @Override
 //    protected void attachBaseContext(Context base) {
 //        super.attachBaseContext(context);
@@ -53,6 +62,13 @@ public class MusicApplication extends CommonBaseApplication {
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //初始化崩溃日志
         CrashReport.initCrashReport(getApplicationContext(), KEY_BUGLY, true);
+        //初始化LeakCanary
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        refWatcher = LeakCanary.install(this);
         //初始化状态页
         LoadSir.beginBuilder()
                 //添加各种状态页

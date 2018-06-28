@@ -17,8 +17,10 @@ import android.widget.TextView;
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadService;
 import com.kingja.loadsir.core.LoadSir;
+import com.squareup.leakcanary.RefWatcher;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
 import com.yzx.xiaomusic.R;
+import com.yzx.xiaomusic.app.MusicApplication;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.service.ServiceManager;
@@ -63,6 +65,13 @@ public abstract class BaseFragment extends CommonBaseFragment {
         loadService.showSuccess();
 
         return loadService.getLoadLayout();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = MusicApplication.getRefWatcher(getActivity());
+        refWatcher.watch(this);
     }
 
     public void initToolBar(Toolbar toolbar) {
