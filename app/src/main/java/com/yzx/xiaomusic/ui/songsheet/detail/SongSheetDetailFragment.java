@@ -321,6 +321,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
                         collectedSongSheetDao.addSongSheet(songSheetInfo);
                         tvCollectSongSheet.setText(R.string.haveCollected);
                     } else {
+
                         showToast(R.string.haveCollected);
                     }
                 }
