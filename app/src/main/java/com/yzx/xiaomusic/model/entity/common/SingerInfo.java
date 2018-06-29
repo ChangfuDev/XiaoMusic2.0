@@ -1,11 +1,29 @@
 package com.yzx.xiaomusic.model.entity.common;
 
+/**
+ * 歌手信息
+ *
+ * @author yzx
+ */
 public class SingerInfo {
 
     //歌手
     String singerId;
     String singerName;
     String singerCoverPath;
+
+    public String getMusicId() {
+        return musicId;
+    }
+
+    public void setMusicId(String musicId) {
+        this.musicId = musicId;
+    }
+
+    /**
+     * 所属音乐Id
+     */
+    String musicId;
 
     public String getSingerId() {
         return singerId;

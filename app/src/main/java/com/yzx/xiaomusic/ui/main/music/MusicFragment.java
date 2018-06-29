@@ -16,6 +16,7 @@ import com.yzx.xiaomusic.ui.main.music.local.LocalMusicFragment;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * @author yzx
@@ -57,10 +58,16 @@ public class MusicFragment extends BaseFragment implements CommonBaseAdapter.OnI
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
 
         swipeRefreshLayout.setColorSchemeColors(ResourceUtils.parseColor(getContext(), R.color.colorAccent));
-        MainMusicAdapter adapter = new MainMusicAdapter();
+
+        SupportFragment parentFragment = (SupportFragment) getParentFragment();
+        MainMusicAdapter adapter = new MainMusicAdapter(parentFragment);
         adapter.setData(titles, icons);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            adapter.notifyDataSetChanged();
+            swipeRefreshLayout.setRefreshing(false);
+        });
     }
 
     @Override

@@ -10,9 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
+import com.yzx.xiaomusic.db.DBUtils;
+import com.yzx.xiaomusic.db.dao.LikedMusicInfoDao;
+import com.yzx.xiaomusic.db.entity.LikedMusicInfo;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
@@ -20,6 +24,7 @@ import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.adapter.PlayCardAdapter;
 import com.yzx.xiaomusic.ui.dialog.BottomMusicInfoDialog;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
+import com.yzx.xiaomusic.utils.JsonUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,6 +46,8 @@ public class PlayCardFragment extends BaseFragment {
     public static final String TAG = "ygl" + PlayCardFragment.class.getSimpleName();
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.iv_like)
+    ImageView ivLike;
     private MusicInfo musicInfo;
 
     @Override
@@ -88,6 +95,8 @@ public class PlayCardFragment extends BaseFragment {
             PlayFragment playFragment = (PlayFragment) getParentFragment();
             playFragment.showHideFragment(playFragment.lyricFragment, this);
         });
+
+        showLiked();
     }
 
     @Override
@@ -100,7 +109,7 @@ public class PlayCardFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_like:
-                showToast(R.string.commingSoon);
+                likeMusic();
                 break;
             case R.id.iv_download:
                 showToast(R.string.commingSoon);
@@ -119,6 +128,23 @@ public class PlayCardFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 点击喜欢收藏到喜欢数据里
+     */
+    private void likeMusic() {
+        MusicInfo musicInfo = service.getMusicInfo();
+        if (musicInfo == null) {
+            showToast("无法获取当前音乐");
+        } else {
+            LikedMusicInfoDao likedMusicInfoDao = DBUtils.getLikedMusicInfoDao();
+            LikedMusicInfo likedMusicInfo = likedMusicInfoDao.getLikedMusicInfoById(musicInfo.getMusicId());
+            if (likedMusicInfo == null) {
+                likedMusicInfoDao.addLikedMusicInfo(new LikedMusicInfo(musicInfo.getMusicId(), JsonUtils.objectToString(musicInfo)));
+                ivLike.setImageResource(R.drawable.ae2);
+            }
+        }
+    }
+
     @Override
     public void onDestroyView() {
         EventBus.getDefault().unregister(this);
@@ -131,7 +157,19 @@ public class PlayCardFragment extends BaseFragment {
             case TYPE_MUSIC_CHANGED:
                 musicInfo = service.getMusicInfo();
                 recyclerView.scrollToPosition(service.getIndex());
+                showLiked();
                 break;
+        }
+    }
+
+    /**
+     * 根据是否收藏显示图标
+     */
+    private void showLiked() {
+        if (musicInfo != null) {
+            LikedMusicInfoDao likedMusicInfoDao = DBUtils.getLikedMusicInfoDao();
+            LikedMusicInfo likedMusicInfo = likedMusicInfoDao.getLikedMusicInfoById(musicInfo.getMusicId());
+            ivLike.setImageResource(likedMusicInfo == null ? R.drawable.ae0 : R.drawable.ae2);
         }
     }
 }

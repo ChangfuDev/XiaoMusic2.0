@@ -1,6 +1,5 @@
 package com.yzx.commonlibrary.base.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,7 +16,6 @@ public abstract class CommonBaseAdapter<VH extends RecyclerView.ViewHolder, B> e
 
     public List<B> datas;
     private OnItemClickListener onItemClickListener;
-    public Context context;
 
     @Override
     public int getItemCount() {

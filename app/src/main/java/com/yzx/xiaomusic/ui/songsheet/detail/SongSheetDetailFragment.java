@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +25,8 @@ import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
+import com.yzx.xiaomusic.db.DBUtils;
+import com.yzx.xiaomusic.db.entity.LikedMusicInfo;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SingerInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
@@ -33,6 +36,7 @@ import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.common.CoverInfoFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
+import com.yzx.xiaomusic.utils.JsonUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
 
@@ -202,11 +206,21 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         args.getSerializable(KEY_INFO_SONG_SHEET);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
 
-        mPresenter.getSongSheetDetail(songSheetId);
+        if (TextUtils.equals("-1", songSheetId)) {
+            List<LikedMusicInfo> allLikedMusicInfos = DBUtils.getLikedMusicInfoDao().getAllLikedMusicInfos();
+            Observable.fromIterable(allLikedMusicInfos)
+                    .map(likedMusicInfo -> (MusicInfo) JsonUtils.stringToObject(likedMusicInfo.musicInfo, MusicInfo.class))
+                    .toList()
+                    .subscribe(musicInfos -> adapter.setData(musicInfos));
+            showSuccessLayout();
+        } else {
+            mPresenter.getSongSheetDetail(songSheetId);
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -273,8 +287,12 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         switch (view.getId()) {
             case R.id.rl_user_info:
                 arguments.clear();
-                arguments.putString(KEY_USER_ID, String.valueOf(result.getCreator().getUserId()));
-                easyStart(new UserCenterFragment(), arguments);
+                if (result == null) {
+                    showToast("缺少用户信息");
+                } else {
+                    arguments.putString(KEY_USER_ID, String.valueOf(result.getCreator().getUserId()));
+                    easyStart(new UserCenterFragment(), arguments);
+                }
                 break;
             case R.id.tv_evaluation_num:
                 break;

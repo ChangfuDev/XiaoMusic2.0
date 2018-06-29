@@ -63,7 +63,6 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
         super.initData(savedInstanceState);
         am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -81,6 +80,7 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
         loadLyric();
+        EventBus.getDefault().register(this);
     }
 
     @OnClick(R.id.lrcView)
@@ -105,6 +105,7 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
                 mPresenter.getLrc(musicId);
             } else {
                 lrcView.setLrcData(LrcHelper.parseLrcFromFile(new File(cacheLyric)));
+                lrcView.updateTime(0);
             }
         }
     }

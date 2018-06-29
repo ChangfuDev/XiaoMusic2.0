@@ -27,8 +27,8 @@ public class GlideUtils {
     public static final int TYPE_DEFAULT = 0;
     public static final int TYPE_HEAD = 1;
     public static final int TYPE_SONG_SHEET = 2;
-    public static final int TYPE_BG_SINGER =3;
-    public static final int TYPE_BG_USER =4;
+    public static final int TYPE_BG_SINGER = 3;
+    public static final int TYPE_BG_USER = 4;
 
     public static final int TYPE_TRANSFORM_DEFAULT = 0;
     public static final int TYPE_TRANSFORM_BLUR = 1;
@@ -70,7 +70,7 @@ public class GlideUtils {
                 placeholder = R.drawable.pz;
                 break;
             default:
-                placeholder = R.drawable.zhanweitu;
+                placeholder = R.drawable.ic_default_song_sheet;
                 break;
         }
         options.placeholder(placeholder).error(placeholder);

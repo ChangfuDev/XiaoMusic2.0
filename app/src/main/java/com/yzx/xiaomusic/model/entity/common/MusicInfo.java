@@ -1,8 +1,5 @@
 package com.yzx.xiaomusic.model.entity.common;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,11 +7,10 @@ import java.util.List;
  * @author yzx
  * 音乐信息
  */
-@Entity
+//@Entity
 public class MusicInfo implements Serializable {
 
-
-    @PrimaryKey(autoGenerate = true)
+//    @PrimaryKey(autoGenerate = true)
     long id;
     /**
      * 是否是本地音乐
