@@ -1,13 +1,21 @@
 package com.yzx.xiaomusic.model.entity.common;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
 /**
  * @author yzx
  * 统一的歌单信息，便于统一处理
  */
+@Entity(indices = {@Index(value = {"id"}, unique = true)})
 public class SongSheetInfo implements Serializable {
 
+    @NonNull
+    @PrimaryKey
     String id;
     String coverUrl;
     String title;

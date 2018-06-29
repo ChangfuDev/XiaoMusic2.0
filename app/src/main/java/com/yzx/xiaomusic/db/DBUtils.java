@@ -1,5 +1,6 @@
 package com.yzx.xiaomusic.db;
 
+import com.yzx.xiaomusic.db.dao.CollectedSongSheetDao;
 import com.yzx.xiaomusic.db.dao.LikedMusicInfoDao;
 import com.yzx.xiaomusic.db.dao.SearchHistoryDao;
 
@@ -16,5 +17,9 @@ public class DBUtils {
 
     public static LikedMusicInfoDao getLikedMusicInfoDao() {
         return AppDatabase.getInstance().getLikedMusicDao();
+    }
+
+    public static CollectedSongSheetDao getCollectedSongSheetDao() {
+        return AppDatabase.getInstance().getCollectedSongSheetDao();
     }
 }

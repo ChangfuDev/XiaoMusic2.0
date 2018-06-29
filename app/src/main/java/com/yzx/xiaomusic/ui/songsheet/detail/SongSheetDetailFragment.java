@@ -26,9 +26,11 @@ import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.db.DBUtils;
+import com.yzx.xiaomusic.db.dao.CollectedSongSheetDao;
 import com.yzx.xiaomusic.db.entity.LikedMusicInfo;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SingerInfo;
+import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.model.entity.songsheet.SongSheetDetail;
 import com.yzx.xiaomusic.service.ServiceManager;
@@ -121,6 +123,8 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     TextView tvMusicName;
     @BindView(R.id.tv_music_singer)
     TextView tvMusicSinger;
+    @BindView(R.id.tv_collect_song_sheet)
+    TextView tvCollectSongSheet;
     @BindView(R.id.iv_play_pause)
     CircleProgress ivPlayPause;
     @BindView(R.id.layout_bottom_music_controller)
@@ -173,6 +177,9 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
 
         initToolBar(tb);
+        SongSheetInfo songSheetInfo = getSongSheetInfoById();
+
+        tvCollectSongSheet.setText(songSheetInfo == null ? R.string.collect : R.string.haveCollected);
         appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             float totalScrollRange = appBarLayout.getTotalScrollRange();
             llHead.setAlpha(1f + ((float) verticalOffset) / totalScrollRange);
@@ -191,6 +198,11 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         adapter = new MusicAdapter(getFragmentManager());
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
+    }
+
+    private SongSheetInfo getSongSheetInfoById() {
+        CollectedSongSheetDao collectedSongSheetDao = DBUtils.getCollectedSongSheetDao();
+        return collectedSongSheetDao.getCollectedSongSheetById(songSheetId);
     }
 
     @Override
@@ -282,9 +294,37 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick({R.id.rl_user_info, R.id.tv_evaluation_num, R.id.tv_share_num, R.id.tv_download, R.id.tv_multi_selection, R.id.tv_play_all, R.id.iv_little_bg})
+    @OnClick({R.id.tv_collect_song_sheet, R.id.rl_user_info, R.id.tv_evaluation_num, R.id.tv_share_num, R.id.tv_download, R.id.tv_multi_selection, R.id.tv_play_all, R.id.iv_little_bg})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.tv_collect_song_sheet:
+                if (result == null) {
+                    showToast(R.string.wait);
+                } else {
+                    CollectedSongSheetDao collectedSongSheetDao = DBUtils.getCollectedSongSheetDao();
+                    SongSheetInfo songSheetInfo = collectedSongSheetDao.getCollectedSongSheetById(songSheetId);
+                    if (songSheetInfo == null) {
+                        songSheetInfo = new SongSheetInfo();
+                        songSheetInfo.setId(result.getId());
+                        songSheetInfo.setTitle(result.getName());
+                        songSheetInfo.setDes(result.getDescription());
+                        songSheetInfo.setCoverUrl(result.getCoverImgUrl());
+                        songSheetInfo.setPlayCount(String.valueOf(result.getPlayCount()));
+                        songSheetInfo.setMusicCount(String.valueOf(result.getTrackCount()));
+                        SongSheetDetail.ResultBean.CreatorBean creator = result.getCreator();
+                        if (creator != null) {
+                            songSheetInfo.setCreatorId(String.valueOf(creator.getUserId()));
+                            songSheetInfo.setCreatorNickName(creator.getNickname());
+                            songSheetInfo.setCreatorCoverUrl(creator.getAvatarUrl());
+                            songSheetInfo.setCreatorBgUrl(creator.getBackgroundUrl());
+                        }
+                        collectedSongSheetDao.addSongSheet(songSheetInfo);
+                        tvCollectSongSheet.setText(R.string.haveCollected);
+                    } else {
+                        showToast(R.string.haveCollected);
+                    }
+                }
+                break;
             case R.id.rl_user_info:
                 arguments.clear();
                 if (result == null) {

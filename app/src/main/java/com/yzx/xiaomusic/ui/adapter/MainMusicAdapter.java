@@ -96,6 +96,7 @@ public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder,
                 adapter.setData(songSheetInfos);
             } else if (position == 6) {
                 songSheetHolder.tvTitle.setText(String.format("收藏的歌单(%s)", "0"));
+                adapter.setData(DBUtils.getCollectedSongSheetDao().getAllCollectedSongSheet());
             }
 
             songSheetHolder.recyclerView.setLayoutManager(new LinearLayoutManager(context) {

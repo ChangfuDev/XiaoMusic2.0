@@ -16,7 +16,7 @@
             android:id="@+id/tb"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            app:navigationIcon="@drawable/oq">
+            app:navigationIcon="@drawable/ow">
 
             <EditText
                 android:id="@+id/et_search"
