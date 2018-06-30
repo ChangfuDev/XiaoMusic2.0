@@ -1,7 +1,10 @@
 package com.yzx.xiaomusic.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +14,13 @@ import android.widget.TextView;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.ui.songsheet.list.SongSheetListFragment;
+import com.yzx.xiaomusic.utils.TimeUtils;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
@@ -52,7 +59,7 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
         Context context = parent.getContext();
         switch (viewType) {
             case TYPE_BANNER:
-                return new BannerHolder(ResourceUtils.parseLayout(context, R.layout.item_banner, parent));
+                return new BannerHolder(ResourceUtils.parseLayout(context, R.layout.banner, parent));
             case TYPE_FOUR:
                 return new FourHolder(ResourceUtils.parseLayout(context, R.layout.item_four, parent));
             case TYPE_TITLE:
@@ -67,6 +74,7 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
 
         switch (getItemViewType(position)) {
             case TYPE_BANNER:
+                dealBanner((BannerHolder) holder);
                 break;
             case TYPE_FOUR:
                 dealFour((FourHolder) holder);
@@ -80,11 +88,27 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
         }
     }
 
+    @SuppressLint("CheckResult")
+    private void dealBanner(BannerHolder holder) {
+        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+        pagerSnapHelper.attachToRecyclerView(holder.recyclerView);
+        holder.recyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
+        BannerAdapter adapter = new BannerAdapter();
+        holder.recyclerView.setAdapter(adapter);
+        Observable
+                .interval(3, TimeUnit.SECONDS)
+                .subscribe(aLong -> {
+                    holder.recyclerView.smoothScrollToPosition(aLong.intValue());
+                });
+
+    }
+
     private void dealFour(FourHolder holder) {
         holder.llPrivateFm.setOnClickListener(this);
         holder.llDayRecommend.setOnClickListener(this);
         holder.llSongSheet.setOnClickListener(this);
         holder.llRank.setOnClickListener(this);
+        holder.tvToday.setText(TimeUtils.getToday());
     }
 
     @Override
@@ -102,6 +126,8 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
     }
 
     class BannerHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.recyclerView)
+        RecyclerView recyclerView;
 
         public BannerHolder(View itemView) {
             super(itemView);
@@ -118,6 +144,8 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
         LinearLayout llSongSheet;
         @BindView(R.id.ll_rank)
         LinearLayout llRank;
+        @BindView(R.id.tv_today)
+        TextView tvToday;
 
         public FourHolder(View itemView) {
             super(itemView);

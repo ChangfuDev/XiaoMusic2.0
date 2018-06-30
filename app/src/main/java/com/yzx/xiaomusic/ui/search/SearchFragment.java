@@ -355,6 +355,7 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
             etSearch.clearFocus();
             return true;
         }
-        return super.onBackPressedSupport();
+        pop();
+        return true;
     }
 }

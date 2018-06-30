@@ -16,7 +16,6 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- *
  * @author yzx
  * @date 2018/6/21
  * Description 播放页面华东的卡片
@@ -34,7 +33,7 @@ public class PlayCardAdapter extends CommonBaseAdapter<PlayCardAdapter.Holder, M
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         super.onBindViewHolder(holder, position);
         MusicInfo musicInfo = datas.get(position);
-        GlideUtils.loadImg(holder.itemView.getContext(), musicInfo.getAlbumCoverPath(), holder.ivCover);
+        GlideUtils.loadImg(holder.itemView.getContext(), musicInfo.getAlbumCoverPath(), GlideUtils.TYPE_PLAY_CARD, -1, holder.ivCover, false);
     }
 
     class Holder extends RecyclerView.ViewHolder {

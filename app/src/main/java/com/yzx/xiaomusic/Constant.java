@@ -32,50 +32,54 @@ public class Constant {
     /**
      * App缓存路径
      */
-    public static final String PATH_APP = Environment.getExternalStorageDirectory().getAbsolutePath()+"/XiaoMusic";
+    public static final String PATH_APP = Environment.getExternalStorageDirectory().getAbsolutePath() + "/XiaoMusic";
 
     /**
      * 缓存
      */
-    public static final String CACHE ="/cache";
+    public static final String CACHE = "/cache";
     /**
      * 歌词目录
      */
-    public static final String LYRIC ="/lyric";
+    public static final String LYRIC = "/lyric";
     /**
      * 歌曲缓存路径
      */
-    public static final String MUSIC ="/music";
+    public static final String MUSIC = "/music";
     /**
      * 图片缓存路径
      */
-    public static final String IMG ="/img";
+    public static final String IMG = "/img";
     /**
      * 歌曲缓存路径
      */
-    public static final String DOWNLOAD ="/download";
+    public static final String DOWNLOAD = "/download";
     /**
      * 缓存绝对路径
      */
-    public static final String PATH_ABSOLUTE_CACHE =PATH_APP+CACHE;
+    public static final String PATH_ABSOLUTE_CACHE = PATH_APP + CACHE;
 
     /**
      * 歌词绝缓存对路径
      */
-    public static final String PATH_ABSOLUTE_CACHE_LYRIC =PATH_APP+CACHE+LYRIC;
+    public static final String PATH_ABSOLUTE_CACHE_LYRIC = PATH_APP + CACHE + LYRIC;
 
     /**
      * 歌曲缓存绝对路径
      */
-    public static final String PATH_ABSOLUTE_CACHE_IMG =PATH_APP+CACHE+IMG;
+    public static final String PATH_ABSOLUTE_CACHE_IMG = PATH_APP + CACHE + IMG;
 
     /**
      * 歌曲缓存绝对路径
      */
-    public static final String PATH_ABSOLUTE_CACHE_MUSIC =PATH_APP+CACHE+MUSIC;
+    public static final String PATH_ABSOLUTE_CACHE_MUSIC = PATH_APP + CACHE + MUSIC;
 
     /**
      * 歌曲下载绝对路径绝对路径
      */
-    public static final String PATH_ABSOLUTE_DOWNLOAD =PATH_APP+DOWNLOAD;
+    public static final String PATH_ABSOLUTE_DOWNLOAD = PATH_APP + DOWNLOAD;
+    /**
+     * 图片
+     */
+    public static final String PIC = "http://p2.music.126.net/o_iih2VXlBwk8Pb3I2J-5w==/109951163172034776.jpg?param=180y180";
 }

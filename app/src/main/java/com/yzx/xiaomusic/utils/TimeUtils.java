@@ -20,4 +20,12 @@ public class TimeUtils {
         return simpleDateFormat.format(time);
     }
 
+    public static String getToday() {
+
+        String data = getFormatData(System.currentTimeMillis(), "dd");
+        if (data.startsWith("0")) {
+            return data.replace("0", "");
+        }
+        return data;
+    }
 }

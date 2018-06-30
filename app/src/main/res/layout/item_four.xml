@@ -49,12 +49,29 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:elevation="5dp"
-                android:src="@drawable/t_dragonball_icn_daily"
-                app:civ_fill_color="@color/colorAccent" />
+                android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elevation="5dp"
+                    android:src="@drawable/t_dragonball_icn_daily"
+                    app:civ_fill_color="@color/colorAccent" />
+
+                <TextView
+                    android:id="@+id/tv_today"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:elevation="6dp"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="10sp"
+                    android:translationY="3dp"
+                    tools:ignore="SmallSp"
+                    tools:text="5" />
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"

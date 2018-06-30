@@ -29,6 +29,7 @@ public class GlideUtils {
     public static final int TYPE_SONG_SHEET = 2;
     public static final int TYPE_BG_SINGER = 3;
     public static final int TYPE_BG_USER = 4;
+    public static final int TYPE_PLAY_CARD = 5;
 
     public static final int TYPE_TRANSFORM_DEFAULT = 0;
     public static final int TYPE_TRANSFORM_BLUR = 1;
@@ -68,6 +69,9 @@ public class GlideUtils {
                 break;
             case TYPE_BG_USER:
                 placeholder = R.drawable.pz;
+                break;
+            case TYPE_PLAY_CARD:
+                placeholder = R.drawable.acg;
                 break;
             default:
                 placeholder = R.drawable.ic_default_song_sheet;

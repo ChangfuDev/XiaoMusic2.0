@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
+import com.yzx.xiaomusic.Constant;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.db.DBUtils;
 import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
@@ -29,7 +30,8 @@ import static com.yzx.xiaomusic.Constant.KEY_NAME;
 
 
 /**
- * Created by yzx on 2018/6/15.
+ * @author yzx
+ * @date 2018/6/15
  * Description
  */
 public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder, String> {
@@ -82,6 +84,13 @@ public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder,
                 songSheetDetailFragment.setArguments(bundle);
                 parentFragment.start(songSheetDetailFragment);
             });
+            songSheetHolder.ivOpenClose.setOnClickListener(v -> {
+                controlVisible(songSheetHolder);
+            });
+
+            songSheetHolder.tvTitle.setOnClickListener(v -> {
+                controlVisible(songSheetHolder);
+            });
             songSheetHolder.recyclerView.setAdapter(adapter);
             if (position == 5) {
                 songSheetHolder.tvTitle.setText(String.format("创建的歌单(%s)", "1"));
@@ -89,7 +98,7 @@ public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder,
                 SongSheetInfo songSheetInfo = new SongSheetInfo();
                 songSheetInfo.setId("-1");
                 songSheetInfo.setTitle("我喜欢的音乐");
-                songSheetInfo.setCoverUrl("http://p2.music.126.net/o_iih2VXlBwk8Pb3I2J-5w==/109951163172034776.jpg?param=180y180");
+                songSheetInfo.setCoverUrl(Constant.PIC);
                 int size = DBUtils.getLikedMusicInfoDao().getAllLikedMusicInfos().size();
                 songSheetInfo.setMusicCount(String.valueOf(size));
                 songSheetInfos.add(songSheetInfo);
@@ -111,6 +120,12 @@ public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder,
             titleHolder.tvTitle.setText(titles.get(position));
             titleHolder.ivCover.setImageResource(icons.get(position));
         }
+    }
+
+    private void controlVisible(SongSheetHolder songSheetHolder) {
+        int visibility = songSheetHolder.recyclerView.getVisibility();
+        songSheetHolder.recyclerView.setVisibility(visibility == View.GONE ? View.VISIBLE : View.GONE);
+        songSheetHolder.ivOpenClose.animate().rotation(visibility == View.GONE ? 90 : 0).setDuration(150).start();
     }
 
     @Override
