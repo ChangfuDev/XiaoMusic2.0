@@ -3,14 +3,19 @@ package com.yzx.xiaomusic.service;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;
 import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.app.MusicApplication;
@@ -21,6 +26,8 @@ import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.network.api.MusicApi;
 import com.yzx.xiaomusic.utils.EventBusUtils;
+import com.yzx.xiaomusic.utils.MusicDataUtils;
+import com.yzx.xiaomusic.utils.PlayNotification;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -148,11 +155,11 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 //        }
         buffer = percent;
         EventBusUtils.post(new MessageEvent(TYPE_MUSIC_UPDATE_BUFFER, percent));
-//        Log.i(TAG, musicInfo.getMusicName() + "onBufferingUpdate: " + percent + "---" + (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration())));
     }
 
     @SuppressLint("CheckResult")
     private void sendPlayingEvent() {
+        showPlayNotification();
         EventBusUtils.post(new MessageEvent(TYPE_MUSIC_PLAYING));
         Log.i(TAG, "sendPlayingEvent: ");
         Observable
@@ -183,11 +190,28 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
     private void sendPauseEvent() {
         EventBus.getDefault().post(new MessageEvent(TYPE_MUSIC_PAUSE));
+        showPlayNotification();
         disposable.dispose();
     }
 
     public boolean isPlaying() {
         return mediaPlayer.isPlaying();
+    }
+
+    private void showPlayNotification() {
+        Glide.with(getApplicationContext())
+                .asBitmap()
+                .load(musicInfo.getAlbumCoverPath())
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        PlayNotification.showNotification(getApplicationContext(),
+                                musicInfo.getMusicName(),
+                                MusicDataUtils.getSingers(musicInfo),
+                                resource);
+                    }
+                });
+
     }
 
     /**

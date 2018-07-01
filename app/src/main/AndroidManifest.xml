@@ -52,7 +52,12 @@
         </activity>
 
         <service android:name=".service.MusicService" />
-
+        <!--小窗口控制音乐-->
+        <receiver android:name=".service.RemoteReceiver">
+            <intent-filter>
+                <action android:name="com.yzx.xiaomusic.remote"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

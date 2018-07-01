@@ -19,6 +19,7 @@ import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.ui.songsheet.detail.SongSheetDetailFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -97,6 +98,7 @@ public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder,
                 ArrayList<SongSheetInfo> songSheetInfos = new ArrayList<>();
                 SongSheetInfo songSheetInfo = new SongSheetInfo();
                 songSheetInfo.setId("-1");
+                songSheetInfo.setCreatorNickName("帅气的杨子晓=^_^=");
                 songSheetInfo.setTitle("我喜欢的音乐");
                 songSheetInfo.setCoverUrl(Constant.PIC);
                 int size = DBUtils.getLikedMusicInfoDao().getAllLikedMusicInfos().size();
@@ -104,8 +106,9 @@ public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder,
                 songSheetInfos.add(songSheetInfo);
                 adapter.setData(songSheetInfos);
             } else if (position == 6) {
-                songSheetHolder.tvTitle.setText(String.format("收藏的歌单(%s)", "0"));
-                adapter.setData(DBUtils.getCollectedSongSheetDao().getAllCollectedSongSheet());
+                List<SongSheetInfo> allCollectedSongSheet = DBUtils.getCollectedSongSheetDao().getAllCollectedSongSheet();
+                songSheetHolder.tvTitle.setText(String.format("收藏的歌单(%s)", allCollectedSongSheet.size()));
+                adapter.setData(allCollectedSongSheet);
             }
 
             songSheetHolder.recyclerView.setLayoutManager(new LinearLayoutManager(context) {

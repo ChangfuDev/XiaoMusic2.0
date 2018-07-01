@@ -37,7 +37,7 @@ public class SongSheetAdapter extends CommonBaseAdapter<SongSheetAdapter.SongShe
         SongSheetInfo songSheet = datas.get(position);
         GlideUtils.loadImg(context, songSheet.getCoverUrl(), holder.ivHead);
         holder.tvTitle.setText(songSheet.getTitle());
-        holder.tvSubTitle.setText(String.format("%s首，播放%s次", songSheet.getMusicCount(), songSheet.getPlayCount()));
+        holder.tvSubTitle.setText(String.format("%s首，by %s", songSheet.getMusicCount(), songSheet.getCreatorNickName()));
     }
 
     class SongSheetHolder extends RecyclerView.ViewHolder {

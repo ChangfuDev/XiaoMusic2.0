@@ -43,6 +43,9 @@ public class CacheUtils {
         final DiskLruCache musicCache = CacheManager.getCacheManager().getMusicCache();
 
         Observable.create((ObservableOnSubscribe<String>) e -> {
+            if (musicCache == null) {
+                return;
+            }
             try {
                 DiskLruCache.Editor editor = musicCache.edit(id);
                 if (editor != null) {

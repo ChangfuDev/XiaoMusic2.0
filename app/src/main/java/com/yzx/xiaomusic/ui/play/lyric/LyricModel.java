@@ -40,6 +40,9 @@ public class LyricModel extends CommonBaseModel {
                         if (lyric != null && lyric.getLrc() != null && lyric.getLrc().getLyric() != null) {
                             String lyricString = lyric.getLrc().getLyric();
                             DiskLruCache lyricCache = CacheManager.getCacheManager().getLyricCache();
+                            if (lyricCache == null) {
+                                return;
+                            }
                             Observable.create((ObservableOnSubscribe<String>) e -> {
                                 try {
                                     DiskLruCache.Editor editor = lyricCache.edit(id);
