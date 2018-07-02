@@ -27,7 +27,6 @@ import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.network.api.MusicApi;
 import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
-import com.yzx.xiaomusic.utils.PlayNotification;
 
 import org.greenrobot.eventbus.EventBus;
 

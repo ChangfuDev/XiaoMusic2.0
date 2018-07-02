@@ -115,7 +115,9 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         initToolBar(tb);
         tb.inflateMenu(R.menu.menu_share);
         tb.setOnMenuItemClickListener(this);
-
+        playCardFragment = new PlayCardFragment();
+        lyricFragment = new LyricFragment();
+        loadMultipleRootFragment(R.id.fragmentContainer, 0, playCardFragment, lyricFragment);
         if (musicInfo != null) {
             tvSubTitle.setVisibility(View.VISIBLE);
             tvTitle.setText(musicInfo.getMusicName());
@@ -127,14 +129,6 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
             tvCurrentProgress.setText("00:00");
             tvDuration.setText(TimeUtils.getFormatData(musicInfo.getDuration(), TimeUtils.FORMAT_MM_SS));
         }
-    }
-
-    @Override
-    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-        super.onEnterAnimationEnd(savedInstanceState);
-        playCardFragment = new PlayCardFragment();
-        lyricFragment = new LyricFragment();
-        loadMultipleRootFragment(R.id.fragmentContainer, 0, playCardFragment, lyricFragment);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.yzx.xiaomusic.utils;
+package com.yzx.xiaomusic.service;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
@@ -10,7 +10,6 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.yzx.xiaomusic.R;
-import com.yzx.xiaomusic.service.RemoteReceiver;
 import com.yzx.xiaomusic.ui.main.MainActivity;
 
 import static com.yzx.xiaomusic.service.RemoteReceiver.ACTION;
@@ -48,9 +47,11 @@ public class PlayNotification {
 //                .setContentTitle(name)
 //                .setContentText(artist)
 //                .setLargeIcon(bitmap)
-                .setContent(remoteView)
-                .setCustomHeadsUpContentView(remoteView)
+//                .setContent(remoteView)
+//                .setCustomHeadsUpContentView(remoteView)
+                //vivo如果只设置该方法会显示小窗口，需要适配
                 .setCustomContentView(remoteView)
+//                魅族如果只设置大的会不显示通知的内容
                 .setCustomBigContentView(remoteView)
 //                .addAction(R.drawable.acu, "", getPreviousPendingIntent(context))
 //                .addAction(isPlaying() ? R.drawable.acq : R.drawable.acs, "", getPlayPausePendingIntent(context))
@@ -59,7 +60,7 @@ public class PlayNotification {
                 //设置优先级优先级越大越靠前
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 //禁止侧滑删除
-                .setOngoing(getInstance().getService().isPlaying())
+                .setOngoing(true)
                 //设置点击取消？可点击取消：不可点击取消
                 .setAutoCancel(false)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

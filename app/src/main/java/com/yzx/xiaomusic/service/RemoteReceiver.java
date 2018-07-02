@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import static com.yzx.xiaomusic.utils.PlayNotification.*;
+import static com.yzx.xiaomusic.service.PlayNotification.*;
 
 
 /**

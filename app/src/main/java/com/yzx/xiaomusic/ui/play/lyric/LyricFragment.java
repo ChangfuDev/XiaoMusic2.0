@@ -79,8 +79,13 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-        loadLyric();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onEnterAnimationEnd(Bundle savedInstanceState) {
+        super.onEnterAnimationEnd(savedInstanceState);
+        loadLyric();
     }
 
     @OnClick(R.id.lrcView)
