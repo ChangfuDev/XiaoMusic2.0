@@ -20,21 +20,31 @@ import android.widget.TextView;
 
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadSir;
+import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.model.entity.album.AlbumDetail;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SingerInfo;
+import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
+import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.common.CoverInfoFragment;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
+import com.yzx.xiaomusic.utils.MusicDataUtils;
+import com.yzx.xiaomusic.widget.CircleProgress;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.Observable;
 
@@ -43,13 +53,17 @@ import static com.yzx.xiaomusic.Constant.KEY_DES;
 import static com.yzx.xiaomusic.Constant.KEY_ID;
 import static com.yzx.xiaomusic.Constant.KEY_NAME;
 import static com.yzx.xiaomusic.Constant.KEY_TITLE;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_PROGRESS;
 
 /**
  * @author yzx
  * @date 2018/6/12
- * Description 歌单详情
+ * Description 专辑详情
  */
-public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> {
+public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> implements CommonBaseAdapter.OnItemClickListener {
     @BindView(R.id.iv_bg)
     ImageView ivBg;
     @BindView(R.id.tv_play_count)
@@ -94,6 +108,19 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> {
     LinearLayout llHead;
     @BindView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
+    @BindView(R.id.iv_music_cover)
+    ImageView ivMusicCover;
+    @BindView(R.id.tv_music_name)
+    TextView tvMusicName;
+    @BindView(R.id.tv_music_singer)
+    TextView tvMusicSinger;
+    @BindView(R.id.iv_play_pause)
+    CircleProgress ivPlayPause;
+    @BindView(R.id.iv_song_sheet)
+    ImageView ivSongSheet;
+    @BindView(R.id.layout_bottom_music_controller)
+    LinearLayout layoutBottomMusicController;
+    Unbinder unbinder;
     private MusicAdapter adapter;
     private Bundle arguments;
 
@@ -101,6 +128,7 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> {
     private String cover;
     private String id;
     private AlbumDetail.AlbumBean album;
+    private MusicInfo musicInfo;
 
     @Override
     protected int initContentViewId() {
@@ -156,6 +184,7 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> {
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
 
         adapter = new MusicAdapter(getFragmentManager());
+        adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -259,6 +288,56 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> {
                     arguments.putString(KEY_DES, album.getDescription());
                     easyStart(new CoverInfoFragment(), arguments);
                 }
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        playMusicWithStartFragment(adapter.datas, position);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initBottomMusicController(layoutBottomMusicController);
+        musicInfo = service.getMusicInfo();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBusUtils.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBusUtils.unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        switch (event.getType()) {
+            case TYPE_MUSIC_CHANGED:
+                service = ServiceManager.getInstance().getService();
+                musicInfo = service.getMusicInfo();
+                tvMusicName.setText(musicInfo.getMusicName());
+                tvMusicSinger.setText(MusicDataUtils.getSingers(musicInfo));
+                if (!musicInfo.isLocal()) {
+                    GlideUtils.loadImg(getContext(), musicInfo.getAlbumCoverPath(), ivMusicCover);
+                }
+                break;
+            case TYPE_MUSIC_PLAYING:
+                ivPlayPause.setState(CircleProgress.STATE_PLAY);
+                break;
+            case TYPE_MUSIC_PAUSE:
+                ivPlayPause.setState(CircleProgress.STATE_PAUSE);
+                break;
+            case TYPE_MUSIC_UPDATE_PROGRESS:
+                Integer content = (Integer) event.getContent();
+                ivPlayPause.setMax((int) musicInfo.getDuration());
+                ivPlayPause.setProgress(content);
                 break;
         }
     }

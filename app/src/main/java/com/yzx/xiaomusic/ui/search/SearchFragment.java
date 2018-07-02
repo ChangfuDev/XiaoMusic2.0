@@ -349,13 +349,14 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
         }
     }
 
-    @Override
-    public boolean onBackPressedSupport() {
-        if (etSearch.hasFocus()) {
-            etSearch.clearFocus();
-            return true;
-        }
-        pop();
-        return true;
-    }
+//    @Override
+//    public boolean onBackPressedSupport() {
+//        if (etSearch.hasFocus()) {
+//            etSearch.setFocusable(false);
+//            etSearch.setFocusable(true);
+//            return true;
+//        }
+//        pop();
+//        return true;
+//    }
 }

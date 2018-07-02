@@ -3,6 +3,7 @@ package com.yzx.xiaomusic.ui.search.result;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -15,6 +16,7 @@ import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.base.LoadMoreView;
 import com.yzx.xiaomusic.model.entity.common.AlbumInfo;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.model.entity.eventbus.SearchContent;
@@ -140,6 +142,10 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
     }
 
     public void search(int offset) {
+        if (TextUtils.isEmpty(searchContent)) {
+            showToast("请输入关键词");
+            return;
+        }
         mPresenter.getSearchResult(searchType, offset * ApiConstant.LIMIT, searchContent);
     }
 
@@ -198,8 +204,13 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
         Bundle bundle = new Bundle();
         switch (view.getId()) {
             case R.id.rl_search_music:
+                MusicInfo musicInfo = (MusicInfo) adapter.datas.get(position);
+                addMusicToSogSheet(musicInfo);
+                getService().setMusicIndex(getService().getSongSheet().size() - 1);
+                getService().realPlay();
                 break;
             case R.id.rl_search_mv:
+                showToast(R.string.commingSoon);
                 break;
             case R.id.rl_search_singer:
                 bundle.clear();
@@ -224,6 +235,7 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
                 easyParentStart(new SongSheetDetailFragment(), bundle);
                 break;
             case R.id.rl_search_radio:
+                showToast(R.string.commingSoon);
                 break;
             case R.id.rl_search_user:
                 bundle.clear();

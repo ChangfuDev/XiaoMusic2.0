@@ -34,6 +34,7 @@ import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import me.yokeyword.fragmentation.SupportFragment;
@@ -273,10 +274,35 @@ public abstract class BaseFragment extends CommonBaseFragment {
                 service.playPause();
             }
             PlayFragment playFragment = findFragment(PlayFragment.class);
-            if (playFragment != null)
+            if (playFragment != null) {
                 playFragment.putNewBundle(null);
+            }
             parent.start(playFragment == null ? new PlayFragment() : playFragment, SINGLETASK);
         }
     }
 
+
+    public MusicService getService() {
+        return service;
+    }
+
+    /**
+     * 添加歌曲到歌单
+     *
+     * @param musicInfo
+     */
+    public void addMusicToSogSheet(MusicInfo musicInfo) {
+        if (getService() == null) {
+            showToast("服务暂未启动");
+            return;
+        }
+
+        List<MusicInfo> songSheet = getService().getSongSheet();
+        if (songSheet == null) {
+            ArrayList<MusicInfo> musicInfos = new ArrayList<>();
+            getService().setSongSheet(musicInfos);
+        } else {
+            songSheet.add(musicInfo);
+        }
+    }
 }

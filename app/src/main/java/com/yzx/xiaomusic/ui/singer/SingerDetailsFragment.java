@@ -28,7 +28,10 @@ import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.SingerDetailPagerAdapter;
+import com.yzx.xiaomusic.ui.singer.album.AlbumFragment;
+import com.yzx.xiaomusic.ui.singer.info.InfoFragment;
 import com.yzx.xiaomusic.ui.singer.top.Top50Fragment;
+import com.yzx.xiaomusic.ui.singer.video.VideoFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
@@ -181,7 +184,9 @@ public class SingerDetailsFragment extends BaseFragment {
         top50Fragment.setArguments(getArguments());
         fragments.add(top50Fragment);
 
-        fragments.add(new AlbumFragment());
+        AlbumFragment albumFragment = new AlbumFragment();
+        albumFragment.setArguments(getArguments());
+        fragments.add(albumFragment);
         fragments.add(new VideoFragment());
 
         InfoFragment infoFragment = new InfoFragment();

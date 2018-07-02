@@ -1,4 +1,4 @@
-package com.yzx.xiaomusic.ui.singer;
+package com.yzx.xiaomusic.ui.singer.video;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,10 +8,7 @@ import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.ui.singer.top.Top50Presenter;
 
-/**
- * @author yzx
- */
-public class InfoFragment extends BaseMvpFragment {
+public class VideoFragment extends BaseMvpFragment {
     @Override
     protected CommonBasePresenter getPresenter() {
         return new Top50Presenter();
