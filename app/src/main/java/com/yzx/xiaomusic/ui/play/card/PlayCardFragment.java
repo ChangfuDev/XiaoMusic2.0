@@ -24,9 +24,9 @@ import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.adapter.PlayCardAdapter;
 import com.yzx.xiaomusic.ui.dialog.BottomMusicInfoDialog;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.JsonUtils;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -58,7 +58,7 @@ public class PlayCardFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+        EventBusUtils.register(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -95,7 +95,6 @@ public class PlayCardFragment extends BaseFragment {
             PlayFragment playFragment = (PlayFragment) getParentFragment();
             playFragment.showHideFragment(playFragment.lyricFragment, this);
         });
-
         showLiked();
     }
 
@@ -141,13 +140,16 @@ public class PlayCardFragment extends BaseFragment {
             if (likedMusicInfo == null) {
                 likedMusicInfoDao.addLikedMusicInfo(new LikedMusicInfo(musicInfo.getMusicId(), JsonUtils.objectToString(musicInfo)));
                 ivLike.setImageResource(R.drawable.ae2);
+            } else {
+                likedMusicInfoDao.deleteLikedMusicInfo(likedMusicInfo);
+                ivLike.setImageResource(R.drawable.ae0);
             }
         }
     }
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+        EventBusUtils.unregister(this);
         super.onDestroyView();
     }
 
@@ -155,7 +157,6 @@ public class PlayCardFragment extends BaseFragment {
     public void onMessageEvent(MessageEvent event) {
         switch (event.getType()) {
             case TYPE_MUSIC_CHANGED:
-                musicInfo = service.getMusicInfo();
                 recyclerView.scrollToPosition(service.getIndex());
                 showLiked();
                 break;
@@ -166,6 +167,7 @@ public class PlayCardFragment extends BaseFragment {
      * 根据是否收藏显示图标
      */
     private void showLiked() {
+        musicInfo = service.getMusicInfo();
         if (musicInfo != null) {
             LikedMusicInfoDao likedMusicInfoDao = DBUtils.getLikedMusicInfoDao();
             LikedMusicInfo likedMusicInfo = likedMusicInfoDao.getLikedMusicInfoById(musicInfo.getMusicId());

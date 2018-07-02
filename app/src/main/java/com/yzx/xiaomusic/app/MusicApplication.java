@@ -19,6 +19,7 @@ import com.yzx.commonlibrary.base.CommonBaseApplication;
 import com.yzx.xiaomusic.cache.CacheManager;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.MusicService;
+import com.yzx.xiaomusic.service.PlayNotification;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
@@ -95,7 +96,7 @@ public class MusicApplication extends CommonBaseApplication {
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-
+                PlayNotification.dismiss();
             }
         };
         bindService(serviceIntent, conn, Service.BIND_AUTO_CREATE);

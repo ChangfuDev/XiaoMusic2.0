@@ -10,10 +10,37 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class EventBusUtils {
     public static void post(MessageEvent event) {
-        EventBus.getDefault().post(event);
+        getDefault().post(event);
     }
 
     public static void postSticky(MessageEvent event) {
-        EventBus.getDefault().postSticky(event);
+        getDefault().postSticky(event);
     }
+
+    /**
+     * 注册EventBus
+     *
+     * @param subscriber
+     */
+    public static void register(Object subscriber) {
+        if (getDefault().isRegistered(subscriber)) {
+            return;
+        }
+        getDefault().register(subscriber);
+    }
+
+    /**
+     * 注销EventBus
+     * @param subscriber
+     */
+    public static void unregister(Object subscriber) {
+        getDefault().unregister(subscriber);
+    }
+
+
+    private static EventBus getDefault() {
+        return EventBus.getDefault();
+    }
+
+
 }

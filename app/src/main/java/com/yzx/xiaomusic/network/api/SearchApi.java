@@ -11,12 +11,13 @@ import com.yzx.xiaomusic.model.entity.search.SearchUserResult;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 /**
  * 搜索APi
  */
-public interface SearchApi {
+public interface SearchApi<T extends BaseResposeBody> {
 
 
     /**
@@ -41,9 +42,23 @@ public interface SearchApi {
     Observable<SearchMusicResult> searchMusic(@Query("type") String type, @Query("limit") int limit, @Query("search_type") int search_type,
                                               @Query("offset") int offset, @Query("s") String s);
 
-    @GET("/cloudmusic/")
-    Observable<SearchMvResult> searchMv(@Query("type") String type, @Query("limit") int limit, @Query("search_type") int search_type,
-                                        @Query("offset") int offset, @Query("s") String s);
+//
+//@GET("/cloudmusic/")
+//    Observable<SearchMvResult> searchMv(@Query("type") String type, @Query("limit") int limit, @Query("search_type") int search_type,
+//                                        @Query("offset") int offset, @Query("s") String s);
+
+    /**
+     * 搜索Mv
+     *
+     * @param type
+     * @param limit
+     * @param offset
+     * @param s
+     * @return
+     */
+    @POST("http://music.163.com/api/search/pc/")
+    Observable<SearchMvResult> searchMv(@Query("type") int type, @Query("limit") String limit,
+                                        @Query("offset") String offset, @Query("s") String s);
 
     @GET("/cloudmusic/")
     Observable<SearchSingerResult> searchSinger(@Query("type") String type, @Query("limit") int limit, @Query("search_type") int search_type,

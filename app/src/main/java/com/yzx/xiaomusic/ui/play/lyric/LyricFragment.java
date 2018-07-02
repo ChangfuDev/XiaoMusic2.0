@@ -19,10 +19,10 @@ import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.widget.lyric.LrcHelper;
 import com.yzx.xiaomusic.widget.lyric.LrcView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -75,17 +75,13 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
         super.onResume();
         int volume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
         seekBar.setProgress(volume);
+
     }
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-        super.onEnterAnimationEnd(savedInstanceState);
         loadLyric();
+        EventBusUtils.register(this);
     }
 
     @OnClick(R.id.lrcView)
@@ -158,7 +154,7 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+        EventBusUtils.unregister(this);
         super.onDestroyView();
     }
 

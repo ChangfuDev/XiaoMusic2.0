@@ -45,7 +45,7 @@ public class RemoteReceiver extends BroadcastReceiver {
                     service.next();
                     break;
                 case VALUE_DELETE:
-                    service.playPause();
+                    service.pause();
                     dismiss();
                     break;
             }

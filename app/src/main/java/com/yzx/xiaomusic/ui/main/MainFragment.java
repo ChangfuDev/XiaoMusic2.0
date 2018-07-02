@@ -32,12 +32,12 @@ import com.yzx.xiaomusic.ui.main.discover.DiscoverFragment;
 import com.yzx.xiaomusic.ui.main.music.MusicFragment;
 import com.yzx.xiaomusic.ui.main.video.VideoFragment;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
 import com.yzx.xiaomusic.widget.simplelistenner.SimpleTabChangeListener;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -142,7 +142,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+        EventBusUtils.register(this);
         initBottomMusicController(layoutBottomMusicController);
         initNavigationView();
         tb.setNavigationOnClickListener(v -> {
@@ -224,7 +224,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+        EventBusUtils.unregister(this);
         super.onDestroyView();
     }
 

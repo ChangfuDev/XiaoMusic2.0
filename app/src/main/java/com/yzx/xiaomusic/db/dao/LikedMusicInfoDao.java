@@ -1,6 +1,7 @@
 package com.yzx.xiaomusic.db.dao;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
@@ -40,4 +41,12 @@ public interface LikedMusicInfoDao {
      */
     @Query("select  * from likedmusicinfo where musicId = :id")
     LikedMusicInfo getLikedMusicInfoById(String id);
+
+    /**
+     * 删除
+     *
+     * @param likedMusicInfo
+     */
+    @Delete
+    void deleteLikedMusicInfo(LikedMusicInfo likedMusicInfo);
 }

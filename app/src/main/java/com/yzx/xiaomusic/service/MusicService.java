@@ -28,8 +28,6 @@ import com.yzx.xiaomusic.network.api.MusicApi;
 import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -188,7 +186,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     }
 
     private void sendPauseEvent() {
-        EventBus.getDefault().post(new MessageEvent(TYPE_MUSIC_PAUSE));
+        EventBusUtils.post(new MessageEvent(TYPE_MUSIC_PAUSE));
         showPlayNotification();
         disposable.dispose();
     }
@@ -206,7 +204,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         PlayNotification.showNotification(getApplicationContext(),
                                 musicInfo.getMusicName(),
-                                MusicDataUtils.getSingers(musicInfo),
+                                MusicDataUtils.getSingers(musicInfo) + " - " + musicInfo.getAlbumName(),
                                 resource);
                     }
                 });
@@ -253,14 +251,22 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
     public void playPause() {
         if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-            sendPauseEvent();
+            pause();
         } else if (prepared) {
-            mediaPlayer.start();
-            sendPlayingEvent();
+            start();
         } else {
             realPlay();
         }
+    }
+
+    private void start() {
+        mediaPlayer.start();
+        sendPlayingEvent();
+    }
+
+    public void pause() {
+        mediaPlayer.pause();
+        sendPauseEvent();
     }
 
     public void next() {

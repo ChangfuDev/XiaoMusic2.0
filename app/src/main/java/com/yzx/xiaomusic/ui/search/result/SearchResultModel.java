@@ -39,7 +39,8 @@ public class SearchResultModel extends CommonBaseModel {
     public void getSearchMvResult(int searchType, int offset, String s, CommonMvpObserver<SearchMvResult> observer) {
 
         getApiService(SearchApi.class)
-                .searchMv(TYPE_SEARCH, LIMIT, searchType, offset, s)
+//                .searchMv(TYPE_SEARCH, LIMIT, searchType, offset, s)
+                .searchMv(searchType, LIMIT + "", offset + "", s)
                 .compose(RxTransformer.switchSchedulers(this))
                 .subscribe(observer);
     }

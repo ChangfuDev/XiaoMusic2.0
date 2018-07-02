@@ -27,9 +27,9 @@ import com.yzx.xiaomusic.ui.search.SearchFragment;
 import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
 import com.yzx.xiaomusic.ui.songsheet.detail.SongSheetDetailFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -85,7 +85,7 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        EventBus.getDefault().register(this);
+        EventBusUtils.register(this);
     }
 
     @Override
@@ -188,7 +188,7 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+        EventBusUtils.unregister(this);
         super.onDestroyView();
     }
 

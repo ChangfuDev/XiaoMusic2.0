@@ -64,7 +64,6 @@ public class PlayNotification {
                 //设置点击取消？可点击取消：不可点击取消
                 .setAutoCancel(false)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setColor(0x000000)
 //                .setStyle(new NotificationCompat.MediaStyle().setShowActionsInCompactView(0, 1, 2, 3))
                 .build();
 
@@ -89,7 +88,7 @@ public class PlayNotification {
 
         PendingIntent playIntent = getPlayPausePendingIntent(context);
         remoteViews.setImageViewResource(R.id.iv_play_pause,
-                isPlaying() ? R.drawable.acq : R.drawable.acs);
+                isPlaying() ? R.drawable.note_btn_pause_white : R.drawable.note_btn_play_white);
         remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, playIntent);
 
         PendingIntent nextIntent = getNextPendingIntent(context);

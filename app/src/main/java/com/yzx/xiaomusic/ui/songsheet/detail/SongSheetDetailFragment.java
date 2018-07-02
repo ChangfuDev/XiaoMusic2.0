@@ -37,12 +37,12 @@ import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.common.CoverInfoFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.JsonUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -151,7 +151,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         loadService = LoadSir
                 .getDefault()
                 .register(recyclerView, (Callback.OnReloadListener) v -> mPresenter.getSongSheetDetail(songSheetId));
-        EventBus.getDefault().register(this);
+        EventBusUtils.register(this);
         return view;
     }
 
@@ -321,8 +321,8 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
                         collectedSongSheetDao.addSongSheet(songSheetInfo);
                         tvCollectSongSheet.setText(R.string.haveCollected);
                     } else {
-
-                        showToast(R.string.haveCollected);
+                        collectedSongSheetDao.deleteSongSheet(songSheetInfo);
+                        tvCollectSongSheet.setText(R.string.collect);
                     }
                 }
                 break;
@@ -367,7 +367,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+        EventBusUtils.unregister(this);
         super.onDestroyView();
     }
 

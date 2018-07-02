@@ -28,13 +28,13 @@ import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.SongSheetListAdapter;
 import com.yzx.xiaomusic.ui.songsheet.detail.SongSheetDetailFragment;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
 import com.yzx.xiaomusic.widget.GridItemDecoration;
 import com.yzx.xiaomusic.widget.MusicFooter;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -144,13 +144,13 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        EventBusUtils.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
+        EventBusUtils.unregister(this);
     }
 
     @Override

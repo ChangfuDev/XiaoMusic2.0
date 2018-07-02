@@ -30,12 +30,12 @@ import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.SingerDetailPagerAdapter;
 import com.yzx.xiaomusic.ui.singer.top.Top50Fragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
 import com.yzx.xiaomusic.widget.ShapeTextView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -224,7 +224,8 @@ public class SingerDetailsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
+
+        EventBusUtils.register(this);
         initBottomMusicController(layoutBottomMusicController);
         musicInfo = service.getMusicInfo();
     }
@@ -238,7 +239,7 @@ public class SingerDetailsFragment extends BaseFragment {
 
     @Override
     public void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        EventBusUtils.unregister(this);
         super.onDestroy();
     }
 

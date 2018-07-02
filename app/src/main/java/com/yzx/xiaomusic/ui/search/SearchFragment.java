@@ -34,6 +34,7 @@ import com.yzx.xiaomusic.ui.adapter.SearchAdapter;
 import com.yzx.xiaomusic.ui.adapter.SearchHistoryAdapter;
 import com.yzx.xiaomusic.ui.adapter.SearchResultPagerAdapter;
 import com.yzx.xiaomusic.ui.search.result.SearchResultFragment;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
@@ -41,7 +42,6 @@ import com.yzx.xiaomusic.widget.simplelistenner.SimpleTextWathcer;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -292,7 +292,7 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
 
         int currentItem = viewPager.getCurrentItem();
 
-        EventBus.getDefault().postSticky(new MessageEvent(TYPE_SEARCH_CONTENT, new SearchContent(SearchUtils.getSearchTypeByPosition(currentItem), content)));
+        EventBusUtils.postSticky(new MessageEvent(TYPE_SEARCH_CONTENT, new SearchContent(SearchUtils.getSearchTypeByPosition(currentItem), content)));
         etSearch.setText(content);
         dismissPop();
         llSearchResult.setVisibility(View.VISIBLE);
@@ -314,13 +314,13 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        EventBusUtils.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
+        EventBusUtils.unregister(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
