@@ -81,7 +81,6 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         EventBusUtils.register(this);
-        Log.i(TAG, "onCreateView: ");
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -110,7 +109,6 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-
 
         initToolBar(tb);
         tb.inflateMenu(R.menu.menu_share);

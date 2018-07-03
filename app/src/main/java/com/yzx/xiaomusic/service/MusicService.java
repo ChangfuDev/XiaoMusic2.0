@@ -70,6 +70,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     private Random random;
     private Disposable disposable;
     private int buffer;
+    private int currentPosition;
 
 
     @Override
@@ -108,6 +109,10 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
     public int getPlayMode() {
         return playMode;
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
     }
 
     public void setMusicIndex(int position) {
@@ -170,7 +175,9 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
                     @Override
                     public void onNext(Long aLong) {
-                        EventBusUtils.post(new MessageEvent(TYPE_MUSIC_UPDATE_PROGRESS, mediaPlayer.getCurrentPosition()));
+
+                        currentPosition = mediaPlayer.getCurrentPosition();
+                        EventBusUtils.post(new MessageEvent(TYPE_MUSIC_UPDATE_PROGRESS, currentPosition));
                     }
 
                     @Override

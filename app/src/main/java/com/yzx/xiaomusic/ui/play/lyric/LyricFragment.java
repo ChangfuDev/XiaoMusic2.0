@@ -1,5 +1,6 @@
 package com.yzx.xiaomusic.ui.play.lyric;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -78,10 +79,10 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
 
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
         loadLyric();
-        EventBusUtils.register(this);
     }
 
     @OnClick(R.id.lrcView)
@@ -93,11 +94,11 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
+        EventBusUtils.register(this);
     }
 
     private void loadLyric() {
         service = ServiceManager.getInstance().getService();
-
         MusicInfo musicInfo = service.getMusicInfo();
         if (musicInfo != null) {
             String musicId = musicInfo.getMusicId();
@@ -106,7 +107,7 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
                 mPresenter.getLrc(musicId);
             } else {
                 lrcView.setLrcData(LrcHelper.parseLrcFromFile(new File(cacheLyric)));
-                lrcView.updateTime(0);
+//                lrcView.updateTime(service.getCurrentPosition());
             }
         }
     }

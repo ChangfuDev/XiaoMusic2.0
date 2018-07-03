@@ -534,7 +534,6 @@ public class LrcView extends View {
         }
     }
 
-
     /*------------------Config-------------------*/
 
     private OnPlayIndicatorLineListener mOnPlayIndicatorLineListener;
