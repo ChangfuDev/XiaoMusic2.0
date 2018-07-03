@@ -60,12 +60,13 @@
                             tools:ignore="SmallSp"
                             tools:text="1.5万" />
 
-                        <ImageView
+                        <com.othershe.library.NiceImageView
                             android:id="@+id/iv_little_bg"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/ic_default_song_sheet" />
+                            android:src="@drawable/ic_default_song_sheet"
+                            app:corner_radius="@dimen/cornerRadius" />
 
                         <ImageView
                             android:id="@+id/iv_info"

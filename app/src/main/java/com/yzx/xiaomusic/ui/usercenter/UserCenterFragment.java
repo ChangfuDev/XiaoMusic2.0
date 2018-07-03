@@ -199,7 +199,7 @@ public class UserCenterFragment extends BaseFragment {
      */
     public void upData(UserSongSheet.PlaylistBean.CreatorBean creatorBean) {
 
-        GlideUtils.loadImg(getContext(), creatorBean.getBackgroundUrl(), GlideUtils.TYPE_BG_USER, -1, ivBg, false);
+        GlideUtils.loadImg(getContext(), creatorBean.getBackgroundUrl(), GlideUtils.TYPE_BG_USER,ivBg, false);
         tvTitle.setText(creatorBean.getNickname());
         GlideUtils.loadImg(getContext(), creatorBean.getAvatarUrl(), ivHead);
         tvNickName.setText(creatorBean.getNickname());

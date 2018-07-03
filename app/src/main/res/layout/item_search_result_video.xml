@@ -14,14 +14,12 @@
         android:padding="5dp">
 
 
-        <android.support.v7.widget.CardView
+        <RelativeLayout
             android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:elevation="0dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="0dp">
+            android:layout_height="60dp">
 
-            <ImageView
+            <com.othershe.library.NiceImageView
+                app:corner_radius="@dimen/cornerRadius"
                 android:id="@+id/iv_mv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -42,7 +40,7 @@
                 android:textSize="8sp"
                 tools:ignore="SmallSp"
                 tools:text="100" />
-        </android.support.v7.widget.CardView>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -16,7 +16,8 @@
         android:paddingEnd="16dp"
         tools:ignore="RtlSymmetry">
 
-        <ImageView
+        <com.othershe.library.NiceImageView
+            app:corner_radius="@dimen/cornerRadius"
             android:id="@+id/iv_head"
             android:layout_width="@dimen/width_common"
             android:layout_height="@dimen/height_common"

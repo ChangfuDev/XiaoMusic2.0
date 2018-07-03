@@ -23,7 +23,8 @@
         <!--app:cardElevation="0dp">-->
 
         <!--</android.support.v7.widget.CardView>-->
-        <ImageView
+        <com.othershe.library.NiceImageView
+            app:corner_radius="@dimen/cornerRadius"
             android:id="@+id/iv_head"
             android:layout_width="@dimen/width_common"
             android:layout_height="@dimen/height_common"

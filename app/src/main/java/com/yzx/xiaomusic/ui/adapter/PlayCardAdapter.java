@@ -33,7 +33,7 @@ public class PlayCardAdapter extends CommonBaseAdapter<PlayCardAdapter.Holder, M
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         super.onBindViewHolder(holder, position);
         MusicInfo musicInfo = datas.get(position);
-        GlideUtils.loadImg(holder.itemView.getContext(), musicInfo.getAlbumCoverPath(), GlideUtils.TYPE_PLAY_CARD, -1, holder.ivCover, false);
+        GlideUtils.loadImg(holder.itemView.getContext(), musicInfo.getAlbumCoverPath(), GlideUtils.TYPE_PLAY_CARD, holder.ivCover, false);
     }
 
     class Holder extends RecyclerView.ViewHolder {

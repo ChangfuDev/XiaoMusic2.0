@@ -55,7 +55,7 @@ public class CoverInfoFragment extends BaseFragment {
 
     @Override
     public FragmentAnimator onCreateFragmentAnimator() {
-        return new FragmentAnimator(R.anim.fragment_a_enter,R.anim.fragment_a_exit);
+        return new FragmentAnimator(R.anim.fragment_a_enter, R.anim.fragment_a_exit);
     }
 
 //    @Override
@@ -80,7 +80,7 @@ public class CoverInfoFragment extends BaseFragment {
         tvTitle.setText(title);
         tvDes.setText(TextUtils.isEmpty(des) ? "暂无描述" : des);
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
-        GlideUtils.loadImg(getContext(), cover, GlideUtils.TYPE_TRANSFORM_BLUR, ivBg);
+        GlideUtils.loadBlurImg(getContext(), cover, ivBg);
 
 
         if (tags != null && tags.size() > 0) {

@@ -3,12 +3,14 @@ package com.yzx.xiaomusic.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import com.othershe.library.NiceImageView;
+
 /**
  * Created by yzx on 2018/1/23.
  * Description  正方形ImageView,随宽度自适应高度
  */
 
-public class SquareImageView extends android.support.v7.widget.AppCompatImageView {
+public class SquareImageView extends NiceImageView {
     public SquareImageView(Context context) {
         this(context,null);
     }

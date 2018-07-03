@@ -28,7 +28,8 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp">
 
-                    <ImageView
+                    <com.othershe.library.NiceImageView
+                        app:corner_radius="@dimen/cornerRadius"
                         android:id="@+id/iv_cover"
                         android:layout_width="80dp"
                         android:layout_height="80dp"

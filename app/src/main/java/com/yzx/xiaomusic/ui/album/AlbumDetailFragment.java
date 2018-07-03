@@ -179,8 +179,8 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
         tvName.setText(name);
 //        tvSubTitle.setText(recommend);
 //        tvSubTitle.setVisibility(TextUtils.isEmpty(recommend) ? View.GONE : View.VISIBLE);
-        GlideUtils.loadImg(getContext(), cover, GlideUtils.TYPE_TRANSFORM_BLUR, ivBg, true);
-        GlideUtils.loadImg(getContext(), cover, GlideUtils.TYPE_TRANSFORM_BLUR, tbBg);
+        GlideUtils.loadBlurImg(getContext(), cover, ivBg);
+        GlideUtils.loadBlurImg(getContext(), cover, tbBg);
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
 
         adapter = new MusicAdapter(getFragmentManager());
