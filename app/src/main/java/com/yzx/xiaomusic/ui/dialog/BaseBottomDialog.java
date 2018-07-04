@@ -5,6 +5,7 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.yzx.commonlibrary.utils.ResourceUtils;
@@ -28,6 +29,9 @@ public abstract class BaseBottomDialog extends BottomSheetDialogFragment {
         getDialog().getWindow().setGravity(Gravity.BOTTOM);
         BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) getDialog();
         View view = bottomSheetDialog.getWindow().findViewById(android.support.design.R.id.design_bottom_sheet);
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.height = dialogHeight;
+        view.setLayoutParams(layoutParams);
         view.setBackgroundResource(ResourceUtils.parseColor(getContext(), R.color.colorTransparent));
         BottomSheetBehavior.from(view).setPeekHeight(1600);
     }

@@ -93,7 +93,7 @@ public class GlideUtils {
     public static void loadBlurImg(Context context, Object resource, ImageView imageView) {
         RequestOptions requestOptions = new RequestOptions();
 
-        requestOptions.placeholder(R.drawable.ic_default_song_sheet).error(R.drawable.ic_default_song_sheet);
+        requestOptions.placeholder(R.color.colorDivider).error(R.color.colorDivider);
 
         Glide.with(context).load(resource)
                 .apply(requestOptions.transform(new BlurTransformation(10, 40)))

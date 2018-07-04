@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.LogUtils;
 import com.yzx.commonlibrary.utils.ToastUtils;
@@ -111,7 +110,7 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
 
-        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getContext()));
+//        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getContext()));
         smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> search(offset));
 
         adapter = new SearchResultAdapter(searchType);

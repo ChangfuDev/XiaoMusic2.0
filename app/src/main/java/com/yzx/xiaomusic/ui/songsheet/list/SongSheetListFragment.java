@@ -33,7 +33,6 @@ import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
 import com.yzx.xiaomusic.widget.GridItemDecoration;
-import com.yzx.xiaomusic.widget.MusicFooter;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -108,7 +107,6 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
 
         initToolBar(tb);
         tvTitle.setText(R.string.songSheet);
-        smartRefreshLayout.setRefreshFooter(new MusicFooter(getContext()));
         smartRefreshLayout.setOnLoadMoreListener(this);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.addItemDecoration(new GridItemDecoration(2, DensityUtils.dip2px(getContext(), 3), false));
@@ -116,7 +114,6 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((view, position) -> {
             SongSheetList.PlaylistsBean playlistsBean = adapter.datas.get(position);
-
             Bundle bundle = new Bundle();
             bundle.putString(KEY_NAME, playlistsBean.getName());
             bundle.putString(KEY_COVER, playlistsBean.getCoverImgUrl());

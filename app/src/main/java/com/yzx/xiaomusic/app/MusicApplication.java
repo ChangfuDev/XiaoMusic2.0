@@ -9,6 +9,8 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.kingja.loadsir.core.LoadSir;
+import com.scwang.smartrefresh.header.MaterialHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -16,12 +18,14 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.yzx.commonlibrary.base.CommonBaseApplication;
+import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.cache.CacheManager;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.service.PlayNotification;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.utils.EventBusUtils;
+import com.yzx.xiaomusic.widget.MusicFooter;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
@@ -40,6 +44,21 @@ public class MusicApplication extends CommonBaseApplication {
         PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
         PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad", "http://sns.whalecloud.com");
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
+    }
+
+    static {
+        //设置全局的Header构建器
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
+            //全局设置主题颜色
+            layout.setPrimaryColorsId(R.color.colorPrimary, android.R.color.white);
+            //.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
+            return new MaterialHeader(context);
+        });
+        //设置全局的Footer构建器
+        SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> {
+            //指定为经典Footer，默认是 BallPulseFooter
+            return new MusicFooter(context);
+        });
     }
 
     private RefWatcher refWatcher;

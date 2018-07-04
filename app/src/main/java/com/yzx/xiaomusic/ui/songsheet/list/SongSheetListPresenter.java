@@ -24,7 +24,11 @@ public class SongSheetListPresenter extends CommonBasePresenter<SongSheetListFra
                 if (offset == 0) {
                     mView.showSuccessLayout();
                 } else {
-                    mView.smartRefreshLayout.finishLoadMore();
+                    if (songSheetList.isMore()) {
+                        mView.smartRefreshLayout.finishLoadMore();
+                    } else {
+                        mView.smartRefreshLayout.finishLoadMoreWithNoMoreData();
+                    }
                 }
                 mView.setData(songSheetList.getPlaylists());
             }

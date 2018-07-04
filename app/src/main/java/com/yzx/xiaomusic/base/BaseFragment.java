@@ -300,6 +300,7 @@ public abstract class BaseFragment extends CommonBaseFragment {
         List<MusicInfo> songSheet = getService().getSongSheet();
         if (songSheet == null) {
             ArrayList<MusicInfo> musicInfos = new ArrayList<>();
+            musicInfos.add(musicInfo);
             getService().setSongSheet(musicInfos);
         } else {
             songSheet.add(musicInfo);
