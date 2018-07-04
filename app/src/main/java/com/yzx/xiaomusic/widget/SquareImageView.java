@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.othershe.library.NiceImageView;
+import com.yzx.commonlibrary.utils.DensityUtils;
 
 /**
  * Created by yzx on 2018/1/23.
@@ -21,6 +22,8 @@ public class SquareImageView extends NiceImageView {
 
     public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        setCornerRadius(DensityUtils.dip2px(context,2));
     }
 
     @Override

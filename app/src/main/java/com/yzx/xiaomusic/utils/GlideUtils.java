@@ -53,6 +53,7 @@ public class GlideUtils {
         int placeholder;
         RequestOptions options = new RequestOptions();
         options.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+
         switch (type) {
             case TYPE_HEAD:
                 placeholder = R.drawable.ic_default_head;
@@ -85,7 +86,6 @@ public class GlideUtils {
         if (anim) {
             apply.transition(transitionOptions);
         }
-
         apply.into(imageView);
     }
 
@@ -97,6 +97,6 @@ public class GlideUtils {
 
         Glide.with(context).load(resource)
                 .apply(requestOptions.transform(new BlurTransformation(10, 40)))
-                .transition(DrawableTransitionOptions.withCrossFade(150)).into(imageView);
+                .transition(DrawableTransitionOptions.withCrossFade(300)).into(imageView);
     }
 }

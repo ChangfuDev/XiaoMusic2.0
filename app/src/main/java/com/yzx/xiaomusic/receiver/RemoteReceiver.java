@@ -1,9 +1,12 @@
-package com.yzx.xiaomusic.service;
+package com.yzx.xiaomusic.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
+import com.yzx.xiaomusic.service.MusicService;
+import com.yzx.xiaomusic.service.ServiceManager;
 
 import static com.yzx.xiaomusic.service.PlayNotification.*;
 

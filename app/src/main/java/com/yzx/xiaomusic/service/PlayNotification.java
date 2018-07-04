@@ -10,9 +10,10 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.yzx.xiaomusic.R;
+import com.yzx.xiaomusic.receiver.RemoteReceiver;
 import com.yzx.xiaomusic.ui.main.MainActivity;
 
-import static com.yzx.xiaomusic.service.RemoteReceiver.ACTION;
+import static com.yzx.xiaomusic.receiver.RemoteReceiver.ACTION;
 import static com.yzx.xiaomusic.service.ServiceManager.getInstance;
 
 

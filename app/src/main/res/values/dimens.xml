@@ -6,5 +6,5 @@
     <dimen name="head_radius">10dp</dimen>
     <dimen name="toolbarHeight">90dp</dimen>
     <dimen name="bottomMusicControlHeight">50dp</dimen>
-    <dimen name="cornerRadius">5dp</dimen>
+    <dimen name="cornerRadius">3dp</dimen>
 </resources>

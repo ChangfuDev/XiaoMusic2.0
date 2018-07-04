@@ -3,8 +3,8 @@ package com.yzx.xiaomusic.ui.main.discover.friend;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 
-import com.othershe.library.NiceImageView;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.utils.GlideUtils;
@@ -18,7 +18,7 @@ import butterknife.BindView;
 public class FriendFragment extends BaseFragment {
 
     @BindView(R.id.iv_head)
-    NiceImageView ivHead;
+    ImageView ivHead;
 
 
     @Override
