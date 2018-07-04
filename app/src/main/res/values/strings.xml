@@ -76,4 +76,5 @@
     <string name="singleLoop">单曲循环</string>
     <string name="randomPlay">随机播放</string>
     <string name="haveCollected">已收藏</string>
+    <string name="latestMusic">最新音乐</string>
 </resources>

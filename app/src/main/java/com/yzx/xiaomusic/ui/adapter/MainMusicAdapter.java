@@ -3,7 +3,6 @@ package com.yzx.xiaomusic.ui.adapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,8 @@ import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.db.DBUtils;
 import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.ui.songsheet.detail.SongSheetDetailFragment;
+import com.yzx.xiaomusic.utils.FragmentStartUtils;
+import com.yzx.xiaomusic.widget.UnScrollLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,14 +77,11 @@ public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder,
 
             adapter.setOnItemClickListener((view, position1) -> {
                 SongSheetInfo songSheetInfo = adapter.datas.get(position1);
-
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_NAME, songSheetInfo.getTitle());
                 bundle.putString(KEY_COVER, songSheetInfo.getCoverUrl());
                 bundle.putString(KEY_ID, String.valueOf(songSheetInfo.getId()));
-                SongSheetDetailFragment songSheetDetailFragment = new SongSheetDetailFragment();
-                songSheetDetailFragment.setArguments(bundle);
-                parentFragment.start(songSheetDetailFragment);
+                FragmentStartUtils.startFragment(parentFragment, new SongSheetDetailFragment(), bundle);
             });
             songSheetHolder.ivOpenClose.setOnClickListener(v -> {
                 controlVisible(songSheetHolder);
@@ -111,12 +109,7 @@ public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder,
                 adapter.setData(allCollectedSongSheet);
             }
 
-            songSheetHolder.recyclerView.setLayoutManager(new LinearLayoutManager(context) {
-                @Override
-                public boolean canScrollVertically() {
-                    return false;
-                }
-            });
+            songSheetHolder.recyclerView.setLayoutManager(new UnScrollLinearLayoutManager(context));
 
         } else {
             Holder titleHolder = (Holder) holder;

@@ -2,6 +2,7 @@ package com.yzx.xiaomusic.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -11,11 +12,21 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.commonlibrary.utils.ResourceUtils;
+import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
+import com.yzx.xiaomusic.model.entity.album.LatestAlbumList;
+import com.yzx.xiaomusic.model.entity.songsheet.SongSheetList;
+import com.yzx.xiaomusic.ui.album.AlbumDetailFragment;
+import com.yzx.xiaomusic.ui.songsheet.detail.SongSheetDetailFragment;
 import com.yzx.xiaomusic.ui.songsheet.list.SongSheetListFragment;
+import com.yzx.xiaomusic.utils.FragmentStartUtils;
 import com.yzx.xiaomusic.utils.TimeUtils;
+import com.yzx.xiaomusic.widget.GridItemDecoration;
+import com.yzx.xiaomusic.widget.UnScrollGridLayoutManager;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -23,8 +34,13 @@ import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import me.yokeyword.fragmentation.SupportFragment;
 
+import static com.yzx.xiaomusic.Constant.KEY_COVER;
+import static com.yzx.xiaomusic.Constant.KEY_ID;
+import static com.yzx.xiaomusic.Constant.KEY_NAME;
+
 /**
- * Created by yzx on 2018/6/23.
+ * @author yzx
+ * @date 2018/6/23
  * Description 推荐页面Adapter
  */
 public class RecommendAdapter extends RecyclerView.Adapter implements View.OnClickListener {
@@ -33,11 +49,13 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
     public static final int TYPE_FOUR = 2;
     public static final int TYPE_TITLE = 3;
     private final SupportFragment parentFragment;
+    private boolean hasAttach;
+    private List<SongSheetList.PlaylistsBean> playlists;
+    private List<LatestAlbumList.AlbumsBean> albums;
 
     public RecommendAdapter(SupportFragment parentFragment) {
         this.parentFragment = parentFragment;
     }
-//    public static final int TYPE_DEFAULT = 3;
 
     @Override
     public int getItemViewType(int position) {
@@ -47,6 +65,7 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
             case 1:
                 return TYPE_FOUR;
             case 2:
+            case 4:
                 return TYPE_TITLE;
             default:
                 return super.getItemViewType(position);
@@ -72,6 +91,7 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
+        Context context = holder.itemView.getContext();
         switch (getItemViewType(position)) {
             case TYPE_BANNER:
                 dealBanner((BannerHolder) holder);
@@ -83,6 +103,44 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
                 TitleHolder titleHolder = (TitleHolder) holder;
                 if (position == 2) {
                     titleHolder.tvTitle.setText(R.string.reommendSongSheet);
+                    titleHolder.llTitle.setOnClickListener(v -> {
+                        FragmentStartUtils.startFragment(parentFragment, new SongSheetListFragment());
+                    });
+                } else if (position == 4) {
+                    titleHolder.tvTitle.setText(R.string.latestMusic);
+                    titleHolder.llTitle.setOnClickListener(v -> {
+                        ToastUtils.showToast(R.string.latestMusic);
+                    });
+                }
+                break;
+            default:
+                SixHolder sixHolder = (SixHolder) holder;
+                sixHolder.recyclerView.setLayoutManager(new UnScrollGridLayoutManager(context, 2));
+                sixHolder.recyclerView.addItemDecoration(new GridItemDecoration(2, DensityUtils.dip2px(context, 3), false));
+                if (position == 3) {
+                    SongSheetListAdapter adapter = new SongSheetListAdapter();
+                    adapter.setData(playlists);
+                    adapter.setOnItemClickListener((view, position1) -> {
+                        SongSheetList.PlaylistsBean playlistsBean = playlists.get(position1);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(KEY_NAME, playlistsBean.getName());
+                        bundle.putString(KEY_COVER, playlistsBean.getCoverImgUrl());
+                        bundle.putString(KEY_ID, String.valueOf(playlistsBean.getId()));
+                        FragmentStartUtils.startFragment(parentFragment, new SongSheetDetailFragment(), bundle);
+                    });
+                    sixHolder.recyclerView.setAdapter(adapter);
+                } else if (position == 5) {
+                    AlbumListAdapter adapter = new AlbumListAdapter();
+                    adapter.setData(albums);
+                    sixHolder.recyclerView.setAdapter(adapter);
+                    adapter.setOnItemClickListener((view, position1) -> {
+                        LatestAlbumList.AlbumsBean albumsBean = albums.get(position1);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(KEY_ID, albumsBean.getId());
+                        bundle.putString(KEY_NAME, albumsBean.getName());
+                        bundle.putString(KEY_COVER, albumsBean.getPicUrl());
+                        FragmentStartUtils.startFragment(parentFragment, new AlbumDetailFragment(), bundle);
+                    });
                 }
                 break;
         }
@@ -90,8 +148,11 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
 
     @SuppressLint("CheckResult")
     private void dealBanner(BannerHolder holder) {
-        PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
-        pagerSnapHelper.attachToRecyclerView(holder.recyclerView);
+        if (!hasAttach) {
+            PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();
+            pagerSnapHelper.attachToRecyclerView(holder.recyclerView);
+            hasAttach = true;
+        }
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
         BannerAdapter adapter = new BannerAdapter();
         holder.recyclerView.setAdapter(adapter);
@@ -113,7 +174,7 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 6;
     }
 
     @Override
@@ -123,6 +184,16 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
                 parentFragment.start(new SongSheetListFragment());
                 break;
         }
+    }
+
+    public void setSongSheetData(List<SongSheetList.PlaylistsBean> playlists) {
+        this.playlists = playlists;
+        notifyDataSetChanged();
+    }
+
+    public void setAlbumData(List<LatestAlbumList.AlbumsBean> albums) {
+        this.albums = albums;
+        notifyDataSetChanged();
     }
 
     class BannerHolder extends RecyclerView.ViewHolder {
@@ -156,6 +227,8 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
     class TitleHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_title)
         TextView tvTitle;
+        @BindView(R.id.ll_title)
+        LinearLayout llTitle;
 
         public TitleHolder(View itemView) {
             super(itemView);
@@ -167,6 +240,8 @@ public class RecommendAdapter extends RecyclerView.Adapter implements View.OnCli
      * 三列六个内容
      */
     class SixHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.recyclerView)
+        RecyclerView recyclerView;
 
         public SixHolder(View itemView) {
             super(itemView);

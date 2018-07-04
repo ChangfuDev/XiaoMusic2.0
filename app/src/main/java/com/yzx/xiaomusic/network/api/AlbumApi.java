@@ -1,6 +1,7 @@
 package com.yzx.xiaomusic.network.api;
 
 import com.yzx.xiaomusic.model.entity.album.AlbumDetail;
+import com.yzx.xiaomusic.model.entity.album.LatestAlbumList;
 import com.yzx.xiaomusic.model.entity.album.SingerAlbum;
 
 import io.reactivex.Observable;
@@ -35,4 +36,8 @@ public interface AlbumApi {
     @GET("http://music.163.com/api/artist/albums/{id}")
     Observable<SingerAlbum> getSingerAlbum(@Path("id") String id, @Query("offset") int offset, @Query("limit") int limit);
 
+
+    @Headers({"Cookie: appver=1.5.0.75771", "Referer: http://music.163.com/"})
+    @GET("http://music.163.com/api/album/new")
+    Observable<LatestAlbumList> getLatestAlbum(@Query("area") String area, @Query("offset") int offset, @Query("limit") int limit);
 }

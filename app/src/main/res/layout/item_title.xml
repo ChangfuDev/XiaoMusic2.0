@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_title"
+    style="@style/WaterEffect"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:orientation="horizontal">
@@ -17,6 +19,5 @@
         android:textSize="12sp"
         tools:ignore="RtlSymmetry"
         tools:text="标题" />
-
 
 </LinearLayout>

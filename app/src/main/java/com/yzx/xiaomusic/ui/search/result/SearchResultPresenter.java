@@ -246,7 +246,7 @@ public class SearchResultPresenter extends CommonBasePresenter<SearchResultFragm
                             MusicInfo musicInfo = new MusicInfo();
                             musicInfo.setMusicId(songsBean.getId());
                             musicInfo.setMusicName(songsBean.getName());
-
+                            musicInfo.setDuration(songsBean.getDt());
                             SearchMusicResult.ResultBean.SongsBean.AlBean al = songsBean.getAl();
                             musicInfo.setAlbumId(al.getId());
                             musicInfo.setAlbumName(al.getName());

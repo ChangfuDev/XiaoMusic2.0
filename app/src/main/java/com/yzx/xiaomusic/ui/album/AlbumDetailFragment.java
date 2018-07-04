@@ -219,12 +219,12 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
                     MusicInfo musicInfo = new MusicInfo();
                     musicInfo.setMusicId(String.valueOf(songsBean.getId()));
                     musicInfo.setMusicName(songsBean.getName());
-
                     musicInfo.setMvId(String.valueOf(songsBean.getMv()));
                     AlbumDetail.SongsBean.AlBean album = songsBean.getAl();
                     if (album != null) {
                         musicInfo.setAlbumId(String.valueOf(album.getId()));
                         musicInfo.setAlbumName(album.getName());
+                        musicInfo.setAlbumCoverPath(album.getPicUrl());
                     }
 
                     List<AlbumDetail.SongsBean.ArBean> artists = songsBean.getAr();

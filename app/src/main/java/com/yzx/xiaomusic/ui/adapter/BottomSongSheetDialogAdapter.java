@@ -10,9 +10,10 @@ import android.widget.TextView;
 
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
-import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
+import com.yzx.xiaomusic.service.MusicService;
+import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 
 import butterknife.BindView;
@@ -42,7 +43,9 @@ public class BottomSongSheetDialogAdapter extends CommonBaseAdapter<BottomSongSh
         holder.tvTitle.setText(musicInfo.getMusicName());
         holder.tvSubTitle.setText(MusicDataUtils.getSingers(musicInfo));
         holder.ivDelete.setOnClickListener(v -> {
-            ToastUtils.showToast("从歌单中删除" + musicInfo.getMusicName());
+            MusicService service = ServiceManager.getInstance().getService();
+            service.getSongSheet().remove(musicInfo);
+//            ToastUtils.showToast("从歌单中删除" + musicInfo.getMusicName());
         });
         if (position == currentPosition) {
             holder.ivPlayingFlag.setVisibility(View.VISIBLE);

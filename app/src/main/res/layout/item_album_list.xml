@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorWhite"
     style="@style/WaterEffect"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -20,25 +20,6 @@
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_default_song_sheet" />
-        <!--歌单听量-->
-        <TextView
-            android:id="@+id/tv_play_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="6dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="10sp"
-            tools:ignore="SmallSp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginTop="8dp"
-            android:layout_toStartOf="@id/tv_play_count"
-            android:src="@drawable/zh" />
     </RelativeLayout>
     <!--歌单描述-->
     <TextView
@@ -46,10 +27,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="2"
-        android:padding="8dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="5dp"
         android:textColor="@color/colorTitle"
         android:textSize="10sp"
-        tools:ignore="SmallSp"
+        tools:ignore="RtlSymmetry,SmallSp"
+        tools:text="名称" />
+
+    <TextView
+        android:id="@+id/tv_subTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:paddingBottom="5dp"
+        android:textColor="@color/colorSubTitle"
+        android:textSize="8sp"
+        tools:ignore="RtlSymmetry,SmallSp"
         tools:text="描述" />
 
 </LinearLayout>
