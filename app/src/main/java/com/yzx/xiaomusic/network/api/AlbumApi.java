@@ -18,13 +18,13 @@ public interface AlbumApi {
 
     /**
      * 获取专辑详情
+     * http://music.163.com/api/album/2457012?ext=true&id=2457012&offset=0&total=true&limit=10
      *
-     * @param type
-     * @param id
      * @return
      */
-    @GET("/cloudmusic/")
-    Observable<AlbumDetail> getAlbumDetail(@Query("type") String type, @Query("id") String id);
+    @Headers({"Cookie: appver=1.5.0.75771", "Referer: http://music.163.com/"})
+    @GET("http://music.163.com/api/album/{id}")
+    Observable<AlbumDetail> getAlbumDetail(@Path("id") String id);
 
     /**
      * http://music.163.com/api/artist/albums/10557?offset=0&limit=3
