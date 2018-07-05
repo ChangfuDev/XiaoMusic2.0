@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.othershe.library.NiceImageView;
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
@@ -27,7 +28,6 @@ import com.yzx.xiaomusic.widget.ShapeTextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.yzx.xiaomusic.ui.search.result.SearchResultFragment.TYPE_SEARCH_ALBUM;
 import static com.yzx.xiaomusic.ui.search.result.SearchResultFragment.TYPE_SEARCH_MV;
@@ -107,7 +107,7 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
 
     private void dealUserResult(Context context, UserHolder holder, int position) {
         SearchUserResult.ResultBean.UserprofilesBean userprofilesBean = (SearchUserResult.ResultBean.UserprofilesBean) datas.get(position);
-        GlideUtils.loadImg(context, userprofilesBean.getAvatarUrl(), holder.ivHead);
+        GlideUtils.loadCircleImg(context, userprofilesBean.getAvatarUrl(), holder.ivHead);
         holder.tvTitle.setText(userprofilesBean.getNickname());
         String signature = userprofilesBean.getSignature();
         holder.tvSubTitle.setText(signature);
@@ -270,7 +270,7 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
 
     class UserHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_head)
-        CircleImageView ivHead;
+        NiceImageView ivHead;
         @BindView(R.id.iv_sex)
         ImageView ivSex;
         @BindView(R.id.iv_user_type)

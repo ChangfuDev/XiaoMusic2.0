@@ -66,12 +66,13 @@
                         android:padding="16dp"
                         app:layout_collapseMode="pin">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
+                        <com.othershe.library.NiceImageView
                             android:id="@+id/iv_head"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/header_default" />
+                            android:src="@drawable/header_default"
+                            app:is_circle="true" />
 
                         <TextView
                             android:id="@+id/tv_nick_name"

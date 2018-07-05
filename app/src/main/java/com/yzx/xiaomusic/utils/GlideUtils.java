@@ -99,4 +99,23 @@ public class GlideUtils {
                 .apply(requestOptions.transform(new BlurTransformation(10, 40)))
                 .transition(DrawableTransitionOptions.withCrossFade(300)).into(imageView);
     }
+
+    @SuppressLint("CheckResult")
+    public static void loadCircleImg(Context context, Object resource, ImageView imageView) {
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.ic_default_head).error(R.drawable.ic_default_head);
+
+        Glide.with(context).load(resource)
+                .apply(requestOptions)
+                .transition(DrawableTransitionOptions.withCrossFade(300)).into(imageView);
+    }
+
+//    @SuppressLint("CheckResult")
+//    public static void loadPlayCardImg(Context context, String resource, ImageView ivCover) {
+//        RequestOptions requestOptions = new RequestOptions();
+//        requestOptions.placeholder(R.drawable.acg).error(R.drawable.acg);
+//        Glide.with(context).load(resource)
+//                .apply(requestOptions)
+//                .transition(DrawableTransitionOptions.withCrossFade(300)).into(ivCover);
+//    }
 }

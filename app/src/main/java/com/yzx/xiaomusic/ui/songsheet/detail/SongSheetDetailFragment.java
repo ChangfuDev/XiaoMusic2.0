@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadSir;
+import com.othershe.library.NiceImageView;
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
@@ -84,7 +85,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     @BindView(R.id.tv_name)
     TextView tvName;
     @BindView(R.id.iv_head)
-    CircleImageView ivHead;
+    NiceImageView ivHead;
     @BindView(R.id.iv_user_type)
     CircleImageView ivUserType;
     @BindView(R.id.tv_creator_name)
@@ -239,7 +240,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     public void setData(SongSheetDetail songSheetDetail) {
         result = songSheetDetail.getResult();
         SongSheetDetail.ResultBean.CreatorBean creator = result.getCreator();
-        GlideUtils.loadImg(getContext(), creator.getAvatarUrl(), ivHead);
+        GlideUtils.loadCircleImg(getContext(), creator.getAvatarUrl(), ivHead);
         tvCreatorName.setText(creator.getNickname());
         tvEvaluationNum.setText(String.valueOf(result.getCommentCount()));
         tvShareNum.setText(String.valueOf(result.getShareCount()));

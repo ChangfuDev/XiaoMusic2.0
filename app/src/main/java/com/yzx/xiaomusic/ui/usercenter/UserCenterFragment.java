@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.othershe.library.NiceImageView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
@@ -42,7 +43,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
@@ -74,7 +74,7 @@ public class UserCenterFragment extends BaseFragment {
     @BindView(R.id.tb)
     Toolbar tb;
     @BindView(R.id.iv_head)
-    CircleImageView ivHead;
+    NiceImageView ivHead;
     @BindView(R.id.tv_nick_name)
     TextView tvNickName;
     @BindView(R.id.tv_des)
@@ -201,7 +201,7 @@ public class UserCenterFragment extends BaseFragment {
 
         GlideUtils.loadImg(getContext(), creatorBean.getBackgroundUrl(), GlideUtils.TYPE_BG_USER,ivBg, false);
         tvTitle.setText(creatorBean.getNickname());
-        GlideUtils.loadImg(getContext(), creatorBean.getAvatarUrl(), ivHead);
+        GlideUtils.loadCircleImg(getContext(), creatorBean.getAvatarUrl(), ivHead);
         tvNickName.setText(creatorBean.getNickname());
         tvDes.setText(creatorBean.getDescription());
         tvFollowedCount.setText(String.format("关注 %s", "未知"));

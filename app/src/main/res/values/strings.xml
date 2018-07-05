@@ -77,4 +77,5 @@
     <string name="randomPlay">随机播放</string>
     <string name="haveCollected">已收藏</string>
     <string name="latestMusic">最新音乐</string>
+    <string name="note_serviceIsNull">服务为空</string>
 </resources>

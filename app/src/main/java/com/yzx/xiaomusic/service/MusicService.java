@@ -25,8 +25,8 @@ import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.network.api.MusicApi;
+import com.yzx.xiaomusic.ui.notification.PlayNotification;
 import com.yzx.xiaomusic.utils.EventBusUtils;
-import com.yzx.xiaomusic.utils.MusicDataUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -203,19 +203,18 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     }
 
     private void showPlayNotification() {
-        Glide.with(getApplicationContext())
-                .asBitmap()
-                .load(musicInfo.getAlbumCoverPath())
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        PlayNotification.showNotification(getApplicationContext(),
-                                musicInfo.getMusicName(),
-                                MusicDataUtils.getSingers(musicInfo) + " - " + musicInfo.getAlbumName(),
-                                resource);
-                    }
-                });
+        if (musicInfo != null) {
+            Glide.with(getApplicationContext())
+                    .asBitmap()
+                    .load(musicInfo.getAlbumCoverPath())
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
 
+                            PlayNotification.showNotification(getApplicationContext(), musicInfo, resource);
+                        }
+                    });
+        }
     }
 
     /**

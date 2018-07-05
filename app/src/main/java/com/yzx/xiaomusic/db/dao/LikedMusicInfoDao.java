@@ -47,6 +47,6 @@ public interface LikedMusicInfoDao {
      *
      * @param likedMusicInfo
      */
-    @Delete
+    @Delete()
     void deleteLikedMusicInfo(LikedMusicInfo likedMusicInfo);
 }
