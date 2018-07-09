@@ -20,6 +20,7 @@ import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;
 import com.yzx.commonlibrary.network.AppHttpClient;
 import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.cache.CacheUtils;
+import com.yzx.xiaomusic.db.DBUtils;
 import com.yzx.xiaomusic.model.entity.MusicAddress;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
@@ -225,6 +226,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     @Override
     public void onPrepared(MediaPlayer mp) {
         prepared = true;
+        DBUtils.listenMusic(musicInfo);
         mp.start();
         sendPlayingEvent();
     }

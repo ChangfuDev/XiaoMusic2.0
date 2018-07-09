@@ -15,8 +15,8 @@ import android.widget.ImageView;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.db.DBUtils;
-import com.yzx.xiaomusic.db.dao.LikedMusicInfoDao;
-import com.yzx.xiaomusic.db.entity.LikedMusicInfo;
+import com.yzx.xiaomusic.db.dao.ExtraMusicInfoDao;
+import com.yzx.xiaomusic.db.entity.ExtraMusicInfo;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
@@ -25,7 +25,6 @@ import com.yzx.xiaomusic.ui.adapter.PlayCardAdapter;
 import com.yzx.xiaomusic.ui.dialog.BottomMusicInfoDialog;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
 import com.yzx.xiaomusic.utils.EventBusUtils;
-import com.yzx.xiaomusic.utils.JsonUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -119,7 +118,7 @@ public class PlayCardFragment extends BaseFragment {
                 break;
             case R.id.iv_more:
                 musicInfo = service.getMusicInfo();
-                if (musicInfo!=null){
+                if (musicInfo != null) {
                     BottomMusicInfoDialog bottomMusicInfoDialog = new BottomMusicInfoDialog();
                     Bundle args = new Bundle();
                     args.putSerializable(KEY_MUSIC_INFO, musicInfo);
@@ -139,13 +138,13 @@ public class PlayCardFragment extends BaseFragment {
         if (musicInfo == null) {
             showToast("无法获取当前音乐");
         } else {
-            LikedMusicInfoDao likedMusicInfoDao = DBUtils.getLikedMusicInfoDao();
-            LikedMusicInfo likedMusicInfo = likedMusicInfoDao.getLikedMusicInfoById(musicInfo.getMusicId());
+            ExtraMusicInfoDao extraMusicInfoDao = DBUtils.getExtraMusicInfoDao();
+            ExtraMusicInfo likedMusicInfo = extraMusicInfoDao.getLikedMusicInfoById(musicInfo.getMusicId());
             if (likedMusicInfo == null) {
-                likedMusicInfoDao.addLikedMusicInfo(new LikedMusicInfo(musicInfo.getMusicId(), JsonUtils.objectToString(musicInfo)));
+                DBUtils.likeMusic(musicInfo);
                 ivLike.setImageResource(R.drawable.ae2);
             } else {
-                likedMusicInfoDao.deleteLikedMusicInfo(likedMusicInfo);
+                DBUtils.cancelLikeMusic(likedMusicInfo);
                 ivLike.setImageResource(R.drawable.ae0);
             }
         }
@@ -173,8 +172,8 @@ public class PlayCardFragment extends BaseFragment {
     private void showLiked() {
         musicInfo = service.getMusicInfo();
         if (musicInfo != null) {
-            LikedMusicInfoDao likedMusicInfoDao = DBUtils.getLikedMusicInfoDao();
-            LikedMusicInfo likedMusicInfo = likedMusicInfoDao.getLikedMusicInfoById(musicInfo.getMusicId());
+            ExtraMusicInfoDao likedMusicInfoDao = DBUtils.getExtraMusicInfoDao();
+            ExtraMusicInfo likedMusicInfo = likedMusicInfoDao.getLikedMusicInfoById(musicInfo.getMusicId());
             ivLike.setImageResource(likedMusicInfo == null ? R.drawable.ae0 : R.drawable.ae2);
         }
     }

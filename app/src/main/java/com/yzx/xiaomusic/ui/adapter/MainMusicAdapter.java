@@ -99,7 +99,7 @@ public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder,
                 songSheetInfo.setCreatorNickName("帅气的杨子晓=^_^=");
                 songSheetInfo.setTitle("我喜欢的音乐");
                 songSheetInfo.setCoverUrl(Constant.PIC);
-                int size = DBUtils.getLikedMusicInfoDao().getAllLikedMusicInfos().size();
+                int size = DBUtils.getExtraMusicInfoDao().getAllLikedMusicInfos().size();
                 songSheetInfo.setMusicCount(String.valueOf(size));
                 songSheetInfos.add(songSheetInfo);
                 adapter.setData(songSheetInfos);

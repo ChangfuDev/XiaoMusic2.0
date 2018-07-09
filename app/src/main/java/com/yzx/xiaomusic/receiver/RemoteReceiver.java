@@ -14,7 +14,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.db.DBUtils;
-import com.yzx.xiaomusic.db.entity.LikedMusicInfo;
+import com.yzx.xiaomusic.db.entity.ExtraMusicInfo;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.service.ServiceManager;
@@ -89,7 +89,7 @@ public class RemoteReceiver extends BroadcastReceiver {
     private void controlLikeMusic(Context context, MusicService service) {
         MusicInfo musicInfo = service.getMusicInfo();
         if (musicInfo != null) {
-            LikedMusicInfo likedMusicInfo = DBUtils.isLikeMusicExit(musicInfo);
+            ExtraMusicInfo likedMusicInfo = DBUtils.isLikeMusicExit(musicInfo);
             if (likedMusicInfo != null) {
                 DBUtils.cancelLikeMusic(likedMusicInfo);
             } else {

@@ -28,7 +28,7 @@ import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.db.DBUtils;
 import com.yzx.xiaomusic.db.dao.CollectedSongSheetDao;
-import com.yzx.xiaomusic.db.entity.LikedMusicInfo;
+import com.yzx.xiaomusic.db.entity.ExtraMusicInfo;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SingerInfo;
 import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
@@ -225,7 +225,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         super.onEnterAnimationEnd(savedInstanceState);
 
         if (TextUtils.equals("-1", songSheetId)) {
-            List<LikedMusicInfo> allLikedMusicInfos = DBUtils.getLikedMusicInfoDao().getAllLikedMusicInfos();
+            List<ExtraMusicInfo> allLikedMusicInfos = DBUtils.getExtraMusicInfoDao().getAllLikedMusicInfos();
             Observable.fromIterable(allLikedMusicInfos)
                     .map(likedMusicInfo -> (MusicInfo) JsonUtils.stringToObject(likedMusicInfo.musicInfo, MusicInfo.class))
                     .toList()

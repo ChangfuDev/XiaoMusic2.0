@@ -17,16 +17,11 @@ import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
-import com.yzx.xiaomusic.service.MusicService;
-import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
-import com.yzx.xiaomusic.ui.play.PlayFragment;
-import com.yzx.xiaomusic.utils.FragmentStartUtils;
 
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.Unbinder;
 
 /**
  * @author yzx
@@ -43,7 +38,6 @@ public class LocalMusicFragment extends BaseMvpFragment<LocalMusicPresenter> imp
     RecyclerView recyclerView;
     @BindView(R.id.tv_des)
     TextView tvDes;
-    Unbinder unbinder;
     private MusicAdapter adapter;
 
     @Nullable
@@ -74,7 +68,7 @@ public class LocalMusicFragment extends BaseMvpFragment<LocalMusicPresenter> imp
         tb.inflateMenu(R.menu.menu_music_local);
         tb.setOnMenuItemClickListener(this);
 
-        adapter = new MusicAdapter(getChildFragmentManager(),this);
+        adapter = new MusicAdapter(getChildFragmentManager(), this);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
     }
@@ -114,10 +108,6 @@ public class LocalMusicFragment extends BaseMvpFragment<LocalMusicPresenter> imp
 
     @Override
     public void onItemClick(View view, int position) {
-        MusicService service = ServiceManager.getInstance().getService();
-        service.setSongSheet(adapter.datas);
-        service.setMusicIndex(position);
-        service.realPlay();
-        FragmentStartUtils.startFragment(this,new PlayFragment());
+        playMusicWithStartFragment(this, adapter.datas, position);
     }
 }

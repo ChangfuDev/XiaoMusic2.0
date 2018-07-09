@@ -12,6 +12,7 @@ import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.ui.adapter.MainMusicAdapter;
 import com.yzx.xiaomusic.ui.main.music.local.LocalMusicFragment;
+import com.yzx.xiaomusic.ui.main.music.recent.RecentPlayFragment;
 
 import java.util.ArrayList;
 
@@ -85,6 +86,9 @@ public class MusicFragment extends BaseFragment implements CommonBaseAdapter.OnI
         switch (position) {
             case 0:
                 easyParentStart(new LocalMusicFragment());
+                break;
+            case 1:
+                easyParentStart(new RecentPlayFragment());
                 break;
         }
     }
