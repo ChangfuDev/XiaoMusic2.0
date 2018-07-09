@@ -63,6 +63,16 @@ public class MusicInfo implements Serializable {
     long size;
     String poster;
 
+    public int getEvaluteCount() {
+        return evaluteCount;
+    }
+
+    public void setEvaluteCount(int evaluteCount) {
+        this.evaluteCount = evaluteCount;
+    }
+
+    int evaluteCount;
+
     public String getPoster() {
         return poster;
     }

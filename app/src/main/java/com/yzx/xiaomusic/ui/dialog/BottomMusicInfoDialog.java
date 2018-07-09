@@ -13,11 +13,20 @@ import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.ui.adapter.BottomMusicInfoDialogAdapter;
+import com.yzx.xiaomusic.ui.album.AlbumDetailFragment;
+import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
+import com.yzx.xiaomusic.utils.FragmentStartUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import me.yokeyword.fragmentation.SupportFragment;
+
+import static com.yzx.xiaomusic.Constant.KEY_COVER;
+import static com.yzx.xiaomusic.Constant.KEY_ID;
+import static com.yzx.xiaomusic.Constant.KEY_NAME;
 import static com.yzx.xiaomusic.ui.adapter.MusicAdapter.KEY_MUSIC_INFO;
+import static com.yzx.xiaomusic.ui.singer.SingerDetailsFragment.KEY_ID_SINGER;
 
 /**
  * @author yzx
@@ -29,6 +38,7 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
     private List<Integer> musicInfoDialogBeans;
     private Bundle arguments;
     private MusicInfo musicInfo;
+    private SupportFragment parentFragment;
 
     {
         musicInfoDialogBeans = new ArrayList<>();
@@ -53,6 +63,9 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
 
     @Override
     public View setHead(LinearLayout container) {
+        if (musicInfo == null) {
+            throw new NullPointerException("musicInfo == null");
+        }
         if (musicInfo.isLocal()) {
             TextView view = (TextView) ResourceUtils.parseLayout(getContext(), R.layout.layout_bottom_dialog_music_info_head, container);
             view.setText(String.format("歌曲：%s", musicInfo.getMusicName()));
@@ -68,6 +81,7 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
     protected boolean canHeadScroll() {
         return true;
     }
+
 
     @Override
     protected RecyclerView.Adapter setAdapter(RecyclerView recyclerView) {
@@ -91,10 +105,20 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
                 ToastUtils.showToast(R.string.collectToSongSheet);
                 break;
             case 3:
-                ToastUtils.showToast(R.string.singer);
+                if (parentFragment != null) {
+                    arguments.clear();
+                    arguments.putString(KEY_ID_SINGER, musicInfo.getSingerInfos().get(0).getSingerId());
+                    FragmentStartUtils.startFragment(parentFragment, new SingerDetailsFragment(), arguments);
+                }
                 break;
             case 4:
-                ToastUtils.showToast(R.string.album);
+                if (parentFragment != null) {
+                    arguments.clear();
+                    arguments.putString(KEY_ID, musicInfo.getAlbumId());
+                    arguments.putString(KEY_NAME, musicInfo.getAlbumName());
+                    arguments.putString(KEY_COVER, musicInfo.getAlbumCoverPath());
+                    FragmentStartUtils.startFragment(parentFragment, new AlbumDetailFragment(), arguments);
+                }
                 break;
             case 5:
                 ToastUtils.showToast(R.string.MusicQuality);
@@ -112,5 +136,10 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
                 ToastUtils.showToast(R.string.driveMode);
                 break;
         }
+        dismiss();
+    }
+
+    public void setParentFragment(SupportFragment parentFragment) {
+        this.parentFragment = parentFragment;
     }
 }

@@ -178,7 +178,7 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
         GlideUtils.loadBlurImg(getContext(), cover, tbBg);
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
 
-        adapter = new MusicAdapter(getFragmentManager());
+        adapter = new MusicAdapter(getFragmentManager(),this);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
     }
@@ -291,7 +291,7 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
 
     @Override
     public void onItemClick(View view, int position) {
-        playMusicWithStartFragment(adapter.datas, position);
+        playMusicWithStartFragment(this,adapter.datas, position);
     }
 
     @Override

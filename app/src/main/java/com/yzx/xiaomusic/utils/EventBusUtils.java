@@ -4,8 +4,12 @@ import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_BUFFER;
+
 /**
- * Created by yzx on 2018/5/17.
+ *
+ * @author yzx
+ * @date 2018/5/17
  * Description
  */
 public class EventBusUtils {
@@ -42,5 +46,13 @@ public class EventBusUtils {
         return EventBus.getDefault();
     }
 
+
+    /**
+     * 更新音乐缓存进度
+     * @param percent
+     */
+    public static void postBuffer(int percent){
+        post(new MessageEvent(TYPE_MUSIC_UPDATE_BUFFER,percent));
+    }
 
 }

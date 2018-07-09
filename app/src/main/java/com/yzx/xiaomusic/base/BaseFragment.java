@@ -26,6 +26,7 @@ import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.dialog.BottomSongSheetDialog;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
+import com.yzx.xiaomusic.utils.FragmentStartUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
@@ -125,10 +126,7 @@ public abstract class BaseFragment extends CommonBaseFragment {
             songSheetDialog.show(getChildFragmentManager(), "songSheet");
         });
         musicController.setOnClickListener(v -> {
-            PlayFragment playFragment = findFragment(PlayFragment.class);
-            if (playFragment != null)
-                playFragment.putNewBundle(null);
-            start(playFragment == null ? new PlayFragment() : playFragment, SINGLETASK);
+            FragmentStartUtils.startFragment(this, new PlayFragment());
         });
     }
 
@@ -152,50 +150,13 @@ public abstract class BaseFragment extends CommonBaseFragment {
      * @param args
      */
     public void easyParentStart(SupportFragment fragment, Bundle args) {
-        if (args != null) {
-            fragment.setArguments(args);
-        }
         SupportFragment parentFragment = (SupportFragment) this.getParentFragment();
-        parentFragment.start(fragment);
+        FragmentStartUtils.startFragment(parentFragment, fragment, args);
     }
 
     public void easyStart(SupportFragment fragment, Bundle args) {
-        if (args != null) {
-            fragment.setArguments(args);
-        }
-        start(fragment);
+        FragmentStartUtils.startFragment(this, fragment, args);
     }
-
-    /**
-     * 单例开启
-     */
-    public void singleStart(Class<SupportFragment> cls, SupportFragment fragment, Bundle args) {
-        SupportFragment supportFragment = findFragment(cls);
-        if (supportFragment == null) {
-            easyStart(fragment, args);
-        } else {
-            fragment.putNewBundle(args);
-            start(fragment, SINGLETASK);
-        }
-    }
-
-    /**
-     * 父Fragment单例开启
-     */
-    public void singParentleStart(Class<SupportFragment> cls, SupportFragment fragment, Bundle args) {
-        SupportFragment supportFragment = findFragment(cls);
-        if (supportFragment == null) {
-            easyParentStart(fragment, args);
-        } else {
-            if (args != null) {
-                fragment.setArguments(args);
-            }
-            SupportFragment parentFragment = (SupportFragment) this.getParentFragment();
-            fragment.putNewBundle(args);
-            parentFragment.start(fragment, SINGLETASK);
-        }
-    }
-
 
     /**
      * 重试
@@ -236,31 +197,6 @@ public abstract class BaseFragment extends CommonBaseFragment {
      * @param songSheet
      * @param position
      */
-    public void playMusicWithStartFragment(List<MusicInfo> songSheet, int position) {
-        MusicService service = ServiceManager.getInstance().getService();
-        service.setSongSheet(songSheet);
-
-        //同一首歌
-        if (songSheet.get(position) != service.getMusicInfo()) {
-            service.setMusicIndex(position);
-            service.realPlay();
-        } else {
-            if (!service.isPlaying()) {
-                service.playPause();
-            }
-            PlayFragment playFragment = findFragment(PlayFragment.class);
-            if (playFragment != null)
-                playFragment.putNewBundle(null);
-            start(playFragment == null ? new PlayFragment() : playFragment, SINGLETASK);
-        }
-    }
-
-    /**
-     * 播放音乐并开启播放页面
-     *
-     * @param songSheet
-     * @param position
-     */
     public void playMusicWithStartFragment(SupportFragment parent, List<MusicInfo> songSheet, int position) {
         MusicService service = ServiceManager.getInstance().getService();
         service.setSongSheet(songSheet);
@@ -273,11 +209,7 @@ public abstract class BaseFragment extends CommonBaseFragment {
             if (!service.isPlaying()) {
                 service.playPause();
             }
-            PlayFragment playFragment = findFragment(PlayFragment.class);
-            if (playFragment != null) {
-                playFragment.putNewBundle(null);
-            }
-            parent.start(playFragment == null ? new PlayFragment() : playFragment, SINGLETASK);
+            FragmentStartUtils.startFragment(parent, new PlayFragment());
         }
     }
 

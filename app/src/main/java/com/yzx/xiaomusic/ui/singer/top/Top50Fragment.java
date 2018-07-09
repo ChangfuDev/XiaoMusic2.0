@@ -50,7 +50,7 @@ public class Top50Fragment extends BaseMvpFragment<Top50Presenter> implements Co
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
 
-        adapter = new MusicAdapter(getFragmentManager());
+        adapter = new MusicAdapter(getFragmentManager(), (SupportFragment) getParentFragment());
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
     }

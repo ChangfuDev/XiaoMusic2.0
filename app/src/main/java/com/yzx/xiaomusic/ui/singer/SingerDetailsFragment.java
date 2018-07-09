@@ -236,6 +236,7 @@ public class SingerDetailsFragment extends BaseFragment {
     }
 
     public void setData(SingerTopInfo.ArtistBean artist) {
+        stvPersonalPager.setVisibility(artist.getAccountId() == 0 ? View.GONE : View.VISIBLE);
         GlideUtils.loadImg(getContext(), artist.getPicUrl(), GlideUtils.TYPE_BG_SINGER, ivHead, false);
         tvTitle.setText(artist.getName());
         accountId = artist.getAccountId();

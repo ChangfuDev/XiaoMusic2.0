@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
+import com.yzx.xiaomusic.cache.CacheUtils;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.MusicService;
@@ -25,6 +26,7 @@ import com.yzx.xiaomusic.ui.play.card.PlayCardFragment;
 import com.yzx.xiaomusic.ui.play.lyric.LyricFragment;
 import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
 import com.yzx.xiaomusic.utils.EventBusUtils;
+import com.yzx.xiaomusic.utils.FragmentStartUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.utils.TimeUtils;
@@ -135,7 +137,11 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         //更新缓存进度
         if (musicInfo != null) {
             seekBar.setMax((int) musicInfo.getDuration());
-            seekBar.setSecondaryProgress((int) (musicInfo.getDuration() * (service.getBuffer()) / 100));
+            if (musicInfo.isLocal() || CacheUtils.isMusicCache(musicInfo.getMusicId())) {
+                seekBar.setSecondaryProgress((int) musicInfo.getDuration());
+            } else {
+                seekBar.setSecondaryProgress((int) (musicInfo.getDuration() * (service.getBuffer()) / 100));
+            }
         }
         //更新播放状态
         ivPlayPause.setImageResource(service.isPlaying() ? R.drawable.acq : R.drawable.acs);
@@ -158,11 +164,9 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         switch (view.getId()) {
             case R.id.tv_subTitle:
                 MusicInfo musicInfo = service.getMusicInfo();
-                SingerDetailsFragment singerDetailsFragment = new SingerDetailsFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_ID_SINGER, musicInfo.getSingerInfos().get(0).getSingerId());
-                singerDetailsFragment.setArguments(bundle);
-                start(singerDetailsFragment, SINGLETASK);
+                FragmentStartUtils.startFragment(this, new SingerDetailsFragment(), bundle);
                 break;
             case R.id.tb:
                 break;
@@ -250,13 +254,6 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 seekBar.setProgress(content);
                 tvCurrentProgress.setText(TimeUtils.getFormatData(content, TimeUtils.FORMAT_MM_SS));
                 break;
-
         }
-    }
-
-    @Override
-    public boolean onBackPressedSupport() {
-
-        return super.onBackPressedSupport();
     }
 }

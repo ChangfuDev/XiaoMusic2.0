@@ -20,6 +20,7 @@ import com.yzx.xiaomusic.utils.MusicDataUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * @author yzx
@@ -27,12 +28,15 @@ import butterknife.ButterKnife;
  */
 public class MusicAdapter extends CommonBaseAdapter<MusicAdapter.Holder, MusicInfo> {
 
-    private final FragmentManager fragmentManager;
+    private final SupportFragment parentFragment;
+    private FragmentManager fragmentManager;
     public static final String KEY_MUSIC_INFO = "musicInfo";
 
-    public MusicAdapter(FragmentManager fragmentManager) {
+    public MusicAdapter(FragmentManager fragmentManager, SupportFragment parentFragment) {
         this.fragmentManager = fragmentManager;
+        this.parentFragment = parentFragment;
     }
+
 
     @NonNull
     @Override
@@ -57,6 +61,7 @@ public class MusicAdapter extends CommonBaseAdapter<MusicAdapter.Holder, MusicIn
         holder.ivMore.setOnClickListener(v -> {
             BottomMusicInfoDialog bottomMusicInfoDialog = new BottomMusicInfoDialog();
             Bundle args = new Bundle();
+            bottomMusicInfoDialog.setParentFragment(parentFragment);
             args.putSerializable(KEY_MUSIC_INFO, musicInfo);
             bottomMusicInfoDialog.setArguments(args);
             bottomMusicInfoDialog.show(fragmentManager, MusicAdapter.class.getSimpleName());

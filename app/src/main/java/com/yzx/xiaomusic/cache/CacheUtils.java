@@ -1,6 +1,7 @@
 package com.yzx.xiaomusic.cache;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.jakewharton.disklrucache.DiskLruCache;
@@ -145,6 +146,11 @@ public class CacheUtils {
             return PATH_ABSOLUTE_CACHE_MUSIC + "/" + id + ".0";
         }
         return null;
+    }
+
+    public static boolean isMusicCache(String id) {
+
+        return !TextUtils.isEmpty(getCacheMusic(id));
     }
 
 

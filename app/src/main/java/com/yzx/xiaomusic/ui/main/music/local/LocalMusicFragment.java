@@ -21,6 +21,7 @@ import com.yzx.xiaomusic.service.MusicService;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
+import com.yzx.xiaomusic.utils.FragmentStartUtils;
 
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class LocalMusicFragment extends BaseMvpFragment<LocalMusicPresenter> imp
         tb.inflateMenu(R.menu.menu_music_local);
         tb.setOnMenuItemClickListener(this);
 
-        adapter = new MusicAdapter(getChildFragmentManager());
+        adapter = new MusicAdapter(getChildFragmentManager(),this);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
     }
@@ -117,6 +118,6 @@ public class LocalMusicFragment extends BaseMvpFragment<LocalMusicPresenter> imp
         service.setSongSheet(adapter.datas);
         service.setMusicIndex(position);
         service.realPlay();
-        start(new PlayFragment(), SINGLETASK);
+        FragmentStartUtils.startFragment(this,new PlayFragment());
     }
 }

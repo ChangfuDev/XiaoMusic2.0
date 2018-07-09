@@ -57,7 +57,7 @@ public class AppHttpClient {
         baseUrl = builder.baseUrl;
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(builder.connectTimeout < 30 ? 30 : builder.connectTimeout, TimeUnit.SECONDS)
                 //添加拦截器
                 .addInterceptor(getInterceptor(context))
                 //设置缓存
@@ -143,6 +143,7 @@ public class AppHttpClient {
 
         private Context context;
         private String baseUrl;
+        private long connectTimeout;
 
 
         public Builder() {
@@ -161,6 +162,11 @@ public class AppHttpClient {
 
         public Builder baseUrl(String baseUrl) {
             this.baseUrl = baseUrl;
+            return this;
+        }
+
+        public Builder connectTimeout(long connectTimeout) {
+            this.connectTimeout = connectTimeout;
             return this;
         }
 

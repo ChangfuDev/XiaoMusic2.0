@@ -39,13 +39,13 @@ public class BottomMusicInfoDialogAdapter extends CommonBaseAdapter<BottomMusicI
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        super.onBindViewHolder(holder,position);
+        super.onBindViewHolder(holder, position);
         Context context = holder.itemView.getContext();
         holder.ivIcon.setImageResource(datas.get(position));
         String title;
         switch (position) {
             case 0:
-                title = ResourceUtils.parseString(context, R.string.evaluate);
+                title = String.format("评论：(%s)", musicInfo.getEvaluteCount());
                 break;
             case 1:
                 title = ResourceUtils.parseString(context, R.string.share);
@@ -63,7 +63,8 @@ public class BottomMusicInfoDialogAdapter extends CommonBaseAdapter<BottomMusicI
                 title = String.format("音质：%s", "120k/s");
                 break;
             case 6:
-                title = String.format("查看视频：%s", TextUtils.equals("0", musicInfo.getMvId()) ? "无" : "有");
+                title = "查看视频";
+                holder.itemView.setClickable(!TextUtils.equals("0", musicInfo.getMvId()));
                 break;
             case 7:
                 title = "相似推荐";

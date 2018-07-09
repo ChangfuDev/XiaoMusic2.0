@@ -17,8 +17,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;
+import com.yzx.commonlibrary.network.AppHttpClient;
 import com.yzx.commonlibrary.utils.ToastUtils;
-import com.yzx.xiaomusic.app.MusicApplication;
 import com.yzx.xiaomusic.cache.CacheUtils;
 import com.yzx.xiaomusic.model.entity.MusicAddress;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
@@ -39,9 +39,9 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.yzx.xiaomusic.Constant.BASE_URL;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
-import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_BUFFER;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_PROGRESS;
 import static com.yzx.xiaomusic.network.ApiConstant.BR_320;
 
@@ -156,7 +156,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 //            sendPlayingEvent();
 //        }
         buffer = percent;
-        EventBusUtils.post(new MessageEvent(TYPE_MUSIC_UPDATE_BUFFER, percent));
+        EventBusUtils.postBuffer(percent);
     }
 
     @SuppressLint("CheckResult")
@@ -353,6 +353,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         if (!TextUtils.isEmpty(cacheMusic)) {
             musicInfo.setPath(cacheMusic);
             playMusic(musicInfo);
+            EventBusUtils.postBuffer(100);
             Log.i(TAG, "playNetMusic: cache");
         } else {
             Log.i(TAG, "playNetMusic: noCache");
@@ -403,8 +404,11 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     }
 
     public void getMusicAddress(String id, CommonMvpObserver<MusicAddress> observer) {
-        MusicApplication
-                .getAppHttpClient()
+        new AppHttpClient.Builder()
+                .context(getApplicationContext())
+                .baseUrl(BASE_URL)
+                .connectTimeout(90)
+                .build()
                 .getService(MusicApi.class)
                 .getMusicAddress(ApiConstant.TYPE_SONG, id, BR_320)
                 .subscribeOn(Schedulers.io())

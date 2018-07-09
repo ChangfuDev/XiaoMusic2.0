@@ -32,6 +32,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import me.yokeyword.fragmentation.SupportFragment;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
@@ -118,11 +119,14 @@ public class PlayCardFragment extends BaseFragment {
                 break;
             case R.id.iv_more:
                 musicInfo = service.getMusicInfo();
-                BottomMusicInfoDialog bottomMusicInfoDialog = new BottomMusicInfoDialog();
-                Bundle args = new Bundle();
-                args.putSerializable(KEY_MUSIC_INFO, musicInfo);
-                bottomMusicInfoDialog.setArguments(args);
-                bottomMusicInfoDialog.show(getChildFragmentManager(), MusicAdapter.class.getSimpleName());
+                if (musicInfo!=null){
+                    BottomMusicInfoDialog bottomMusicInfoDialog = new BottomMusicInfoDialog();
+                    Bundle args = new Bundle();
+                    args.putSerializable(KEY_MUSIC_INFO, musicInfo);
+                    bottomMusicInfoDialog.setArguments(args);
+                    bottomMusicInfoDialog.setParentFragment((SupportFragment) getParentFragment());
+                    bottomMusicInfoDialog.show(getChildFragmentManager(), MusicAdapter.class.getSimpleName());
+                }
                 break;
         }
     }
