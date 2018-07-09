@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.yzx.xiaomusic.R;
@@ -30,6 +31,7 @@ import com.yzx.xiaomusic.utils.FragmentStartUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.utils.TimeUtils;
+import com.yzx.xiaomusic.widget.simplelistenner.SimpleSeekBarChangeListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -37,6 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_BUFFERRING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
@@ -115,6 +118,14 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         initToolBar(tb);
         tb.inflateMenu(R.menu.menu_share);
         tb.setOnMenuItemClickListener(this);
+        seekBar.setOnSeekBarChangeListener(new SimpleSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    service.seekTo(progress);
+                }
+            }
+        });
         playCardFragment = new PlayCardFragment();
         lyricFragment = new LyricFragment();
         loadMultipleRootFragment(R.id.fragmentContainer, 0, playCardFragment, lyricFragment);
@@ -253,6 +264,9 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 seekBar.setMax((int) musicInfo.getDuration());
                 seekBar.setProgress(content);
                 tvCurrentProgress.setText(TimeUtils.getFormatData(content, TimeUtils.FORMAT_MM_SS));
+                break;
+            case TYPE_MUSIC_BUFFERRING:
+                //TODO 缓存不足时操作
                 break;
         }
     }

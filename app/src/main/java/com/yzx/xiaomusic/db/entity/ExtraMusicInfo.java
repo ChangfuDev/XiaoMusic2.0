@@ -16,12 +16,35 @@ public class ExtraMusicInfo {
     public int id;
 
 
-    public ExtraMusicInfo(String musicId, String musicInfo,int liked, int listened) {
-        this.liked =liked;
+    public ExtraMusicInfo(String musicId, String musicInfo, int liked, int listened) {
+        this.liked = liked;
         this.listened = listened;
         this.musicId = musicId;
         this.musicInfo = musicInfo;
     }
+
+    public int getPlayCount() {
+        return playCount;
+    }
+
+    public void setPlayCount(int playCount) {
+        this.playCount = playCount;
+    }
+
+    public int playCount;
+
+    public long getLatestTime() {
+        return latestTime;
+    }
+
+    public void setLatestTime(long latestTime) {
+        this.latestTime = latestTime;
+    }
+
+    /**
+     * 最新一次时间
+     */
+    public long latestTime;
 
     public int getLiked() {
         return liked;

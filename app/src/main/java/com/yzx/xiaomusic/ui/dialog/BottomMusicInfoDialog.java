@@ -11,6 +11,8 @@ import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
+import com.yzx.xiaomusic.db.DBUtils;
+import com.yzx.xiaomusic.db.entity.ExtraMusicInfo;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.ui.adapter.BottomMusicInfoDialogAdapter;
 import com.yzx.xiaomusic.ui.album.AlbumDetailFragment;
@@ -68,11 +70,21 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
         }
         if (musicInfo.isLocal()) {
             TextView view = (TextView) ResourceUtils.parseLayout(getContext(), R.layout.layout_bottom_dialog_music_info_head, container);
-            view.setText(String.format("歌曲：%s", musicInfo.getMusicName()));
+            ExtraMusicInfo extraMusicInfo = DBUtils.getExtraMusicInfoDao().getExtraMusicInfoById(musicInfo.getMusicId());
+            if (extraMusicInfo == null) {
+                view.setText(String.format("歌曲：%s", musicInfo.getMusicName()));
+            } else {
+                view.setText(String.format("歌曲：%s(共播放了%s次)", musicInfo.getMusicName(), extraMusicInfo.getPlayCount()));
+            }
             return view;
         } else {
             TextView view = (TextView) ResourceUtils.parseLayout(getContext(), R.layout.layout_bottom_dialog_music_info_head, container);
-            view.setText(String.format("歌曲：%s", musicInfo.getMusicName()));
+            ExtraMusicInfo extraMusicInfo = DBUtils.getExtraMusicInfoDao().getExtraMusicInfoById(musicInfo.getMusicId());
+            if (extraMusicInfo == null) {
+                view.setText(String.format("歌曲：%s", musicInfo.getMusicName()));
+            } else {
+                view.setText(String.format("歌曲：%s(共播放了%s次)", musicInfo.getMusicName(), extraMusicInfo.getPlayCount()));
+            }
             return view;
         }
     }

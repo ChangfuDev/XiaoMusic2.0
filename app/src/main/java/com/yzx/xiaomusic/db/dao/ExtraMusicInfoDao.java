@@ -24,7 +24,7 @@ public interface ExtraMusicInfoDao {
      *
      * @return
      */
-    @Query("select * from ExtraMusicInfo where liked = 1")
+    @Query("select * from ExtraMusicInfo where liked = 1 order by latestTime desc")
     List<ExtraMusicInfo> getAllLikedMusicInfos();
 
 
@@ -33,7 +33,7 @@ public interface ExtraMusicInfoDao {
      *
      * @return
      */
-    @Query("select * from ExtraMusicInfo where listened = 1 order by id desc limit 100")
+    @Query("select * from ExtraMusicInfo where listened = 1 order by latestTime desc limit 100")
     List<ExtraMusicInfo> getAllRecentMusicInfos();
 
     /**

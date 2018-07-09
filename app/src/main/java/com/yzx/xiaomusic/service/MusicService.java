@@ -72,6 +72,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     private Disposable disposable;
     private int buffer;
     private int currentPosition;
+    private Disposable d;
 
 
     @Override
@@ -133,6 +134,10 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         return buffer;
     }
 
+    public void seekTo(int progress) {
+        mediaPlayer.seekTo(progress);
+    }
+
     /**
      * 进度更新
      *
@@ -142,20 +147,16 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
 //        缓存不足时，先暂停
-//        if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 1) {
-//            mp.pause();
-//            sendPauseEvent();
-//        } else {
-//            if (!mp.isPlaying()) {
-//                mp.start();
-//                sendPlayingEvent();
-//            }
-//        }
-
-//        if (percent == 100) {
-//            mp.start();
-//            sendPlayingEvent();
-//        }
+        if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 1) {
+            mp.pause();
+            EventBusUtils.postBufferringState();
+            sendPauseEvent();
+        } else {
+            if (!mp.isPlaying()) {
+                mp.start();
+                sendPlayingEvent();
+            }
+        }
         buffer = percent;
         EventBusUtils.postBuffer(percent);
     }
@@ -254,7 +255,6 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
     @Override
     public void onSeekComplete(MediaPlayer mp) {
-
     }
 
     public void playPause() {
@@ -327,8 +327,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
 
     public void realPlay() {
-        mediaPlayer.reset();
-        prepared = false;
+        reset();
         MusicInfo musicInfo = getMusicInfo();
         if (mediaPlayer == null || songSheet == null || songSheet.size() <= 0 || musicInfo == null) {
             ToastUtils.showToast("没有要播放的歌单或歌曲");
@@ -339,6 +338,18 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         } else {
             playNetMusic(musicInfo);
         }
+    }
+
+    /**
+     * 如果正在获取网络歌曲地址的时候切歌，取消请求
+     * 重置mediaPlayer
+     */
+    private void reset() {
+        if (d != null) {
+            d.dispose();
+        }
+        mediaPlayer.reset();
+        prepared = false;
     }
 
     /**
@@ -365,6 +376,13 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
     private void getNetMusicAddressAndPlay(MusicInfo musicInfo) {
         getMusicAddress(musicInfo.getMusicId(), new CommonMvpObserver<MusicAddress>() {
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                super.onSubscribe(d);
+                MusicService.this.d = d;
+            }
+
             @Override
             protected void onSuccess(MusicAddress musicAddress) {
                 Log.i(TAG, "onSuccess: 获取地址成功" + musicInfo.getMusicName());

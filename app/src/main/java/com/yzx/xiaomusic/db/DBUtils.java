@@ -46,9 +46,13 @@ public class DBUtils {
         ExtraMusicInfo extraMusicInfo = getExtraMusicInfoDao().getExtraMusicInfoById(musicInfo.getMusicId());
         if (extraMusicInfo != null) {
             extraMusicInfo.setLiked(1);
+            extraMusicInfo.setLatestTime(System.currentTimeMillis());
             getExtraMusicInfoDao().updateExtraMusicInfo(extraMusicInfo);
         } else {
-            getExtraMusicInfoDao().addExtraMusicInfo(new ExtraMusicInfo(musicInfo.getMusicId(), JsonUtils.objectToString(musicInfo), 1, 0));
+            ExtraMusicInfo newExtraMusicInfo = new ExtraMusicInfo(musicInfo.getMusicId(), JsonUtils.objectToString(musicInfo), 1, 0);
+            newExtraMusicInfo.setPlayCount(1);
+            newExtraMusicInfo.setLatestTime(System.currentTimeMillis());
+            getExtraMusicInfoDao().addExtraMusicInfo(newExtraMusicInfo);
         }
     }
 
@@ -62,25 +66,26 @@ public class DBUtils {
         ExtraMusicInfo extraMusicInfo = getExtraMusicInfoDao().getExtraMusicInfoById(musicInfo.getMusicId());
         if (extraMusicInfo != null) {
             extraMusicInfo.setListened(1);
+            extraMusicInfo.setPlayCount(extraMusicInfo.getPlayCount() + 1);
+            extraMusicInfo.setLatestTime(System.currentTimeMillis());
             getExtraMusicInfoDao().updateExtraMusicInfo(extraMusicInfo);
         } else {
-            getExtraMusicInfoDao().addExtraMusicInfo(new ExtraMusicInfo(musicInfo.getMusicId(), JsonUtils.objectToString(musicInfo), 0, 1));
+            ExtraMusicInfo newExtraMusicInfo = new ExtraMusicInfo(musicInfo.getMusicId(), JsonUtils.objectToString(musicInfo), 0, 1);
+            newExtraMusicInfo.setPlayCount(1);
+            newExtraMusicInfo.setLatestTime(System.currentTimeMillis());
+            getExtraMusicInfoDao().addExtraMusicInfo(newExtraMusicInfo);
         }
     }
 
     /**
      * 删除喜欢记录
-     * 如果同时收听过，则只需要更新喜欢信息即可，否则则直接删除记录
+     * 实质是更新喜欢状态
      *
      * @param likedMusicInfo
      */
     public static void cancelLikeMusic(ExtraMusicInfo likedMusicInfo) {
-        if (likedMusicInfo.listened == 1 && likedMusicInfo.liked == 1) {
-            likedMusicInfo.setLiked(0);
-            getExtraMusicInfoDao().updateExtraMusicInfo(likedMusicInfo);
-        } else {
-            getExtraMusicInfoDao().deleteExtraMusicInfo(likedMusicInfo);
-        }
+        likedMusicInfo.setLiked(0);
+        getExtraMusicInfoDao().updateExtraMusicInfo(likedMusicInfo);
     }
 
 

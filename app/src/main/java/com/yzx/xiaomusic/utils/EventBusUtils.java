@@ -4,10 +4,10 @@ import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_BUFFERRING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_BUFFER;
 
 /**
- *
  * @author yzx
  * @date 2018/5/17
  * Description
@@ -35,6 +35,7 @@ public class EventBusUtils {
 
     /**
      * 注销EventBus
+     *
      * @param subscriber
      */
     public static void unregister(Object subscriber) {
@@ -49,10 +50,19 @@ public class EventBusUtils {
 
     /**
      * 更新音乐缓存进度
+     *
      * @param percent
      */
-    public static void postBuffer(int percent){
-        post(new MessageEvent(TYPE_MUSIC_UPDATE_BUFFER,percent));
+    public static void postBuffer(int percent) {
+        post(new MessageEvent(TYPE_MUSIC_UPDATE_BUFFER, percent));
     }
+
+    /**
+     * 缓存进度不足播放时
+     */
+    public static void postBufferringState() {
+        post(new MessageEvent(TYPE_MUSIC_BUFFERRING));
+    }
+
 
 }
