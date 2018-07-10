@@ -29,6 +29,7 @@ import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
 import com.yzx.xiaomusic.ui.songsheet.detail.SongSheetDetailFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
 import com.yzx.xiaomusic.utils.EventBusUtils;
+import com.yzx.xiaomusic.widget.MusicFooter;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -112,7 +113,7 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
 
 //        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getContext()));
         smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> search(offset));
-
+        smartRefreshLayout.setRefreshFooter(new MusicFooter(getContext()));
         adapter = new SearchResultAdapter(searchType);
         adapter.setOnItemClickListener(this);
 
