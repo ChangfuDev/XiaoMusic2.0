@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
@@ -56,6 +57,21 @@ import static com.yzx.xiaomusic.network.ApiConstant.BR_320;
 
 public class MusicService extends Service implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnErrorListener {
     public static final String TAG = "ygl" + MusicService.class.getSimpleName();
+
+    /**
+     * 焦点状态改变监听
+     */
+    private AudioManager.OnAudioFocusChangeListener mAudioFocusChangeListener = focusChange -> {
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                pause();
+                break;
+        }
+    };
+
+
     public static final int PLAY_MODE_LOOP = 1;
     public static final int PLAY_MODE_SINGLE = 2;
     public static final int PLAY_MODE_RANDOM = 3;
@@ -78,6 +94,8 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     private int buffer;
     private int currentPosition;
     private Disposable d;
+    private AudioManager mAudioManager;
+    private MediaSessionManager mMediaSessionManager;
 
 
     @Override
@@ -89,13 +107,15 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnSeekCompleteListener(this);
         mediaPlayer.setOnErrorListener(this);
+        //设置成播放音乐
         AudioAttributes attributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
         mediaPlayer.setAudioAttributes(attributes);
+        //用来随机播放
         random = new Random();
-
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         //显示上次播放的歌曲信息
         String stringSongSheet = SPUtils.getString(KEY_SONG_SHEET, null);
         if (!TextUtils.isEmpty(stringSongSheet)) {
@@ -104,6 +124,9 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
             musicInfo = getSongSheet().get(index);
             EventBusUtils.postMusicChanged();
         }
+
+        mMediaSessionManager = new MediaSessionManager(this);
+//        initMediaSession();
     }
 
     public void setSongSheet(List<MusicInfo> songSheet) {
@@ -116,6 +139,10 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
     public MusicInfo getMusicInfo() {
         return musicInfo;
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
     }
 
     public void setPlayMode(int playMode) {
@@ -162,13 +189,11 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 //        缓存不足时，先暂停
         if (musicInfo != null && musicInfo.getDuration() > 0) {
             if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 1) {
-                mp.pause();
+                pause();
                 EventBusUtils.postBufferringState();
-                sendPauseEvent();
             } else {
                 if (!mp.isPlaying()) {
-                    mp.start();
-                    sendPlayingEvent();
+                    start();
                 }
             }
         }
@@ -243,11 +268,11 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         DBUtils.listenMusic(musicInfo);
         //如果歌单不一样，保存到本地
         if (songSheet != null && !TextUtils.equals(JsonUtils.objectToString(songSheet), SPUtils.getString(KEY_SONG_SHEET, null))) {
+            Log.i(TAG, "onPrepared: 歌单不一致SP更新歌单");
             SPUtils.putString(KEY_SONG_SHEET, JsonUtils.objectToString(songSheet));
         }
         SPUtils.putInt(KEY_LAST_POSITION, index);
-        mp.start();
-        sendPlayingEvent();
+        start();
     }
 
     /**
@@ -284,13 +309,17 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         }
     }
 
-    private void start() {
+    public void start() {
         mediaPlayer.start();
+        mMediaSessionManager.updatePlaybackState();
+        mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         sendPlayingEvent();
     }
 
     public void pause() {
         mediaPlayer.pause();
+        mMediaSessionManager.updatePlaybackState();
+        mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
         sendPauseEvent();
     }
 
@@ -350,6 +379,8 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
             ToastUtils.showToast("没有要播放的歌单或歌曲");
             return;
         }
+        //播放的时候获取焦点
+        mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         if (musicInfo.isLocal()) {
             playMusic(musicInfo);
         } else {
