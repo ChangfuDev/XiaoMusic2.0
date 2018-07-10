@@ -28,6 +28,8 @@ import com.yzx.xiaomusic.network.ApiConstant;
 import com.yzx.xiaomusic.network.api.MusicApi;
 import com.yzx.xiaomusic.ui.notification.PlayNotification;
 import com.yzx.xiaomusic.utils.EventBusUtils;
+import com.yzx.xiaomusic.utils.JsonUtils;
+import com.yzx.xiaomusic.utils.SPUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -58,6 +60,9 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     public static final int PLAY_MODE_SINGLE = 2;
     public static final int PLAY_MODE_RANDOM = 3;
     private int playMode = PLAY_MODE_LOOP;
+
+    public static final String KEY_SONG_SHEET = "SongSheet";
+    public static final String KEY_LAST_POSITION = "lastPosition";
 
     CompositeDisposable mDisposable = new CompositeDisposable();
     MusicInfo musicInfo;
@@ -90,7 +95,15 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                 .build();
         mediaPlayer.setAudioAttributes(attributes);
         random = new Random();
-        Log.d(TAG, "onCreate: ");
+
+        //显示上次播放的歌曲信息
+        String stringSongSheet = SPUtils.getString(KEY_SONG_SHEET, null);
+        if (!TextUtils.isEmpty(stringSongSheet)) {
+            setSongSheet(JsonUtils.stringToList(stringSongSheet, MusicInfo.class));
+            index = SPUtils.getInt(KEY_LAST_POSITION, 0);
+            musicInfo = getSongSheet().get(index);
+            EventBusUtils.postMusicChanged();
+        }
     }
 
     public void setSongSheet(List<MusicInfo> songSheet) {
@@ -122,7 +135,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
         musicInfo = songSheet.get(position);
         //TODO EventBus 歌曲改变
-        EventBusUtils.postSticky(new MessageEvent(MessageEvent.TYPE_MUSIC_CHANGED, musicInfo));
+        EventBusUtils.postMusicChanged();
         Log.i(TAG, "setMusicIndex: " + musicInfo.getMusicName() + position);
     }
 
@@ -167,7 +180,6 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     private void sendPlayingEvent() {
         showPlayNotification();
         EventBusUtils.post(new MessageEvent(TYPE_MUSIC_PLAYING));
-        Log.i(TAG, "sendPlayingEvent: ");
         Observable
                 .interval(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -214,7 +226,6 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-
                             PlayNotification.showNotification(getApplicationContext(), musicInfo, resource);
                         }
                     });
@@ -230,6 +241,11 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     public void onPrepared(MediaPlayer mp) {
         prepared = true;
         DBUtils.listenMusic(musicInfo);
+        //如果歌单不一样，保存到本地
+        if (songSheet != null && !TextUtils.equals(JsonUtils.objectToString(songSheet), SPUtils.getString(KEY_SONG_SHEET, null))) {
+            SPUtils.putString(KEY_SONG_SHEET, JsonUtils.objectToString(songSheet));
+        }
+        SPUtils.putInt(KEY_LAST_POSITION, index);
         mp.start();
         sendPlayingEvent();
     }
@@ -241,7 +257,6 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
      */
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Log.i(TAG, musicInfo.getMusicName() + "onCompletion: 播放完成");
         //重置播放缓存
         buffer = 0;
         sendPauseEvent();

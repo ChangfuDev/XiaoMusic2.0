@@ -5,6 +5,7 @@ import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import org.greenrobot.eventbus.EventBus;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_BUFFERRING;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_BUFFER;
 
 /**
@@ -64,5 +65,10 @@ public class EventBusUtils {
         post(new MessageEvent(TYPE_MUSIC_BUFFERRING));
     }
 
-
+    /**
+     * 音乐改变
+     */
+    public static void postMusicChanged() {
+        post(new MessageEvent(TYPE_MUSIC_CHANGED));
+    }
 }
