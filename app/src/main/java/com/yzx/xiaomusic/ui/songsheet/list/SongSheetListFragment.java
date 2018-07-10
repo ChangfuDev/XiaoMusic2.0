@@ -33,6 +33,7 @@ import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
 import com.yzx.xiaomusic.widget.GridItemDecoration;
+import com.yzx.xiaomusic.widget.MusicFooter;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -108,6 +109,7 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
         initToolBar(tb);
         tvTitle.setText(R.string.songSheet);
         smartRefreshLayout.setOnLoadMoreListener(this);
+        smartRefreshLayout.setRefreshFooter(new MusicFooter(getContext()));
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.addItemDecoration(new GridItemDecoration(2, DensityUtils.dip2px(getContext(), 3), false));
         adapter = new SongSheetListAdapter();

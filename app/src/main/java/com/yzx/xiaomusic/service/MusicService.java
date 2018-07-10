@@ -147,14 +147,16 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
 //        缓存不足时，先暂停
-        if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 1) {
-            mp.pause();
-            EventBusUtils.postBufferringState();
-            sendPauseEvent();
-        } else {
-            if (!mp.isPlaying()) {
-                mp.start();
-                sendPlayingEvent();
+        if (musicInfo != null && musicInfo.getDuration() > 0) {
+            if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 1) {
+                mp.pause();
+                EventBusUtils.postBufferringState();
+                sendPauseEvent();
+            } else {
+                if (!mp.isPlaying()) {
+                    mp.start();
+                    sendPlayingEvent();
+                }
             }
         }
         buffer = percent;

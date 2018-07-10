@@ -135,7 +135,11 @@ public class SearchResultAdapter extends CommonBaseAdapter<RecyclerView.ViewHold
         GlideUtils.loadImg(context, songSheetInfo.getCoverUrl(), holder.ivHead);
         holder.tvTitle.setText(songSheetInfo.getTitle());
         holder.tvSubTitle.setText(String.format("%s首", songSheetInfo.getMusicCount()));
-        holder.tvAuthor.setText(String.format("by %s，播放了%s次", songSheetInfo.getCreatorNickName(), songSheetInfo.getPlayCount()));
+        String playCount = songSheetInfo.getPlayCount();
+        if (Integer.parseInt(playCount) > 10000) {
+            playCount = Integer.parseInt(playCount) / 10000 + "万";
+        }
+        holder.tvAuthor.setText(String.format("by %s，播放了%s次", songSheetInfo.getCreatorNickName(), playCount));
     }
 
     private void dealAlbumResult(Context context, AlbumHolder holder, int position) {

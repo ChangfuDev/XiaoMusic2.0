@@ -157,6 +157,23 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
     }
 
     @Override
+    public void onNewBundle(Bundle args) {
+        super.onNewBundle(args);
+        if (args != null) {
+            name = args.getString(KEY_NAME);
+            cover = args.getString(KEY_COVER);
+            songSheetId = args.getString(KEY_ID);
+            mPresenter.getSongSheetDetail(songSheetId);
+            //初始化上个页面传来的信息
+            tvTitle.setText(name);
+            tvName.setText(name);
+            GlideUtils.loadBlurImg(getContext(), cover, ivBg);
+            GlideUtils.loadBlurImg(getContext(), cover, tbBg);
+            GlideUtils.loadImg(getContext(), cover, ivLittleBg);
+        }
+    }
+
+    @Override
     protected SongSheetDetailPresenter getPresenter() {
         return new SongSheetDetailPresenter();
     }
@@ -166,7 +183,6 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         super.initData(savedInstanceState);
 
         arguments = getArguments();
-
         name = arguments.getString(KEY_NAME);
         cover = arguments.getString(KEY_COVER);
         songSheetId = arguments.getString(KEY_ID);
@@ -190,13 +206,11 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         //初始化上个页面传来的信息
         tvTitle.setText(name);
         tvName.setText(name);
-//        tvSubTitle.setText(recommend);
-//        tvSubTitle.setVisibility(TextUtils.isEmpty(recommend) ? View.GONE : View.VISIBLE);
         GlideUtils.loadBlurImg(getContext(), cover, ivBg);
         GlideUtils.loadBlurImg(getContext(), cover, tbBg);
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
 
-        adapter = new MusicAdapter(getFragmentManager(),this);
+        adapter = new MusicAdapter(getFragmentManager(), this);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
     }
@@ -211,12 +225,6 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         super.onResume();
         initBottomMusicController(layoutBottomMusicController);
         musicInfo = service.getMusicInfo();
-    }
-
-    @Override
-    public void onNewBundle(Bundle args) {
-        super.onNewBundle(args);
-        args.getSerializable(KEY_INFO_SONG_SHEET);
     }
 
     @SuppressLint("CheckResult")
@@ -363,7 +371,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
 
     @Override
     public void onItemClick(View view, int position) {
-        playMusicWithStartFragment(this,adapter.datas, position);
+        playMusicWithStartFragment(this, adapter.datas, position);
     }
 
     @Override

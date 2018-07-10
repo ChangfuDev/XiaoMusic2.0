@@ -9,7 +9,8 @@ import me.yokeyword.fragmentation.SupportFragment;
 import me.yokeyword.fragmentation.SupportHelper;
 
 /**
- * Created by yzx on 2018/7/4.
+ * @author yzx
+ * @date 2018/7/4
  * Description
  */
 public class FragmentStartUtils {
@@ -40,8 +41,9 @@ public class FragmentStartUtils {
         } else {
             //否则
             SupportFragment fragment = SupportHelper.findFragment(parentFragment.getFragmentManager(), targetFragment.getClass());
-            //如果已经存在，pop掉
+            //如果已经存在，单例开启，走onNewBundle()方法
             if (fragment != null) {
+                parentFragment.putNewBundle(args);
                 parentFragment.start(targetFragment, ISupportFragment.SINGLETASK);
             } else {
                 parentFragment.start(targetFragment);

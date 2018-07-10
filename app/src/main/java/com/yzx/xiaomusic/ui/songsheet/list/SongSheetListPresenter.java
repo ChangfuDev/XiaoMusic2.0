@@ -39,7 +39,7 @@ public class SongSheetListPresenter extends CommonBasePresenter<SongSheetListFra
                 if (offset == 0) {
                     mView.showErrorLayout();
                 } else {
-                    mView.smartRefreshLayout.finishLoadMore();
+                    mView.smartRefreshLayout.finishLoadMore(false);
                 }
             }
         });

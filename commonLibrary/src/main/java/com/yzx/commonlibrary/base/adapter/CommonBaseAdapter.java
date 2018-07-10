@@ -43,7 +43,7 @@ public abstract class CommonBaseAdapter<VH extends RecyclerView.ViewHolder, B> e
     public void setData(List<B> originalData) {
         if (originalData != null) {
             datas = originalData;
-            notifyItemRangeInserted(0, originalData.size());
+            notifyDataSetChanged();
         }
     }
 

@@ -19,8 +19,8 @@ import com.yzx.commonlibrary.base.CommonBaseApplication;
 import com.yzx.xiaomusic.cache.CacheManager;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.MusicService;
-import com.yzx.xiaomusic.ui.notification.PlayNotification;
 import com.yzx.xiaomusic.service.ServiceManager;
+import com.yzx.xiaomusic.ui.notification.PlayNotification;
 import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
@@ -42,8 +42,8 @@ public class MusicApplication extends CommonBaseApplication {
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
     }
 
-//    static {
-//        //设置全局的Header构建器
+    static {
+        //设置全局的Header构建器
 //        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
 //            //全局设置主题颜色
 //            layout.setPrimaryColorsId(R.color.colorPrimary, android.R.color.white);
@@ -55,7 +55,7 @@ public class MusicApplication extends CommonBaseApplication {
 //            //指定为经典Footer，默认是 BallPulseFooter
 //            return new MusicFooter(context);
 //        });
-//    }
+    }
 
     private RefWatcher refWatcher;
 

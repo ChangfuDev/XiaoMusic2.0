@@ -1,15 +1,10 @@
 package com.yzx.xiaomusic.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-
-import com.yzx.xiaomusic.R;
 
 /**
  * Created by yzx on 2018/7/9.
@@ -36,11 +31,8 @@ public class MusicSeekBar extends android.support.v7.widget.AppCompatSeekBar {
     }
 
     @Override
-    protected synchronized void onDraw(Canvas canvas) {
-        @SuppressLint("DrawAllocation")
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.aeu);
-        canvas.drawBitmap(bitmap, 0, 0, paint);
-        super.onDraw(canvas);
+    public void setThumb(Drawable thumb) {
+        super.setThumb(thumb);
     }
 
     @Override

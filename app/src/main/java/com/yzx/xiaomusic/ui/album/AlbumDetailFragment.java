@@ -88,8 +88,6 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
     TextView tvMultiSelection;
     @BindView(R.id.tv_title)
     TextView tvTitle;
-    //    @BindView(R.id.tv_subTitle)
-//    TextView tvSubTitle;
     @BindView(R.id.tb)
     Toolbar tb;
     @BindView(R.id.tbBg)
@@ -149,9 +147,7 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
     @Override
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
-
         arguments = getArguments();
-
         name = arguments.getString(KEY_NAME);
         cover = arguments.getString(KEY_COVER);
         id = arguments.getString(KEY_ID);
@@ -178,7 +174,7 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
         GlideUtils.loadBlurImg(getContext(), cover, tbBg);
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
 
-        adapter = new MusicAdapter(getFragmentManager(),this);
+        adapter = new MusicAdapter(getFragmentManager(), this);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
     }
@@ -186,7 +182,18 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
     @Override
     public void onNewBundle(Bundle args) {
         super.onNewBundle(args);
-        args.getSerializable(KEY_INFO_SONG_SHEET);
+        if (args != null) {
+            name = args.getString(KEY_NAME);
+            cover = args.getString(KEY_COVER);
+            id = arguments.getString(KEY_ID);
+            mPresenter.getAlbumDetail(id);
+            //初始化上个页面传来的信息
+            tvTitle.setText(name);
+            tvName.setText(name);
+            GlideUtils.loadBlurImg(getContext(), cover, ivBg);
+            GlideUtils.loadBlurImg(getContext(), cover, tbBg);
+            GlideUtils.loadImg(getContext(), cover, ivLittleBg);
+        }
     }
 
     @Override
@@ -229,7 +236,6 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
                         singerInfo.setSingerName(artistsBeanX.getName());
                         singerInfos.add(singerInfo);
                     }
-
                     musicInfo.setSingerInfos(singerInfos);
                     return musicInfo;
                 })
@@ -291,7 +297,7 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
 
     @Override
     public void onItemClick(View view, int position) {
-        playMusicWithStartFragment(this,adapter.datas, position);
+        playMusicWithStartFragment(this, adapter.datas, position);
     }
 
     @Override

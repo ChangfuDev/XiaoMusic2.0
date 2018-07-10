@@ -46,7 +46,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
@@ -94,13 +93,11 @@ public class SingerDetailsFragment extends BaseFragment {
     ImageView ivSongSheet;
     @BindView(R.id.layout_bottom_music_controller)
     LinearLayout layoutBottomMusicController;
-    Unbinder unbinder;
     private ArrayList<String> tabTitles;
     private ArrayList<Fragment> fragments;
 
     public static final String KEY_ID_SINGER = "singerId";
 
-    private String singerId;
     private SingerDetailPagerAdapter adapter;
     private MusicInfo musicInfo;
     private int accountId;
@@ -113,10 +110,6 @@ public class SingerDetailsFragment extends BaseFragment {
     @Override
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            singerId = arguments.getString(KEY_ID_SINGER);
-        }
 
         tabTitles = new ArrayList<>();
         tabTitles.add("热门50");
@@ -212,7 +205,6 @@ public class SingerDetailsFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-
         inflater.inflate(R.menu.menu_share, menu);
     }
 
@@ -229,7 +221,6 @@ public class SingerDetailsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
         EventBusUtils.register(this);
         initBottomMusicController(layoutBottomMusicController);
         musicInfo = service.getMusicInfo();

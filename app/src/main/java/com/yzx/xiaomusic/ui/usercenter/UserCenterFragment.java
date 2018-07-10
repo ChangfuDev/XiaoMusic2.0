@@ -30,12 +30,12 @@ import com.yzx.xiaomusic.ui.adapter.UserCenterPagerAdapter;
 import com.yzx.xiaomusic.ui.usercenter.about.UserCenterAboutFragment;
 import com.yzx.xiaomusic.ui.usercenter.dynamic.UserCenterDynamicFragment;
 import com.yzx.xiaomusic.ui.usercenter.music.UserCenterMusicFragment;
+import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -137,15 +137,17 @@ public class UserCenterFragment extends BaseFragment {
         tl.setupWithViewPager(viewPager);
         ViewGroup.LayoutParams layoutParams = rlHeadContainer.getLayoutParams();
         int headPx = DensityUtils.dip2px(getContext(), 300);
+        int maxHeadPx = (int) (getResources().getDisplayMetrics().heightPixels * 0.6);
         int coverPx = DensityUtils.dip2px(getContext(), 220);
-
         smartRefreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
             @Override
             public void onHeaderPulling(RefreshHeader header, float percent, int offset, int headerHeight, int extendHeight) {
                 super.onHeaderPulling(header, percent, offset, headerHeight, extendHeight);
                 if (offset > 0) {
                     float rate = ((float) offset) / ((float) headPx);
-                    layoutParams.height = (int) (headPx * (1f + rate));
+                    int height = (int) (headPx * (1f + rate));
+//                    layoutParams.height = height > maxHeadPx ? maxHeadPx : height;
+                    layoutParams.height = height;
                     rlHeadContainer.setLayoutParams(layoutParams);
                 }
             }
@@ -199,7 +201,7 @@ public class UserCenterFragment extends BaseFragment {
      */
     public void upData(UserSongSheet.PlaylistBean.CreatorBean creatorBean) {
 
-        GlideUtils.loadImg(getContext(), creatorBean.getBackgroundUrl(), GlideUtils.TYPE_BG_USER,ivBg, false);
+        GlideUtils.loadImg(getContext(), creatorBean.getBackgroundUrl(), GlideUtils.TYPE_BG_USER, ivBg, false);
         tvTitle.setText(creatorBean.getNickname());
         GlideUtils.loadCircleImg(getContext(), creatorBean.getAvatarUrl(), ivHead);
         tvNickName.setText(creatorBean.getNickname());
@@ -212,14 +214,14 @@ public class UserCenterFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
+        EventBusUtils.register(this);
         initBottomMusicController(layoutBottomMusicController);
         musicInfo = service.getMusicInfo();
     }
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+        EventBusUtils.unregister(this);
         super.onDestroyView();
     }
 
