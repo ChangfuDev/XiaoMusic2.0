@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/WaterEffect"
+    style="@style/WaterEffect_gray"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorWhite">
@@ -67,7 +67,7 @@
 
         <ImageView
             android:id="@+id/iv_mv"
-            style="@style/WaterEffect"
+            style="@style/WaterEffect_gray"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:scaleType="centerInside"
@@ -76,7 +76,7 @@
 
         <ImageView
             android:id="@+id/iv_more"
-            style="@style/WaterEffect"
+            style="@style/WaterEffect_gray"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:scaleType="centerInside"

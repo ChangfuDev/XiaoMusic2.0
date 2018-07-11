@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rl_search_mv"
-    style="@style/WaterEffect"
+    style="@style/WaterEffect_gray"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 

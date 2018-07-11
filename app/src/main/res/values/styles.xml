@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!--修改menu更多的图标-->
         <item name="android:actionOverflowButtonStyle">@style/Action_OverflowButtonStyle</item>
+        <!--<item name="android:colorEdgeEffect">#b4ffffff</item>-->
     </style>
 
     <!--修改menu更多的图标-->
@@ -28,10 +29,24 @@
         <item name="android:windowContentOverlay">@color/colorTransparent</item>
     </style>
 
-    <style name="WaterEffect">
+    <style name="WaterEffect_gray">
         <item name="android:background">@drawable/selector_bg</item>
         <item name="android:clickable">true</item>
         <item name="android:foreground">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="WaterEffect_transparent">
+        <item name="android:clickable">true</item>
+        <item name="android:foreground">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <!--android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@null"
+        android:focusable="true"-->
+    <style name="WaterEffect_circle">
+        <item name="android:clickable">true</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
 
     <style name="SearchEditTextStyle" parent="AppTheme">

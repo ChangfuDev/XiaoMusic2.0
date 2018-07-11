@@ -1,6 +1,7 @@
 package com.yzx.xiaomusic.ui.main;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -218,7 +219,11 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else {
-            return super.onBackPressedSupport();
+            //返回到桌面
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(homeIntent);
+            return true;
         }
     }
 
