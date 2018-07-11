@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseActivity;
+import com.yzx.xiaomusic.ui.notification.PlayNotification;
 
 /**
  * @author yzx
@@ -16,13 +17,13 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void initData(Bundle savedInstanceState) {
-        super.initData(savedInstanceState);
-
+    protected void initView(Bundle savedInstanceState) {
+        loadRootFragment(R.id.fragmentContainer, new MainFragment());
     }
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
-        loadRootFragment(R.id.fragmentContainer, new MainFragment());
+    protected void onDestroy() {
+        PlayNotification.dismiss();
+        super.onDestroy();
     }
 }

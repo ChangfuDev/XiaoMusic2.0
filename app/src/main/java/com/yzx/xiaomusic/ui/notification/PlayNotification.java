@@ -80,7 +80,9 @@ public class PlayNotification {
     }
 
     public static void dismiss() {
-        systemService.cancelAll();
+        if (systemService != null) {
+            systemService.cancelAll();
+        }
     }
 
 

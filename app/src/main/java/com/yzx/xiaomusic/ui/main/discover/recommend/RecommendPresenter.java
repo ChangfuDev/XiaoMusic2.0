@@ -29,7 +29,7 @@ public class RecommendPresenter extends CommonBasePresenter<RecommendFragment, R
             @Override
             protected void onFail(int code, String errorMsg) {
                 super.onFail(code, errorMsg);
-                mView.showSuccessLayout();
+                mView.showErrorLayout();
             }
         });
     }
@@ -45,7 +45,7 @@ public class RecommendPresenter extends CommonBasePresenter<RecommendFragment, R
             @Override
             protected void onFail(int code, String errorMsg) {
                 super.onFail(code, errorMsg);
-                mView.showSuccessLayout();
+                mView.showErrorLayout();
             }
         });
     }
