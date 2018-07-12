@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.flyco.tablayout.CommonTabLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tabLayout"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@color/colorAccent"
+    app:tl_indicator_color="@color/colorWhite"
+    app:tl_indicator_margin_bottom="5dp"
+    app:tl_indicator_corner_radius="10dp"
+    app:tl_indicator_width="30dp"
+    app:tl_indicator_bounce_enable="false"
+    app:tl_textSelectColor="@color/colorWhite"
+    app:tl_textUnselectColor="@color/colorLightWhite">
+
+</com.flyco.tablayout.CommonTabLayout>

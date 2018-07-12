@@ -5,6 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,13 +15,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.flyco.tablayout.CommonTabLayout;
+import com.flyco.tablayout.listener.CustomTabEntity;
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadService;
 import com.kingja.loadsir.core.LoadSir;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
 import com.squareup.leakcanary.RefWatcher;
 import com.yzx.commonlibrary.base.CommonBaseFragment;
+import com.yzx.commonlibrary.base.adapter.CommonBaseFragmentPagerAdapter;
+import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.app.MusicApplication;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
@@ -33,6 +44,7 @@ import com.yzx.xiaomusic.widget.CircleProgress;
 import com.yzx.xiaomusic.widget.loadsir.EmptyCallback;
 import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
+import com.yzx.xiaomusic.widget.simplelistenner.SimpleTabSelectedListener;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -127,6 +139,80 @@ public abstract class BaseFragment extends CommonBaseFragment {
         });
         musicController.setOnClickListener(v -> {
             FragmentStartUtils.startFragment(this, new PlayFragment());
+        });
+    }
+
+    /**
+     * 初始化弹性头布局个人中心与歌手中心
+     */
+    public void initElasticHead(RelativeLayout rlHeadContainer, SmartRefreshLayout smartRefreshLayout,
+                                AppBarLayout mAppBarLayout, View ivCover, ViewGroup llExtraOperate) {
+        ViewGroup.LayoutParams layoutParams = rlHeadContainer.getLayoutParams();
+        int headPx = DensityUtils.dip2px(getContext(), 300);
+        int coverPx = DensityUtils.dip2px(getContext(), 220);
+
+        smartRefreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
+            @Override
+            public void onHeaderPulling(RefreshHeader header, float percent, int offset, int headerHeight, int extendHeight) {
+                super.onHeaderPulling(header, percent, offset, headerHeight, extendHeight);
+                if (offset > 0) {
+                    float rate = ((float) offset) / ((float) headPx);
+                    layoutParams.height = (int) (headPx * (1f + rate));
+                    rlHeadContainer.setLayoutParams(layoutParams);
+                }
+            }
+
+            @Override
+            public void onHeaderReleasing(RefreshHeader header, float percent, int offset, int footerHeight, int extendHeight) {
+                super.onHeaderReleasing(header, percent, offset, footerHeight, extendHeight);
+                if (offset > 0) {
+                    float rate = ((float) offset) / ((float) headPx);
+                    layoutParams.height = (int) (headPx * (1f + rate));
+                    rlHeadContainer.setLayoutParams(layoutParams);
+                }
+            }
+        });
+
+        mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (verticalOffset <= 0) {
+                layoutParams.height = headPx + verticalOffset;
+                rlHeadContainer.setLayoutParams(layoutParams);
+                float alpha = -((float) verticalOffset) / ((float) coverPx);
+                ivCover.setAlpha(alpha);
+                llExtraOperate.setAlpha(1 - alpha);
+            }
+        });
+    }
+
+
+    /**
+     * 关联ViewPager和TabLayout
+     *
+     * @param viewPager
+     * @param tabLayout
+     * @param adapter
+     * @param fragments
+     * @param tabEntities
+     */
+    public void setUpViewPager(ViewPager viewPager, CommonTabLayout tabLayout, CommonBaseFragmentPagerAdapter adapter,
+                               ArrayList<Fragment> fragments, ArrayList<CustomTabEntity> tabEntities) {
+        viewPager.setOffscreenPageLimit(tabEntities.size());
+        adapter.setFragments(fragments);
+        tabLayout.setTabData(tabEntities);
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                tabLayout.setCurrentTab(position);
+            }
+        });
+        tabLayout.setOnTabSelectListener(new SimpleTabSelectedListener() {
+            @Override
+            public void onTabSelect(int position) {
+                super.onTabSelect(position);
+                viewPager.setCurrentItem(position, true);
+            }
         });
     }
 

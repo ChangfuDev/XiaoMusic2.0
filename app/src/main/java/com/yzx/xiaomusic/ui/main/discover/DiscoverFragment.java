@@ -1,11 +1,12 @@
 package com.yzx.xiaomusic.ui.main.discover;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 
+import com.flyco.tablayout.CommonTabLayout;
+import com.flyco.tablayout.listener.CustomTabEntity;
 import com.yzx.commonlibrary.base.adapter.CommonBaseFragmentPagerAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
@@ -13,6 +14,7 @@ import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.ui.main.discover.friend.FriendFragment;
 import com.yzx.xiaomusic.ui.main.discover.radio.RadioFragment;
 import com.yzx.xiaomusic.ui.main.discover.recommend.RecommendFragment;
+import com.yzx.xiaomusic.widget.tab.TabEntity;
 
 import java.util.ArrayList;
 
@@ -23,13 +25,13 @@ import butterknife.BindView;
  * 发现页面
  */
 public class DiscoverFragment extends BaseFragment {
-    @BindView(R.id.tl)
-    TabLayout tl;
+    @BindView(R.id.tabLayout)
+    CommonTabLayout tabLayout;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     private ArrayList<Fragment> fragments;
-    private ArrayList<String> titles;
     private CommonBaseFragmentPagerAdapter adapter;
+    private ArrayList<CustomTabEntity> tabEntities;
 
     @Override
     protected int initContentViewId() {
@@ -44,19 +46,17 @@ public class DiscoverFragment extends BaseFragment {
         fragments.add(new FriendFragment());
         fragments.add(new RadioFragment());
 
-        titles = new ArrayList<>();
-        titles.add(ResourceUtils.parseString(getContext(), R.string.recommend));
-        titles.add(ResourceUtils.parseString(getContext(), R.string.friend));
-        titles.add(ResourceUtils.parseString(getContext(), R.string.radio));
+        tabEntities = new ArrayList<>();
+        tabEntities.add(new TabEntity(ResourceUtils.parseString(getContext(), R.string.recommend)));
+        tabEntities.add(new TabEntity(ResourceUtils.parseString(getContext(), R.string.friend)));
+        tabEntities.add(new TabEntity(ResourceUtils.parseString(getContext(), R.string.radio)));
     }
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
-        viewPager.setOffscreenPageLimit(3);
         adapter = new CommonBaseFragmentPagerAdapter(getChildFragmentManager());
-        adapter.setFragments(fragments);
-        adapter.setTitles(titles);
-        viewPager.setAdapter(adapter);
-        tl.setupWithViewPager(viewPager);
+        setUpViewPager(viewPager, tabLayout, adapter, fragments, tabEntities);
     }
+
+
 }

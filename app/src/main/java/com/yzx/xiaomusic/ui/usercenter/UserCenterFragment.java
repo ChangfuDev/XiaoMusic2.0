@@ -2,24 +2,21 @@ package com.yzx.xiaomusic.ui.usercenter;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.flyco.tablayout.CommonTabLayout;
+import com.flyco.tablayout.listener.CustomTabEntity;
 import com.othershe.library.NiceImageView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshHeader;
-import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
-import com.yzx.commonlibrary.utils.DensityUtils;
-import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
@@ -34,6 +31,7 @@ import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
+import com.yzx.xiaomusic.widget.tab.TabEntity;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -42,7 +40,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.Unbinder;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
@@ -61,8 +58,8 @@ public class UserCenterFragment extends BaseFragment {
     RelativeLayout rlHeadContainer;
     @BindView(R.id.ll_extra_operate)
     RelativeLayout llExtraOperate;
-    @BindView(R.id.tl)
-    TabLayout tl;
+    @BindView(R.id.tabLayout)
+    CommonTabLayout tabLayout;
     @BindView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
     @BindView(R.id.viewPager)
@@ -103,8 +100,7 @@ public class UserCenterFragment extends BaseFragment {
     ImageView ivSongSheet;
     @BindView(R.id.layout_bottom_music_controller)
     LinearLayout layoutBottomMusicController;
-    Unbinder unbinder;
-    private ArrayList<String> tabTitles;
+    private ArrayList<CustomTabEntity> tabEntities;
     private ArrayList<Fragment> fragments;
 
     public static final String KEY_USER_ID = "userId";
@@ -120,58 +116,19 @@ public class UserCenterFragment extends BaseFragment {
     @Override
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
-        tabTitles = new ArrayList<>();
-        tabTitles.add(ResourceUtils.parseString(getContext(), R.string.music));
-        tabTitles.add(ResourceUtils.parseString(getContext(), R.string.dynamic));
-        tabTitles.add(ResourceUtils.parseString(getContext(), R.string.aboutTa));
+
+        tabEntities = new ArrayList<>();
+        tabEntities.add(new TabEntity("音乐"));
+        tabEntities.add(new TabEntity("动态"));
+        tabEntities.add(new TabEntity("关于TA"));
     }
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
         initToolBar(tb);
-
-        viewPager.setOffscreenPageLimit(3);
         adapter = new UserCenterPagerAdapter(getChildFragmentManager());
-        adapter.setTitles(tabTitles);
-        viewPager.setAdapter(adapter);
-        tl.setupWithViewPager(viewPager);
-        ViewGroup.LayoutParams layoutParams = rlHeadContainer.getLayoutParams();
-        int headPx = DensityUtils.dip2px(getContext(), 300);
-        int maxHeadPx = (int) (getResources().getDisplayMetrics().heightPixels * 0.6);
-        int coverPx = DensityUtils.dip2px(getContext(), 220);
-        smartRefreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
-            @Override
-            public void onHeaderPulling(RefreshHeader header, float percent, int offset, int headerHeight, int extendHeight) {
-                super.onHeaderPulling(header, percent, offset, headerHeight, extendHeight);
-                if (offset > 0) {
-                    float rate = ((float) offset) / ((float) headPx);
-                    int height = (int) (headPx * (1f + rate));
-//                    layoutParams.height = height > maxHeadPx ? maxHeadPx : height;
-                    layoutParams.height = height;
-                    rlHeadContainer.setLayoutParams(layoutParams);
-                }
-            }
-
-            @Override
-            public void onHeaderReleasing(RefreshHeader header, float percent, int offset, int footerHeight, int extendHeight) {
-                super.onHeaderReleasing(header, percent, offset, footerHeight, extendHeight);
-                if (offset > 0) {
-                    float rate = ((float) offset) / ((float) headPx);
-                    layoutParams.height = (int) (headPx * (1f + rate));
-                    rlHeadContainer.setLayoutParams(layoutParams);
-                }
-            }
-        });
-
-        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-            if (verticalOffset <= 0) {
-                layoutParams.height = headPx + verticalOffset;
-                rlHeadContainer.setLayoutParams(layoutParams);
-                float alpha = -((float) verticalOffset) / ((float) coverPx);
-                ivCover.setAlpha(alpha);
-                llExtraOperate.setAlpha(1 - alpha);
-            }
-        });
+        setUpViewPager(viewPager, tabLayout, adapter, fragments, tabEntities);
+        initElasticHead(rlHeadContainer, smartRefreshLayout, appBarLayout, ivCover, llExtraOperate);
     }
 
     @Override
@@ -206,6 +163,7 @@ public class UserCenterFragment extends BaseFragment {
         GlideUtils.loadCircleImg(getContext(), creatorBean.getAvatarUrl(), ivHead);
         tvNickName.setText(creatorBean.getNickname());
         tvDes.setText(creatorBean.getDescription());
+        tvDes.setVisibility(TextUtils.isEmpty(creatorBean.getDescription()) ? View.GONE : View.VISIBLE);
         tvFollowedCount.setText(String.format("关注 %s", "未知"));
         tvFansCount.setText(String.format("粉丝 %s", "未知"));
     }

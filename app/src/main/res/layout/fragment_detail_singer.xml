@@ -101,14 +101,7 @@
                 </android.support.design.widget.CollapsingToolbarLayout>
 
 
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/tl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorWhite"
-                    app:tabIndicatorColor="@color/colorAccent"
-                    app:tabSelectedTextColor="@color/colorAccent"
-                    app:tabTextColor="@color/colorSubTitle" />
+                <include layout="@layout/include_tablayout_white" />
             </android.support.design.widget.AppBarLayout>
 
             <android.support.v4.widget.NestedScrollView

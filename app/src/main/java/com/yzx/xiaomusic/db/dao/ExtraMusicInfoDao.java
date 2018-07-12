@@ -24,7 +24,7 @@ public interface ExtraMusicInfoDao {
      *
      * @return
      */
-    @Query("select * from ExtraMusicInfo where liked = 1 order by latestTime desc")
+    @Query("select * from ExtraMusicInfo where liked = 1 order by id desc")
     List<ExtraMusicInfo> getAllLikedMusicInfos();
 
 
@@ -35,6 +35,14 @@ public interface ExtraMusicInfoDao {
      */
     @Query("select * from ExtraMusicInfo where listened = 1 order by latestTime desc limit 100")
     List<ExtraMusicInfo> getAllRecentMusicInfos();
+
+    /**
+     * 查询所有的听过的音乐
+     *
+     * @return
+     */
+    @Query("select * from ExtraMusicInfo where listened = 1 order by playCount desc limit 100")
+    List<ExtraMusicInfo> getPlayRankMusicInfos();
 
     /**
      * 添加音乐

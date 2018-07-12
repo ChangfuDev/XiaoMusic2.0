@@ -2,7 +2,6 @@ package com.yzx.xiaomusic.ui.singer;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -11,16 +10,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.flyco.tablayout.CommonTabLayout;
+import com.flyco.tablayout.listener.CustomTabEntity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshHeader;
-import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
-import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.model.entity.SingerTopInfo;
@@ -38,6 +35,7 @@ import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
 import com.yzx.xiaomusic.widget.ShapeTextView;
+import com.yzx.xiaomusic.widget.tab.TabEntity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -59,8 +57,8 @@ import static com.yzx.xiaomusic.ui.usercenter.UserCenterFragment.KEY_USER_ID;
 public class SingerDetailsFragment extends BaseFragment {
     @BindView(R.id.iv_head)
     ImageView ivHead;
-    @BindView(R.id.tl)
-    TabLayout tl;
+    @BindView(R.id.tabLayout)
+    CommonTabLayout tabLayout;
     @BindView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
     @BindView(R.id.viewPager)
@@ -93,7 +91,6 @@ public class SingerDetailsFragment extends BaseFragment {
     ImageView ivSongSheet;
     @BindView(R.id.layout_bottom_music_controller)
     LinearLayout layoutBottomMusicController;
-    private ArrayList<String> tabTitles;
     private ArrayList<Fragment> fragments;
 
     public static final String KEY_ID_SINGER = "singerId";
@@ -101,6 +98,7 @@ public class SingerDetailsFragment extends BaseFragment {
     private SingerDetailPagerAdapter adapter;
     private MusicInfo musicInfo;
     private int accountId;
+    private ArrayList<CustomTabEntity> tabEntities;
 
     @Override
     protected int initContentViewId() {
@@ -111,61 +109,22 @@ public class SingerDetailsFragment extends BaseFragment {
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
 
-        tabTitles = new ArrayList<>();
-        tabTitles.add("热门50");
-        tabTitles.add("专辑");
-        tabTitles.add("视频");
-        tabTitles.add("歌手信息");
 
+        tabEntities = new ArrayList<>();
+        tabEntities.add(new TabEntity("热门50"));
+        tabEntities.add(new TabEntity("专辑"));
+        tabEntities.add(new TabEntity("视频"));
+        tabEntities.add(new TabEntity("歌手信息"));
     }
 
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
         initToolBar(tb);
 
-        //初始化信息
-        viewPager.setOffscreenPageLimit(4);
         adapter = new SingerDetailPagerAdapter(getChildFragmentManager());
-        adapter.setTitles(tabTitles);
-        viewPager.setAdapter(adapter);
-        tl.setupWithViewPager(viewPager);
+        setUpViewPager(viewPager, tabLayout, adapter, fragments, tabEntities);
 
-
-        ViewGroup.LayoutParams layoutParams = rlHeadContainer.getLayoutParams();
-        int headPx = DensityUtils.dip2px(getContext(), 300);
-        int coverPx = DensityUtils.dip2px(getContext(), 220);
-
-        smartRefreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
-            @Override
-            public void onHeaderPulling(RefreshHeader header, float percent, int offset, int headerHeight, int extendHeight) {
-                super.onHeaderPulling(header, percent, offset, headerHeight, extendHeight);
-                if (offset > 0) {
-                    float rate = ((float) offset) / ((float) headPx);
-                    layoutParams.height = (int) (headPx * (1f + rate));
-                    rlHeadContainer.setLayoutParams(layoutParams);
-                }
-            }
-
-            @Override
-            public void onHeaderReleasing(RefreshHeader header, float percent, int offset, int footerHeight, int extendHeight) {
-                super.onHeaderReleasing(header, percent, offset, footerHeight, extendHeight);
-                if (offset > 0) {
-                    float rate = ((float) offset) / ((float) headPx);
-                    layoutParams.height = (int) (headPx * (1f + rate));
-                    rlHeadContainer.setLayoutParams(layoutParams);
-                }
-            }
-        });
-
-        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-            if (verticalOffset <= 0) {
-                layoutParams.height = headPx + verticalOffset;
-                rlHeadContainer.setLayoutParams(layoutParams);
-                float alpha = -((float) verticalOffset) / ((float) coverPx);
-                ivCover.setAlpha(alpha);
-                llExtraOperate.setAlpha(1 - alpha);
-            }
-        });
+        initElasticHead(rlHeadContainer, smartRefreshLayout, appBarLayout, ivCover, llExtraOperate);
     }
 
     @Override
