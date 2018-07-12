@@ -1,7 +1,6 @@
 package com.yzx.xiaomusic.ui.search;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
+import com.flyco.tablayout.SlidingTabLayout;
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
@@ -38,6 +38,7 @@ import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
+import com.yzx.xiaomusic.widget.simplelistenner.SimpleTabSelectedListener;
 import com.yzx.xiaomusic.widget.simplelistenner.SimpleTextWathcer;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -50,7 +51,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
@@ -70,15 +70,14 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
     Toolbar tb;
     @BindView(R.id.iv_clear)
     ImageView ivClear;
-
     @BindView(R.id.flowLayout)
     TagFlowLayout flowLayout;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.ll_search)
     LinearLayout llSearch;
-    @BindView(R.id.tl)
-    TabLayout tl;
+    @BindView(R.id.tabLayout)
+    SlidingTabLayout tabLayout;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     @BindView(R.id.ll_search_result)
@@ -97,18 +96,17 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
     ImageView ivSongSheet;
     @BindView(R.id.layout_bottom_music_controller)
     LinearLayout layoutBottomMusicController;
-    Unbinder unbinder;
     private ListPopupWindow listPopupWindow;
     private List<String> hotSearchs;
     private ArrayList<String> searchs;
     private SearchHistoryDao searchHistoryDao;
     private List<SearchHistory> leastFiveSearchHistory;
     private SearchHistoryAdapter searchHistoryAdapter;
-    private ArrayList<String> tabTitles;
+    //    private ArrayList<String> tabTitles;
     private ArrayList<Fragment> fragments;
     private SearchResultPagerAdapter adapter;
     private MusicInfo musicInfo;
-
+    private String[] tabTitles = {"单曲", "视频", "歌手", "专辑", "歌单", "主播电台", "用户"};
 
     @Override
     protected int initContentViewId() {
@@ -137,18 +135,9 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
         hotSearchs.add("I Am You ");
         hotSearchs.add("Say SomeThing");
 
-        tabTitles = new ArrayList<>();
-        tabTitles.add("单曲");
-        tabTitles.add("视频");
-        tabTitles.add("歌手");
-        tabTitles.add("专辑");
-        tabTitles.add("歌单");
-        tabTitles.add("主播电台");
-        tabTitles.add("用户");
-
 
         fragments = new ArrayList<>();
-        for (int i = 0; i < tabTitles.size(); i++) {
+        for (int i = 0; i < tabTitles.length; i++) {
 
             SearchResultFragment searchResultFragment = new SearchResultFragment();
             Bundle args = new Bundle();
@@ -221,15 +210,26 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
 
 
         //搜索结果页面
-
-        tl.setTabMode(TabLayout.MODE_SCROLLABLE);
-        viewPager.setOffscreenPageLimit(tabTitles.size());
         adapter = new SearchResultPagerAdapter(getChildFragmentManager());
-        adapter.setTitles(tabTitles);
+//        setUpViewPager(viewPager, tabLayout, adapter, fragments, tabTitles);
         adapter.setFragments(fragments);
+        viewPager.setOffscreenPageLimit(tabTitles.length);
         viewPager.setAdapter(adapter);
-        tl.setupWithViewPager(viewPager);
-
+        tabLayout.setViewPager(viewPager, tabTitles);
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                tabLayout.setCurrentTab(position);
+            }
+        });
+        tabLayout.setOnTabSelectListener(new SimpleTabSelectedListener() {
+            @Override
+            public void onTabSelect(int position) {
+                super.onTabSelect(position);
+                viewPager.setCurrentItem(position, true);
+            }
+        });
     }
 
 
@@ -348,15 +348,4 @@ public class SearchFragment extends BaseFragment implements TagFlowLayout.OnTagC
                 break;
         }
     }
-
-//    @Override
-//    public boolean onBackPressedSupport() {
-//        if (etSearch.hasFocus()) {
-//            etSearch.setFocusable(false);
-//            etSearch.setFocusable(true);
-//            return true;
-//        }
-//        pop();
-//        return true;
-//    }
 }

@@ -39,7 +39,10 @@ public class LyricPresenter extends CommonBasePresenter<LyricFragment, LyricMode
             @Override
             public void onError(Throwable e) {
                 Log.i(TAG, "onError: " + e.toString());
-                mView.showToast("获取歌词失败");
+//                mView.showToast("获取歌词失败");
+                if (e instanceof NullPointerException) {
+                    mView.lrcView.setEmptyContent("Have No Lyric");
+                }
             }
 
             @Override
