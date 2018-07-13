@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
+    style="@style/WaterEffect_gray"
     android:padding="10dp">
 
     <com.othershe.library.NiceImageView
