@@ -22,6 +22,7 @@ import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.MusicAdapter;
 import com.yzx.xiaomusic.ui.adapter.PlayCardAdapter;
+import com.yzx.xiaomusic.ui.comment.music.MusicCommentFragment;
 import com.yzx.xiaomusic.ui.dialog.BottomMusicInfoDialog;
 import com.yzx.xiaomusic.ui.play.PlayFragment;
 import com.yzx.xiaomusic.utils.EventBusUtils;
@@ -34,6 +35,7 @@ import butterknife.OnClick;
 import me.yokeyword.fragmentation.SupportFragment;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+import static com.yzx.xiaomusic.Constant.KEY_ID;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.ui.adapter.MusicAdapter.KEY_MUSIC_INFO;
 
@@ -114,7 +116,10 @@ public class PlayCardFragment extends BaseFragment {
                 showToast(R.string.commingSoon);
                 break;
             case R.id.iv_evaluate:
-                showToast(R.string.commingSoon);
+                musicInfo = service.getMusicInfo();
+                Bundle args1 = new Bundle();
+                args1.putString(KEY_ID, musicInfo.getMusicId());
+                easyParentStart(new MusicCommentFragment(), args1);
                 break;
             case R.id.iv_more:
                 musicInfo = service.getMusicInfo();

@@ -2,6 +2,7 @@ package com.yzx.xiaomusic.network.api;
 
 import com.yzx.xiaomusic.model.entity.Lyric;
 import com.yzx.xiaomusic.model.entity.MusicAddress;
+import com.yzx.xiaomusic.model.entity.comment.MusicComment;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
@@ -42,4 +43,13 @@ public interface MusicApi {
      */
     @GET("https://api.imjad.cn/cloudmusic")
     Observable<Lyric> getMusicLyrics(@Query("type") String type, @Query("id") String id);
+
+    /**
+     * 获取评论
+     *
+     * @param id
+     * @return
+     */
+    @GET("https://api.imjad.cn/cloudmusic")
+    Observable<MusicComment> getMusicComment(@Query("type") String type, @Query("limit") int limit, @Query("offset") int offset, @Query("id") String id);
 }

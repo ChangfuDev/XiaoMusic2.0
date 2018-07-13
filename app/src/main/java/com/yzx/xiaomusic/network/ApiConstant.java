@@ -29,6 +29,7 @@ public class ApiConstant {
     public static final String TYPE_ALBUM = "album";
 
     public static final String TYPE_SONG = "song";
+    public static final String TYPE_COMMENT = "comments";
 
     public static final String TYPE_LYRIC = "lyric";
     public static String TYPE_SINGER = "artist";

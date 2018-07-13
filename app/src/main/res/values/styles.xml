@@ -74,4 +74,21 @@
         <item name="android:textSize">12sp</item>
         <item name="android:tint">@color/colorIcon</item>
     </style>
+
+    <style name="StyleTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="StyleTitle.Black" parent="StyleTitle">
+        <item name="android:textColor">@color/colorTitle</item>
+    </style>
+
+    <style name="StyleSubTitle.Black" parent="StyleTitle">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/colorSubTitle</item>
+    </style>
 </resources>
