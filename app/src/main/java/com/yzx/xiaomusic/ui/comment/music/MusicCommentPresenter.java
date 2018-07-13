@@ -1,5 +1,7 @@
 package com.yzx.xiaomusic.ui.comment.music;
 
+import android.util.Log;
+
 import com.yzx.commonlibrary.base.mvp.CommonBasePresenter;
 import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;
 import com.yzx.xiaomusic.model.entity.comment.MusicComment;
@@ -18,11 +20,14 @@ public class MusicCommentPresenter extends CommonBasePresenter<MusicCommentFragm
         if (offset == 0) {
             mView.showLoadingLayout();
         }
+        Log.i("ygl", "onSuccess: " + offset);
+        Log.i("ygl", "onSuccess: " + mView.loadService.getCurrentCallback().getSimpleName());
         mModel.getComment(id, offset, new CommonMvpObserver<MusicComment>() {
             @Override
             protected void onSuccess(MusicComment musicComment) {
                 if (offset == 0) {
                     if (musicComment.getTotal() > 0) {
+                        Log.i(TAG, "onSuccess: ");
                         mView.setData(musicComment);
                         mView.showSuccessLayout();
                     } else {

@@ -38,7 +38,7 @@ public class SongSheetListAdapter extends CommonBaseAdapter<SongSheetListAdapter
         GlideUtils.loadImg(context, playlistsBean.getCoverImgUrl(), GlideUtils.TYPE_SONG_SHEET, holder.ivCover);
         int playCount = playlistsBean.getPlayCount();
         holder.tvPlayCount.setText(playCount > 10000 ? String.format("%s万", String.valueOf(playCount / 10000)) : String.valueOf(playCount));
-        holder.tvSongSheetDes.setText(playlistsBean.getName());
+        holder.tvSongSheetDes.setText(playlistsBean.getName().trim());
     }
 
     class Holder extends RecyclerView.ViewHolder {

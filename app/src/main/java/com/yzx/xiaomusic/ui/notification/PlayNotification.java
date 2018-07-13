@@ -17,6 +17,7 @@ import com.yzx.xiaomusic.ui.main.MainActivity;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 
 import static com.yzx.xiaomusic.receiver.RemoteReceiver.ACTION;
+import static com.yzx.xiaomusic.receiver.RemoteReceiver.VALUE_DELETE;
 import static com.yzx.xiaomusic.receiver.RemoteReceiver.VALUE_LIKE;
 import static com.yzx.xiaomusic.receiver.RemoteReceiver.VALUE_LYRIC;
 import static com.yzx.xiaomusic.receiver.RemoteReceiver.VALUE_NEXT;
@@ -52,20 +53,10 @@ public class PlayNotification {
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 //设置跳转页面
                 .setContentIntent(pendingIntent)
-//                .setCustomBigContentView(getBigRemoteView(context, name, artist, bitmap))
-//                .setContentTitle(name)
-//                .setContentText(artist)
-//                .setLargeIcon(bitmap)
-//                .setContent(bigRemoteView)
-//                .setCustomHeadsUpContentView(bigRemoteView)
                 //vivo如果只设置该方法会显示小窗口，需要适配
                 .setCustomContentView(customRemoteView)
 //                魅族如果只设置大的会不显示通知的内容
                 .setCustomBigContentView(bigRemoteView)
-//                .addAction(R.drawable.acu, "", getPreviousPendingIntent(context))
-//                .addAction(isPlaying() ? R.drawable.acq : R.drawable.acs, "", getPlayPausePendingIntent(context))
-//                .addAction(R.drawable.aco, "", getNextPendingIntent(context))
-//                .addAction(R.drawable.ou, "", getDeletePendingIntent(context))
                 //设置优先级优先级越大越靠前
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 //禁止侧滑删除
@@ -94,11 +85,6 @@ public class PlayNotification {
         remoteViews.setTextViewText(R.id.tv_artist, MusicDataUtils.getSingers(musicInfo) + " - " + musicInfo.getAlbumName());
         remoteViews.setImageViewBitmap(R.id.iv_music_poster, bitmap);
 
-        remoteViews.setImageViewResource(R.id.iv_like,
-                DBUtils.isLikeMusicExit(musicInfo) != null ? R.drawable.note_btn_loved : R.drawable.note_btn_love_white);
-        setPendingIntent(remoteViews, R.id.iv_like, context, 0, VALUE_LIKE);
-        setPendingIntent(remoteViews, R.id.iv_play_previous, context, 1, VALUE_PREVIOUS);
-
         remoteViews.setImageViewResource(R.id.iv_play_pause,
                 isPlaying() ? R.drawable.note_btn_pause_white : R.drawable.note_btn_play_white);
         PendingIntent playIntent = getPlayPausePendingIntent(context);
@@ -107,7 +93,6 @@ public class PlayNotification {
         setPendingIntent(remoteViews, R.id.iv_next, context, 3, VALUE_NEXT);
         setPendingIntent(remoteViews, R.id.iv_delete, context, 4, VALUE_NEXT);
         setPendingIntent(remoteViews, R.id.iv_lyric, context, 5, VALUE_LYRIC);
-
 
         return remoteViews;
     }
@@ -123,6 +108,7 @@ public class PlayNotification {
         remoteViews.setImageViewResource(R.id.iv_like,
                 DBUtils.isLikeMusicExit(musicInfo) != null ? R.drawable.note_btn_loved : R.drawable.note_btn_love_white);
         setPendingIntent(remoteViews, R.id.iv_like, context, 0, VALUE_LIKE);
+
         setPendingIntent(remoteViews, R.id.iv_play_previous, context, 1, VALUE_PREVIOUS);
 
         remoteViews.setImageViewResource(R.id.iv_play_pause,
@@ -131,7 +117,7 @@ public class PlayNotification {
         remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, playIntent);
 
         setPendingIntent(remoteViews, R.id.iv_next, context, 3, VALUE_NEXT);
-        setPendingIntent(remoteViews, R.id.iv_delete, context, 4, VALUE_NEXT);
+        setPendingIntent(remoteViews, R.id.iv_delete, context, 4, VALUE_DELETE);
         setPendingIntent(remoteViews, R.id.iv_lyric, context, 5, VALUE_LYRIC);
 
 

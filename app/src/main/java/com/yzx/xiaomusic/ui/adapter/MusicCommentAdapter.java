@@ -102,7 +102,6 @@ public class MusicCommentAdapter extends RecyclerView.Adapter {
                 }
                 break;
             default:
-
                 int size = data.getHotComments().size();
                 //有热评
                 if (size > 0) {

@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kingja.loadsir.callback.Callback;
+import com.kingja.loadsir.core.LoadSir;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
@@ -53,9 +55,10 @@ public class MusicCommentFragment extends BaseMvpFragment<MusicCommentPresenter>
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-//        loadService = LoadSir
-//                .getDefault()
-//                .register(smartRefreshLayout, (Callback.OnReloadListener) v -> mPresenter.getComment(id, 0));
+        //重新注册到View里
+        loadService = LoadSir
+                .getDefault()
+                .register(smartRefreshLayout, (Callback.OnReloadListener) v -> mPresenter.getComment(id, 0));
         return view;
     }
 
@@ -82,11 +85,17 @@ public class MusicCommentFragment extends BaseMvpFragment<MusicCommentPresenter>
         });
         adapter = new MusicCommentAdapter(this);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         mPresenter.getComment(id, offset);
     }
 
     public void setData(MusicComment musicComment) {
         adapter.setData(musicComment);
+        adapter.notifyDataSetChanged();
         offset += 10;
     }
 
