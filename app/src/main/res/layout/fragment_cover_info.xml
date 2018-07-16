@@ -38,6 +38,7 @@
 
 
             <com.othershe.library.NiceImageView
+                android:transitionName="img"
                 app:corner_radius="@dimen/cornerRadius"
                 android:id="@+id/iv_little_bg"
                 android:layout_width="200dp"

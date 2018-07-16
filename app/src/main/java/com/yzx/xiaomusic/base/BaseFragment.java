@@ -60,6 +60,7 @@ import static com.yzx.xiaomusic.widget.CircleProgress.STATE_PLAY;
  */
 public abstract class BaseFragment extends CommonBaseFragment {
 
+    public final String TAG = "ygl" + this.getClass().getSimpleName();
     public LoadService loadService;
     public MusicService service;
 

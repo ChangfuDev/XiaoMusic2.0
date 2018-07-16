@@ -66,6 +66,7 @@
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_default_song_sheet"
+                            android:transitionName="img"
                             app:corner_radius="@dimen/cornerRadius" />
 
                         <ImageView

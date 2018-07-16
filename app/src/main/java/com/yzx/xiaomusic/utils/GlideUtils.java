@@ -104,18 +104,21 @@ public class GlideUtils {
     public static void loadCircleImg(Context context, Object resource, ImageView imageView) {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.ic_default_head).error(R.drawable.ic_default_head);
-
         Glide.with(context).load(resource)
                 .apply(requestOptions)
                 .transition(DrawableTransitionOptions.withCrossFade(300)).into(imageView);
     }
 
-//    @SuppressLint("CheckResult")
-//    public static void loadPlayCardImg(Context context, String resource, ImageView ivCover) {
-//        RequestOptions requestOptions = new RequestOptions();
-//        requestOptions.placeholder(R.drawable.acg).error(R.drawable.acg);
-//        Glide.with(context).load(resource)
-//                .apply(requestOptions)
-//                .transition(DrawableTransitionOptions.withCrossFade(300)).into(ivCover);
-//    }
+    /**
+     * 带动画加载
+     *
+     * @param context
+     * @param resource
+     * @param ivCover
+     */
+    @SuppressLint("CheckResult")
+    public static void animLoadImg(Context context, Object resource, ImageView ivCover) {
+        Glide.with(context).load(resource)
+                .transition(DrawableTransitionOptions.withCrossFade(300)).into(ivCover);
+    }
 }

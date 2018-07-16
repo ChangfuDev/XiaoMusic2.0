@@ -1,5 +1,6 @@
 package com.yzx.xiaomusic.ui.play;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -237,6 +238,7 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         super.onDestroyView();
     }
 
+    @SuppressLint("CheckResult")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         switch (event.getType()) {

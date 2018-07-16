@@ -125,7 +125,7 @@ public class MusicCommentAdapter extends RecyclerView.Adapter {
 
     private void setCommentData(@NonNull RecyclerView.ViewHolder holder, MusicComment.CommentsBean commentsBean, MusicComment.CommentsBean.UserBeanX user) {
         CommentHolder commentHolder = (CommentHolder) holder;
-        GlideUtils.loadImg(holder.itemView.getContext(), user.getAvatarUrl(), commentHolder.ivHead);
+        GlideUtils.loadImg(holder.itemView.getContext(), user.getAvatarUrl(), GlideUtils.TYPE_HEAD, commentHolder.ivHead);
         commentHolder.tvTitle.setText(user.getNickname());
         commentHolder.tvSubTitle.setText(TimeUtils.getFriendlyData(commentsBean.getTime()));
         commentHolder.tvContent.setText(commentsBean.getContent());
