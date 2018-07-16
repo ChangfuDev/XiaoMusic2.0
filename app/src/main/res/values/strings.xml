@@ -78,4 +78,6 @@
     <string name="haveCollected">已收藏</string>
     <string name="latestMusic">最新音乐</string>
     <string name="note_serviceIsNull">服务为空</string>
+    <string name="finishDownload">下载完成</string>
+    <string name="fileExist">文件已存在</string>
 </resources>

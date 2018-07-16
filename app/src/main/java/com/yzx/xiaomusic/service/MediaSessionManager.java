@@ -60,7 +60,7 @@ public class MediaSessionManager {
 ////                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, CoverLoader.getInstance().loadThumbnail(music));
 //
 ////        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-////            metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, AppCache.get().getMusicList().size());
+////            metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, AppCache.download().getMusicList().size());
 ////        }
 //
 //        mediaSessionCompat.setMetadata(metaData.build());

@@ -172,7 +172,7 @@ public class AppHttpClient {
 
         public AppHttpClient build() {
             checkNotNull(context, "context == null");
-            checkNotNull(baseUrl, "baseUrl == null");
+//            checkNotNull(baseUrl, "baseUrl == null");
 
             if (mAppHttpClient == null) {
                 synchronized (AppHttpClient.class) {

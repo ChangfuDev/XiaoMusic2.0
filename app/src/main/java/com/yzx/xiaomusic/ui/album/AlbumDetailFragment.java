@@ -220,7 +220,7 @@ public class AlbumDetailFragment extends BaseMvpFragment<AlbumDetailPresenter> i
                     musicInfo.setMusicId(String.valueOf(songsBean.getId()));
                     musicInfo.setMusicName(songsBean.getName());
                     musicInfo.setMvId(String.valueOf(songsBean.getMvid()));
-//                    AlbumDetail.AlbumBeanX.SongsBean.AlbumBean album = songsBean.getAlbum();
+                    musicInfo.setDuration(songsBean.getDuration());
                     if (this.album != null) {
                         musicInfo.setAlbumId(String.valueOf(this.album.getId()));
                         musicInfo.setAlbumName(this.album.getName());

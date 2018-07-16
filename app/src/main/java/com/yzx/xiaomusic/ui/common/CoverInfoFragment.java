@@ -1,25 +1,39 @@
 package com.yzx.xiaomusic.ui.common;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.yzx.commonlibrary.network.AppHttpClient;
+import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseFragment;
+import com.yzx.xiaomusic.network.api.DownloadApi;
 import com.yzx.xiaomusic.ui.adapter.CommonTagAdapter;
 import com.yzx.xiaomusic.utils.GlideUtils;
+import com.yzx.xiaomusic.utils.PathUtils;
 import com.yzx.xiaomusic.widget.ShapeTextView;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
+import okhttp3.ResponseBody;
 
 import static com.yzx.xiaomusic.Constant.KEY_COVER;
 import static com.yzx.xiaomusic.Constant.KEY_DES;
@@ -47,6 +61,8 @@ public class CoverInfoFragment extends BaseFragment {
     TextView tvDes;
     @BindView(R.id.stv_save)
     ShapeTextView stvSave;
+    private String cover;
+    private String title;
 
     @Override
     protected int initContentViewId() {
@@ -58,30 +74,19 @@ public class CoverInfoFragment extends BaseFragment {
         return new FragmentAnimator(R.anim.fragment_a_enter, R.anim.fragment_a_exit);
     }
 
-//    @Override
-//    public FragmentAnimator getFragmentAnimator() {
-//        FragmentAnimator fragmentAnimator = super.getFragmentAnimator();
-//        fragmentAnimator.setEnter(R.anim.fragment_a_enter);
-//        fragmentAnimator.setExit(R.anim.fragment_a_exit);
-//        fragmentAnimator.setPopEnter(R.anim.fragment_a_pop_enter);
-//        fragmentAnimator.setPopExit(R.anim.fragment_a_pop_exit);
-//        return fragmentAnimator;
-//    }
-
     @Override
     protected void initView(LayoutInflater inflater, Bundle savedInstanceState) {
 
         Bundle arguments = getArguments();
 
-        String cover = arguments.getString(KEY_COVER);
-        String title = arguments.getString(KEY_TITLE);
+        cover = arguments.getString(KEY_COVER);
+        title = arguments.getString(KEY_TITLE);
         String des = arguments.getString(KEY_DES);
         ArrayList<String> tags = arguments.getStringArrayList(KEY_TAG);
         tvTitle.setText(title);
         tvDes.setText(TextUtils.isEmpty(des) ? "暂无描述" : des);
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
         GlideUtils.loadBlurImg(getContext(), cover, ivBg);
-
 
         if (tags != null && tags.size() > 0) {
             flowLayout.setVisibility(View.VISIBLE);
@@ -100,8 +105,74 @@ public class CoverInfoFragment extends BaseFragment {
                 pop();
                 break;
             case R.id.stv_save:
-                showToast(R.string.save);
+                File file = new File(getDownloadCoverPath());
+                if (file.exists()) {
+                    showToast(R.string.fileExist);
+                } else {
+                    saveCover();
+                }
                 break;
         }
+    }
+
+    /**
+     * 保存文件
+     */
+    @SuppressLint("CheckResult")
+    private void saveCover() {
+
+        new AppHttpClient.Builder()
+                .context(getContext())
+                .build()
+                .getService(DownloadApi.class)
+                .download(cover)
+                .subscribeOn(Schedulers.io())
+                .map(ResponseBody::byteStream)
+                .subscribeOn(Schedulers.computation())
+                .doOnNext(inputStream -> writeFile(inputStream, getDownloadCoverPath()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(inputStream -> ToastUtils.showToast("已保存至：" + getDownloadCoverPath()));
+    }
+
+    /**
+     * 获取下载路径
+     *
+     * @return
+     */
+    @NonNull
+    private String getDownloadCoverPath() {
+        return PathUtils.getDownloadCoverPath(title, cover);
+    }
+
+    /**
+     * 将输入流写入文件
+     *
+     * @param inputStream
+     * @param filePath
+     */
+    private void writeFile(InputStream inputStream, String filePath) {
+
+        String TAG = "yglDownload";
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+
+            byte[] b = new byte[1024];
+
+            int len;
+            while ((len = inputStream.read(b)) != -1) {
+                fos.write(b, 0, len);
+            }
+            inputStream.close();
+            fos.close();
+
+        } catch (IOException e) {
+            Log.i(TAG, "writeFile: " + e.toString());
+        }
+
     }
 }

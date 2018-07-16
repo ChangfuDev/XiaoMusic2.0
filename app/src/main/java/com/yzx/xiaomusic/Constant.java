@@ -75,11 +75,25 @@ public class Constant {
     public static final String PATH_ABSOLUTE_CACHE_MUSIC = PATH_APP + CACHE + MUSIC;
 
     /**
-     * 歌曲下载绝对路径绝对路径
+     * 下载绝对路径绝对路径
      */
     public static final String PATH_ABSOLUTE_DOWNLOAD = PATH_APP + DOWNLOAD;
+    /**
+     * 歌曲下载绝对路径绝对路径
+     */
+    public static final String PATH_ABSOLUTE_DOWNLOAD_MUISC = PATH_APP + DOWNLOAD + "/Music";
+
+    /**
+     * 封面下载绝对路径绝对路径
+     */
+    public static final String PATH_ABSOLUTE_DOWNLOAD_COVER = PATH_APP + DOWNLOAD + "/晓音乐相册";
     /**
      * 图片
      */
     public static final String PIC = "http://p2.music.126.net/o_iih2VXlBwk8Pb3I2J-5w==/109951163172034776.jpg?param=180y180";
+
+    /**
+     * MD5加密key
+     */
+    public static final String MD5_KEY = "y183399";
 }
