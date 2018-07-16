@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.avos.avoscloud.AVOSCloud;
 import com.kingja.loadsir.core.LoadSir;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -72,6 +73,10 @@ public class MusicApplication extends CommonBaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        // 初始化参数依次为 this, AppId, AppKey
+        AVOSCloud.initialize(this,"CghDjwlOTN96qvIL1XFcamD3-gzGzoHsz","sIqdXCfJFgilIp0bor4g32K9");
+        // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
+        AVOSCloud.setDebugLogEnabled(true);
         //初始化友盟
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
         UMConfigure.setLogEnabled(true);
