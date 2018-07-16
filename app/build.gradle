@@ -158,6 +158,8 @@ dependencies {
     implementation('com.alibaba.android:vlayout:1.2.8@aar') {
         transitive = true
     }
+//    banner
+    implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
 
 
 }

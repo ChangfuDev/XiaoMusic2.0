@@ -90,8 +90,8 @@ public class PlayNotification {
         PendingIntent playIntent = getPlayPausePendingIntent(context);
         remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, playIntent);
 
-        setPendingIntent(remoteViews, R.id.iv_next, context, 3, VALUE_NEXT);
-        setPendingIntent(remoteViews, R.id.iv_delete, context, 4, VALUE_NEXT);
+        setPendingIntent(remoteViews, R.id.iv_play_next, context, 3, VALUE_NEXT);
+        setPendingIntent(remoteViews, R.id.iv_delete, context, 4, VALUE_DELETE);
         setPendingIntent(remoteViews, R.id.iv_lyric, context, 5, VALUE_LYRIC);
 
         return remoteViews;
@@ -116,7 +116,7 @@ public class PlayNotification {
         PendingIntent playIntent = getPlayPausePendingIntent(context);
         remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, playIntent);
 
-        setPendingIntent(remoteViews, R.id.iv_next, context, 3, VALUE_NEXT);
+        setPendingIntent(remoteViews, R.id.iv_play_next, context, 3, VALUE_NEXT);
         setPendingIntent(remoteViews, R.id.iv_delete, context, 4, VALUE_DELETE);
         setPendingIntent(remoteViews, R.id.iv_lyric, context, 5, VALUE_LYRIC);
 

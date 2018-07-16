@@ -5,13 +5,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.LayoutHelper;
+import com.avos.avoscloud.AVObject;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.commonlibrary.utils.ToastUtils;
 import com.yzx.xiaomusic.R;
@@ -24,6 +27,8 @@ import com.yzx.xiaomusic.utils.FragmentStartUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.TimeUtils;
 import com.yzx.xiaomusic.widget.SquareImageView;
+import com.zhouwei.mzbanner.MZBannerView;
+import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import java.util.List;
 
@@ -52,14 +57,18 @@ public class RecommendAdapter extends DelegateAdapter.Adapter implements View.On
 
     private final LayoutHelper helper;
     private final int count;
+    private final BannerViewHolder bannerViewHolder;
     private SupportFragment parentFragment;
     private List<SongSheetList.PlaylistsBean> playlists;
     private List<LatestAlbumList.AlbumsBean> albums;
+    private List<AVObject> banners;
 
     public RecommendAdapter(SupportFragment parentFragment, LayoutHelper helper, int count) {
         this.parentFragment = parentFragment;
         this.helper = helper;
         this.count = count;
+
+        bannerViewHolder = new BannerViewHolder();
     }
 
     @Override
@@ -153,7 +162,16 @@ public class RecommendAdapter extends DelegateAdapter.Adapter implements View.On
 
     @SuppressLint("CheckResult")
     private void dealBanner(BannerHolder holder) {
-
+        holder.banner.setDelayedTime(5000);
+//        holder.banner.setIndicatorRes(R.color.colorDivider, R.color.colorAccent);
+        holder.banner.setPages(banners, () -> bannerViewHolder);
+        holder.banner.setBannerPageClickListener((view, i) -> {
+            ToastUtils.showToast(banners.get(i).getString("type"));
+            holder.banner.setDelayedTime(5000);
+        });
+        holder.banner.start();
+        holder.setIsRecyclable(false);
+//        holder.banner.start();
     }
 
     private void dealFour(FourHolder holder) {
@@ -188,10 +206,15 @@ public class RecommendAdapter extends DelegateAdapter.Adapter implements View.On
         notifyDataSetChanged();
     }
 
+    public void setBannerData(List<AVObject> banners) {
+        this.banners = banners;
+        notifyDataSetChanged();
+    }
+
 
     class BannerHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.recyclerView)
-        RecyclerView recyclerView;
+        @BindView(R.id.banner)
+        MZBannerView banner;
 
         public BannerHolder(View itemView) {
             super(itemView);
@@ -256,16 +279,25 @@ public class RecommendAdapter extends DelegateAdapter.Adapter implements View.On
         }
     }
 
-//    /**
-//     * 三列六个内容
-//     */
-//    class SixHolder extends RecyclerView.ViewHolder {
-//        @BindView(R.id.recyclerView)
-//        RecyclerView recyclerView;
-//
-//        public SixHolder(View itemView) {
-//            super(itemView);
-//            ButterKnife.bind(this, itemView);
-//        }
-//    }
+
+    public static class BannerViewHolder implements MZViewHolder<AVObject> {
+        private ImageView mImageView;
+        private TextView tvTitle;
+
+        @Override
+        public View createView(Context context) {
+            // 返回页面布局
+            View view = LayoutInflater.from(context).inflate(R.layout.item_banner, null);
+            mImageView = (ImageView) view.findViewById(R.id.iv_cover);
+            tvTitle = (TextView) view.findViewById(R.id.tv_title);
+            return view;
+        }
+
+        @Override
+        public void onBind(Context context, int position, AVObject data) {
+            // 数据绑定
+            tvTitle.setText(data.getString("type"));
+            GlideUtils.loadImg(context, data.getString("coverUrl"), mImageView);
+        }
+    }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
+import com.avos.avoscloud.AVObject;
 import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
@@ -35,6 +37,7 @@ public class RecommendFragment extends BaseMvpFragment<RecommendPresenter> {
     RecyclerView recyclerView;
     private RecommendAdapter songSheetAdapter;
     private RecommendAdapter albumAdapter;
+    private RecommendAdapter bannerAdapter;
 
     @Override
     protected RecommendPresenter getPresenter() {
@@ -74,7 +77,7 @@ public class RecommendFragment extends BaseMvpFragment<RecommendPresenter> {
         //创建存储adapter的list
         List<DelegateAdapter.Adapter> adapters = new ArrayList<>();
         //banner
-        RecommendAdapter bannerAdapter = new RecommendAdapter(parentFragment, new SingleLayoutHelper(), 1) {
+        bannerAdapter = new RecommendAdapter(parentFragment, new SingleLayoutHelper(), 1) {
             @Override
             public int getItemViewType(int position) {
                 return TYPE_BANNER;
@@ -135,6 +138,7 @@ public class RecommendFragment extends BaseMvpFragment<RecommendPresenter> {
         super.onLazyInitView(savedInstanceState);
         mPresenter.getSongSheet();
         mPresenter.getLatestAlbums();
+        mPresenter.getBanner();
     }
 
     public void setSongSheetData(List<SongSheetList.PlaylistsBean> playlists) {
@@ -143,5 +147,21 @@ public class RecommendFragment extends BaseMvpFragment<RecommendPresenter> {
 
     public void setAlbumData(List<LatestAlbumList.AlbumsBean> albums) {
         albumAdapter.setAlbumData(albums);
+    }
+
+    public void setBannerData(List<AVObject> list) {
+        bannerAdapter.setBannerData(list);
+
+        for (int i = 0; i < list.size(); i++) {
+            Log.i(TAG, "setBannerData: " + list.get(i).toString());
+        }
+    }
+
+    @Override
+    public void reload(View v) {
+        super.reload(v);
+        mPresenter.getSongSheet();
+        mPresenter.getLatestAlbums();
+        mPresenter.getBanner();
     }
 }
