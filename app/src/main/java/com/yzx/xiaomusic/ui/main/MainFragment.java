@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -16,7 +15,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +22,7 @@ import android.widget.TextView;
 import com.yzx.commonlibrary.base.adapter.CommonBaseFragmentPagerAdapter;
 import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
+import com.yzx.xiaomusic.app.MusicApplication;
 import com.yzx.xiaomusic.base.BaseFragment;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
@@ -45,6 +44,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
@@ -63,8 +64,10 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
     Toolbar tb;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
-    @BindView(R.id.navigationView)
-    NavigationView navigationView;
+    @BindView(R.id.navigationLayout)
+    LinearLayout navigationLayout;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
     @BindView(R.id.iv_music_cover)
@@ -77,8 +80,15 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
     CircleProgress ivPlayPause;
     @BindView(R.id.iv_song_sheet)
     ImageView ivSongSheet;
+    @BindView(R.id.ll_night_mode)
+    LinearLayout llNightMode;
+    @BindView(R.id.ll_setting)
+    LinearLayout llSetting;
+    @BindView(R.id.ll_exit)
+    LinearLayout llExit;
     @BindView(R.id.layout_bottom_music_controller)
     LinearLayout layoutBottomMusicController;
+    Unbinder unbinder;
     private ArrayList<Integer> navigationMenuTitles;
     private ArrayList<Integer> navigationMenuIcons;
     private ArrayList<Fragment> fragments;
@@ -146,6 +156,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
         EventBusUtils.register(this);
         initBottomMusicController(layoutBottomMusicController);
         initNavigationView();
+
         tb.setNavigationOnClickListener(v -> {
             if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -183,12 +194,6 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
     @SuppressLint("ClickableViewAccessibility")
     private void initNavigationView() {
 
-        LinearLayout navigationViewHeaderView = (LinearLayout) navigationView.getHeaderView(0);
-        ViewGroup.LayoutParams layoutParams = navigationViewHeaderView.getLayoutParams();
-        layoutParams.height = getResources().getDisplayMetrics().heightPixels;
-        navigationViewHeaderView.setLayoutParams(layoutParams);
-
-        RecyclerView recyclerView = (RecyclerView) navigationViewHeaderView.findViewById(R.id.recyclerView);
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
@@ -259,6 +264,20 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
             case TYPE_SERVICE_CREATED:
                 service = ServiceManager.getInstance().getService();
                 initBottomMusicController(layoutBottomMusicController);
+                break;
+        }
+    }
+
+    @OnClick({R.id.ll_night_mode, R.id.ll_setting, R.id.ll_exit})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.ll_night_mode:
+                break;
+            case R.id.ll_setting:
+                break;
+            case R.id.ll_exit:
+                MusicApplication.getContext().unbindService(ServiceManager.getInstance().getConn());
+                getActivity().finish();
                 break;
         }
     }

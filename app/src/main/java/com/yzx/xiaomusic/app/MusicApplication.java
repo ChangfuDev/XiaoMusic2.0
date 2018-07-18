@@ -119,8 +119,11 @@ public class MusicApplication extends CommonBaseApplication {
                 PlayNotification.dismiss();
             }
         };
+        ServiceManager.getInstance().setServiceConnection(conn);
         bindService(serviceIntent, conn, Service.BIND_AUTO_CREATE);
+
     }
+
 
     @Override
     public String initBaseUrl() {

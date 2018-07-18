@@ -7,6 +7,7 @@
 
     <ImageView
         android:id="@+id/iv_navigation_head_background"
+        android:src="@drawable/bg_colorful"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
@@ -18,7 +19,8 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <com.othershe.library.NiceImageView
+            app:is_circle="true"
             android:id="@+id/iv_head"
             android:layout_width="80dp"
             android:layout_height="80dp"

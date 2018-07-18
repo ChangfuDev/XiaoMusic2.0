@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.othershe.library.NiceImageView;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.utils.GlideUtils;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by yzx on 2018/5/31.
@@ -55,7 +55,7 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
         Context context = holder.itemView.getContext();
         if (position == 0) {
             HeadHolder headHolder = (HeadHolder) holder;
-            GlideUtils.loadImg(context, R.drawable.ic_head, headHolder.ivHead);
+            GlideUtils.loadImg(context, R.drawable.ic_head, GlideUtils.TYPE_HEAD, headHolder.ivHead);
             GlideUtils.loadImg(context, R.drawable.ic_background, headHolder.ivNavigationHeadBackground);
             headHolder.tvName.setText("杨子晓");
             headHolder.stvAccountGrade.setText(String.format("Lv %s", 8));
@@ -82,7 +82,7 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
         @BindView(R.id.iv_navigation_head_background)
         ImageView ivNavigationHeadBackground;
         @BindView(R.id.iv_head)
-        CircleImageView ivHead;
+        NiceImageView ivHead;
         @BindView(R.id.tv_name)
         TextView tvName;
         @BindView(R.id.stv_account_grade)

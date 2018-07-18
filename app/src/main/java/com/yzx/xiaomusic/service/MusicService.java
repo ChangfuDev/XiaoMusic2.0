@@ -490,6 +490,20 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
                 .subscribe(observer);
     }
 
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.i(TAG, "onUnbind: ");
+        mediaPlayer.release();
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "onDestroy: ");
+        super.onDestroy();
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
