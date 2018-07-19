@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">XiaoMusic</string>
+    <string name="app_name">晓音乐</string>
     <string name="signIn">签到</string>
     <string name="commingSoon">敬请期待</string>
     <string name="setting">设置</string>
@@ -80,4 +80,12 @@
     <string name="note_serviceIsNull">服务为空</string>
     <string name="finishDownload">下载完成</string>
     <string name="fileExist">文件已存在</string>
+    <string name="login">登录</string>
+    <string name="forgetPassword">forgetPassword</string>
+    <string name="loginNow">立即登录</string>
+    <string name="password">Password</string>
+    <string name="userName">userName</string>
+    <string name="rePassword">RePassword</string>
+    <string name="login_e">Login</string>
+    <string name="phoneNum">PhoneNum</string>
 </resources>

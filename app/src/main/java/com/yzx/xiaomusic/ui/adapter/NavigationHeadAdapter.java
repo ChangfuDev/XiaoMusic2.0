@@ -2,15 +2,23 @@ package com.yzx.xiaomusic.ui.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVUser;
 import com.othershe.library.NiceImageView;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
+import com.yzx.xiaomusic.ui.login.LoginFragment;
+import com.yzx.xiaomusic.ui.main.MainFragment;
+import com.yzx.xiaomusic.utils.FragmentStartUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.widget.ShapeTextView;
 
@@ -28,8 +36,10 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
     public static final int TYPE_HEAD = 1;
     public static final int TYPE_DEFAULT = 2;
 
+
     private ArrayList<Integer> navigationMenuIcons;
     private ArrayList<Integer> navigationMenuTitles;
+    private MainFragment parentFragment;
 
     @Override
     public int getItemViewType(int position) {
@@ -54,12 +64,40 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
         if (position == 0) {
+
             HeadHolder headHolder = (HeadHolder) holder;
-            GlideUtils.loadImg(context, R.drawable.ic_head, GlideUtils.TYPE_HEAD, headHolder.ivHead);
-            GlideUtils.loadImg(context, R.drawable.ic_background, headHolder.ivNavigationHeadBackground);
-            headHolder.tvName.setText("杨子晓");
-            headHolder.stvAccountGrade.setText(String.format("Lv %s", 8));
-            headHolder.stvSignIn.setText(R.string.signIn);
+            AVUser currentUser = AVUser.getCurrentUser();
+            //未登录
+            if (currentUser == null) {
+                headHolder.llUnLogin.setVisibility(View.VISIBLE);
+                headHolder.llLogin.setVisibility(View.GONE);
+
+                headHolder.stvGoLogin.setOnClickListener(v -> {
+                    final boolean[] hadStart = {false};
+                    parentFragment.drawerLayout.closeDrawer(Gravity.START);
+                    parentFragment.drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                        @Override
+                        public void onDrawerClosed(View drawerView) {
+                            super.onDrawerClosed(drawerView);
+                            Log.i("ygl", "onDrawerClosed: ");
+
+                            if (!hadStart[0]) {
+                                FragmentStartUtils.startFragment(parentFragment, new LoginFragment());
+                                hadStart[0] = true;
+                            }
+                        }
+                    });
+                });
+            } else {
+                //登陆
+                headHolder.llUnLogin.setVisibility(View.GONE);
+                headHolder.llLogin.setVisibility(View.VISIBLE);
+                GlideUtils.loadImg(context, R.drawable.ic_head, GlideUtils.TYPE_HEAD, headHolder.ivHead);
+                GlideUtils.loadImg(context, R.drawable.ic_background, headHolder.ivNavigationHeadBackground);
+                headHolder.tvName.setText(currentUser.getUsername());
+                headHolder.stvAccountGrade.setText(String.format("Lv %s", 8));
+                headHolder.stvSignIn.setText(R.string.signIn);
+            }
         } else {
             MenuHolder menuHolder = (MenuHolder) holder;
             menuHolder.tvNavigationMenuTitle.setText(navigationMenuTitles.get(position - 1));
@@ -73,7 +111,8 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
         return navigationMenuTitles.size() + 1;
     }
 
-    public void setData(ArrayList<Integer> navigationMenuIcons, ArrayList<Integer> navigationMenuTitles) {
+    public void setData(MainFragment parentFragment, ArrayList<Integer> navigationMenuIcons, ArrayList<Integer> navigationMenuTitles) {
+        this.parentFragment = parentFragment;
         this.navigationMenuIcons = navigationMenuIcons;
         this.navigationMenuTitles = navigationMenuTitles;
     }
@@ -89,6 +128,12 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
         ShapeTextView stvAccountGrade;
         @BindView(R.id.stv_sign_in)
         ShapeTextView stvSignIn;
+        @BindView(R.id.ll_login)
+        LinearLayout llLogin;
+        @BindView(R.id.stv_go_login)
+        ShapeTextView stvGoLogin;
+        @BindView(R.id.ll_unLogin)
+        LinearLayout llUnLogin;
 
         public HeadHolder(View itemView) {
             super(itemView);

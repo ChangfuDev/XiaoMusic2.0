@@ -69,7 +69,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.drawerLayout)
-    DrawerLayout drawerLayout;
+    public DrawerLayout drawerLayout;
     @BindView(R.id.iv_music_cover)
     ImageView ivMusicCover;
     @BindView(R.id.tv_music_name)
@@ -203,7 +203,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
             }
         });
         NavigationHeadAdapter adapter = new NavigationHeadAdapter();
-        adapter.setData(navigationMenuIcons, navigationMenuTitles);
+        adapter.setData(this,navigationMenuIcons, navigationMenuTitles);
         recyclerView.setAdapter(adapter);
     }
 

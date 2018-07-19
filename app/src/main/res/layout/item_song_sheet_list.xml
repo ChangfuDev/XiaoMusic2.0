@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorWhite"
-    style="@style/WaterEffect_gray"
+    android:stateListAnimator="@drawable/state_list_animator_scale"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -19,7 +19,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_default_song_sheet" />
+            android:src="@drawable/ic_default_song_sheet"/>
         <!--歌单听量-->
         <TextView
             android:id="@+id/tv_play_count"

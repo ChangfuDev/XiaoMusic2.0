@@ -7,4 +7,5 @@
     <dimen name="toolbarHeight">90dp</dimen>
     <dimen name="bottomMusicControlHeight">50dp</dimen>
     <dimen name="cornerRadius">3dp</dimen>
+    <dimen name="strokeWidth">0.5dp</dimen>
 </resources>

@@ -15,7 +15,9 @@ import com.yzx.commonlibrary.utils.DensityUtils;
 import com.yzx.xiaomusic.R;
 
 /**
- * Created by yzx on 2018/7/18.
+ *
+ * @author yzx
+ * @date 2018/7/18
  * Description  图标  文字   文字   图标这种类型的布局
  */
 public class SimpleLayout extends LinearLayout {

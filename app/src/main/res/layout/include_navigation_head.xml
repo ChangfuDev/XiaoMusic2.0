@@ -7,26 +7,28 @@
 
     <ImageView
         android:id="@+id/iv_navigation_head_background"
-        android:src="@drawable/bg_colorful"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_colorful" />
 
     <LinearLayout
+        android:id="@+id/ll_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:visibility="gone">
 
         <com.othershe.library.NiceImageView
-            app:is_circle="true"
             android:id="@+id/iv_head"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="50dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_head" />
+            android:src="@drawable/ic_head"
+            app:is_circle="true" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,10 +50,10 @@
                 android:id="@+id/stv_account_grade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="3dp"
+                android:paddingEnd="8dp"
                 android:paddingStart="8dp"
                 android:paddingTop="3dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="3dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="10sp"
                 android:typeface="serif"
@@ -72,10 +74,10 @@
                 android:drawableEnd="@drawable/a2i"
                 android:drawablePadding="5dp"
                 android:gravity="center_vertical"
+                android:paddingBottom="3dp"
+                android:paddingEnd="8dp"
                 android:paddingStart="8dp"
                 android:paddingTop="3dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="3dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="12sp"
                 android:typeface="monospace"
@@ -83,6 +85,30 @@
                 app:strokeWidth="0.25dp"
                 tools:text="签到" />
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_unLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+
+        <com.yzx.xiaomusic.widget.ShapeTextView
+            android:id="@+id/stv_go_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="5dp"
+            android:text="@string/loginNow"
+            android:textColor="@color/colorWhite"
+            app:solidColor="@color/state_color_tp_gray"
+            app:strokeColor="@color/colorLightWhite"
+            app:strokeWidth="@dimen/strokeWidth" />
     </LinearLayout>
 
 </RelativeLayout>
