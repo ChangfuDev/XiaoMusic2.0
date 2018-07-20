@@ -88,4 +88,7 @@
     <string name="rePassword">RePassword</string>
     <string name="login_e">Login</string>
     <string name="phoneNum">PhoneNum</string>
+    <string name="register_e">Register</string>
+    <string name="register">注册</string>
+    <string name="changeAccount">切换账号</string>
 </resources>

@@ -21,4 +21,5 @@
     <color name="colorSeekBarBg">#88ffffff</color>
     <color name="colorSeekBarProgressBg">#aaffffff</color>
     <color name="colorTitleBgDark">#33000000</color>
+    <color name="colorYellow">#FFD700</color>
 </resources>

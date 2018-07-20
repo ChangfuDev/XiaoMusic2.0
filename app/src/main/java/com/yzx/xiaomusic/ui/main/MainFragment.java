@@ -32,6 +32,7 @@ import com.yzx.xiaomusic.ui.main.discover.DiscoverFragment;
 import com.yzx.xiaomusic.ui.main.music.MusicFragment;
 import com.yzx.xiaomusic.ui.main.video.VideoFragment;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
+import com.yzx.xiaomusic.ui.setting.SettingFragment;
 import com.yzx.xiaomusic.utils.EventBusUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
@@ -52,6 +53,7 @@ import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PA
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_PROGRESS;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SERVICE_CREATED;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_USER_INFOR_CHANGED;
 
 /**
  * @author yzx
@@ -93,6 +95,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
     private ArrayList<Integer> navigationMenuIcons;
     private ArrayList<Fragment> fragments;
     private MusicInfo musicInfo;
+    private NavigationHeadAdapter adapter;
 
     @Override
     protected int initContentViewId() {
@@ -202,8 +205,8 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
                 }
             }
         });
-        NavigationHeadAdapter adapter = new NavigationHeadAdapter();
-        adapter.setData(this,navigationMenuIcons, navigationMenuTitles);
+        adapter = new NavigationHeadAdapter();
+        adapter.setData(this, navigationMenuIcons, navigationMenuTitles);
         recyclerView.setAdapter(adapter);
     }
 
@@ -265,6 +268,9 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
                 service = ServiceManager.getInstance().getService();
                 initBottomMusicController(layoutBottomMusicController);
                 break;
+            case TYPE_USER_INFOR_CHANGED:
+                adapter.notifyDataSetChanged();
+                break;
         }
     }
 
@@ -274,6 +280,18 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
             case R.id.ll_night_mode:
                 break;
             case R.id.ll_setting:
+                drawerLayout.closeDrawer(Gravity.START);
+                final boolean[] hadStart = {false};
+                drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                        super.onDrawerClosed(drawerView);
+                        if (!hadStart[0]) {
+                            start(new SettingFragment());
+                            hadStart[0] = true;
+                        }
+                    }
+                });
                 break;
             case R.id.ll_exit:
                 MusicApplication.getContext().unbindService(ServiceManager.getInstance().getConn());
@@ -281,4 +299,5 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
                 break;
         }
     }
+
 }

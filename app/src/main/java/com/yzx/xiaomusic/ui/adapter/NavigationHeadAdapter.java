@@ -67,11 +67,11 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
 
             HeadHolder headHolder = (HeadHolder) holder;
             AVUser currentUser = AVUser.getCurrentUser();
+            GlideUtils.loadImg(context, R.drawable.ic_background, headHolder.ivNavigationHeadBackground);
             //未登录
             if (currentUser == null) {
                 headHolder.llUnLogin.setVisibility(View.VISIBLE);
                 headHolder.llLogin.setVisibility(View.GONE);
-
                 headHolder.stvGoLogin.setOnClickListener(v -> {
                     final boolean[] hadStart = {false};
                     parentFragment.drawerLayout.closeDrawer(Gravity.START);
@@ -93,7 +93,6 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
                 headHolder.llUnLogin.setVisibility(View.GONE);
                 headHolder.llLogin.setVisibility(View.VISIBLE);
                 GlideUtils.loadImg(context, R.drawable.ic_head, GlideUtils.TYPE_HEAD, headHolder.ivHead);
-                GlideUtils.loadImg(context, R.drawable.ic_background, headHolder.ivNavigationHeadBackground);
                 headHolder.tvName.setText(currentUser.getUsername());
                 headHolder.stvAccountGrade.setText(String.format("Lv %s", 8));
                 headHolder.stvSignIn.setText(R.string.signIn);

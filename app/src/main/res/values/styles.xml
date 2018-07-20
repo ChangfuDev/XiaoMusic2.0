@@ -11,6 +11,12 @@
         <!--<item name="android:colorEdgeEffect">#b4ffffff</item>-->
     </style>
 
+
+    <style name="TextLabel" parent="AppTheme.Transparent">
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlActivated">@color/colorWhite</item>
+    </style>
+
     <!--修改menu更多的图标-->
     <style name="Action_OverflowButtonStyle" parent="@android:style/Widget.Holo.Light.ActionButton.Overflow">
         <item name="android:src">@drawable/p9</item>
@@ -105,5 +111,19 @@
         <item name="titleLeftMargin">10dp</item>
         <item name="titleSize">12sp</item>
     </style>
+
+
+    <style name="StyleTextInputLayout_Register" parent="AppTheme.Transparent">
+        <item name="android:theme">@style/TextLabel</item>
+        <item name="android:textColorHint">@color/colorWhite</item>
+    </style>
+
+    <style name="StyleEditText_Register">
+        <!--<item name="android:background">@drawable/selector_bg_edit_yellow</item>-->
+        <item name="android:backgroundTint">@color/colorWhite</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
 
 </resources>

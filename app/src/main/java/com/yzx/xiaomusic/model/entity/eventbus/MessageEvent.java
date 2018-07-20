@@ -38,6 +38,11 @@ public class MessageEvent {
      */
     public static final int TYPE_SERVICE_CREATED = 7;
 
+    /**
+     * 用户信息改变（登陆登出）
+     */
+    public static final int TYPE_USER_INFOR_CHANGED = 8;
+
     public MessageEvent(int type) {
         this.type = type;
     }
