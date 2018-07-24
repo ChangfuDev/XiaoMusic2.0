@@ -21,8 +21,10 @@ android {
     }
     buildTypes {
         release {
+            //删除无用资源
+            shrinkResources true
             //是否开启混淆
-            minifyEnabled false
+            minifyEnabled true
 //            //是否去除未利用的资源
 //            shrinkResources true
 //            //是否使用zipalign工具压缩
@@ -161,5 +163,6 @@ dependencies {
 //    banner
     implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
 
-
+    //完整版引入
+    implementation 'com.shuyu:GSYVideoPlayer:5.0.1'
 }

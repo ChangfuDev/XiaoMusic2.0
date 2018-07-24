@@ -238,7 +238,9 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     private void sendPauseEvent() {
         EventBusUtils.post(new MessageEvent(TYPE_MUSIC_PAUSE));
         showPlayNotification();
-        disposable.dispose();
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     public boolean isPlaying() {

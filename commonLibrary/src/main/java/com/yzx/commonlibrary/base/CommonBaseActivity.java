@@ -15,7 +15,7 @@ import butterknife.Unbinder;
  */
 public abstract class CommonBaseActivity extends AbstractWrapperActivity {
 
-    public String TAG = this.getClass().getSimpleName();
+    public String TAG = "ygl" + this.getClass().getSimpleName();
     private Unbinder bind;
 
     @Override

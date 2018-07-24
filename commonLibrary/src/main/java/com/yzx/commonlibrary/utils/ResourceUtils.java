@@ -33,7 +33,7 @@ public class ResourceUtils {
      */
     public static int parseColor(Context context, @ColorRes int color) {
 
-        return getResources(context).getColor(color);
+        return getResources(context.getApplicationContext()).getColor(color);
     }
 
     /**
@@ -42,7 +42,7 @@ public class ResourceUtils {
      */
     public static String parseString(Context context, @StringRes int string) {
 
-        return getResources(context).getString(string);
+        return getResources(context.getApplicationContext()).getString(string);
     }
 
     public static View parseLayout(Context context, @LayoutRes int layoutId) {
@@ -52,4 +52,5 @@ public class ResourceUtils {
     public static View parseLayout(Context context, @LayoutRes int layoutId, ViewGroup container) {
         return LayoutInflater.from(context).inflate(layoutId, container, false);
     }
+
 }

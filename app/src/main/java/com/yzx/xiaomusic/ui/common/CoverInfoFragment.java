@@ -1,7 +1,10 @@
 package com.yzx.xiaomusic.ui.common;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +26,7 @@ import com.yzx.xiaomusic.widget.ShapeTextView;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -173,6 +177,19 @@ public class CoverInfoFragment extends BaseFragment {
         } catch (IOException e) {
             Log.i(TAG, "writeFile: " + e.toString());
         }
+
+
+        // 第二步：其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getAbsolutePath(), title, null);
+//   /storage/emulated/0/Boohee/1493711988333.jpg
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // 第三步：最后通知图库更新
+        getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file)));
+        //context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
 
     }
 }

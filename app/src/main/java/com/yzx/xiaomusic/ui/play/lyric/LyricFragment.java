@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
+import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.base.BaseMvpFragment;
 import com.yzx.xiaomusic.cache.CacheUtils;
@@ -97,13 +98,14 @@ public class LyricFragment extends BaseMvpFragment<LyricPresenter> {
         EventBusUtils.register(this);
     }
 
-    private void loadLyric() {
+    public void loadLyric() {
         service = ServiceManager.getInstance().getService();
         MusicInfo musicInfo = service.getMusicInfo();
         if (musicInfo != null) {
             String musicId = musicInfo.getMusicId();
             String cacheLyric = CacheUtils.getCacheLyric(musicId);
             if (TextUtils.isEmpty(cacheLyric)) {
+                lrcView.setEmptyContent(ResourceUtils.parseString(getContext(), R.string.gettingLyric));
                 mPresenter.getLrc(musicId);
             } else {
                 lrcView.setLrcData(LrcHelper.parseLrcFromFile(new File(cacheLyric)));

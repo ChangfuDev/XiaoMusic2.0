@@ -93,4 +93,14 @@ public abstract class CommonBaseAdapter<VH extends RecyclerView.ViewHolder, B> e
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull VH holder) {
+        super.onViewDetachedFromWindow(holder);
+//        if (datas != null) {
+//            datas.clear();
+//            datas = null;
+//        }
+    }
+
 }

@@ -8,6 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!--修改menu更多的图标-->
         <item name="android:actionOverflowButtonStyle">@style/Action_OverflowButtonStyle</item>
+
+        <!-- enable window content transitions -->
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <!--<item name="android:windowEnterTransition">@transition/explode</item>-->
+        <!--<item name="android:windowExitTransition">@transition/explode</item>-->
         <!--<item name="android:colorEdgeEffect">#b4ffffff</item>-->
     </style>
 
@@ -22,11 +29,18 @@
         <item name="android:src">@drawable/p9</item>
     </style>
 
-    <!--透明状态栏-->
-    <style name="AppTheme.Transparent" parent="AppTheme">
+    <style name="AppTheme.NoTitle" parent="AppTheme">
         <item name="windowNoTitle">true</item>
+    </style>
+    <!--透明状态栏-->
+    <style name="AppTheme.Transparent" parent="AppTheme.NoTitle">
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+
+    <style name="AppTheme.FullScreen" parent="AppTheme.NoTitle">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 
     <!--解决启动时白屏-->
     <style name="AppTheme.Launch" parent="AppTheme.Transparent">

@@ -1,8 +1,10 @@
 package com.yzx.xiaomusic.ui.dialog;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import com.yzx.xiaomusic.db.entity.ExtraMusicInfo;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.ui.adapter.BottomMusicInfoDialogAdapter;
 import com.yzx.xiaomusic.ui.album.AlbumDetailFragment;
+import com.yzx.xiaomusic.ui.mv.MvDetailsActivity;
 import com.yzx.xiaomusic.ui.singer.SingerDetailsFragment;
 import com.yzx.xiaomusic.utils.FragmentStartUtils;
 
@@ -136,7 +139,11 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
                 ToastUtils.showToast(R.string.MusicQuality);
                 break;
             case 6:
-                ToastUtils.showToast(R.string.video);
+                if (!TextUtils.equals("0", musicInfo.getMvId())) {
+                    Intent intent = new Intent(getContext(), MvDetailsActivity.class);
+                    intent.putExtra(KEY_ID, musicInfo.getMvId());
+                    getContext().startActivity(intent);
+                }
                 break;
             case 7:
                 ToastUtils.showToast("相似推荐");

@@ -1,6 +1,7 @@
 package com.yzx.commonlibrary.network;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,6 +22,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okio.Buffer;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -121,6 +123,12 @@ public class AppHttpClient {
 
             Response originalResponse = chain.proceed(request);
 
+            ResponseBody responseBody = originalResponse.body();
+            if (responseBody != null) {
+                Log.i(TAG, "responseBody: " + responseBody.string());
+            }
+
+            originalResponse = chain.proceed(request);
             if (NetWorkUtils.isNetAvailable(context)) {
                 return originalResponse.newBuilder().header("Cache-Control", "public,  max-age=" + MAX_AGE).build();
             } else {

@@ -1,6 +1,7 @@
 package com.yzx.xiaomusic.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -16,11 +17,14 @@ import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.ui.dialog.BottomMusicInfoDialog;
+import com.yzx.xiaomusic.ui.mv.MvDetailsActivity;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.yokeyword.fragmentation.SupportFragment;
+
+import static com.yzx.xiaomusic.Constant.KEY_ID;
 
 /**
  * @author yzx
@@ -50,6 +54,7 @@ public class MusicAdapter extends CommonBaseAdapter<MusicAdapter.Holder, MusicIn
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         super.onBindViewHolder(holder, position);
         MusicInfo musicInfo = datas.get(position);
+        Context context = holder.itemView.getContext();
         holder.tvSort.setText(String.valueOf(position + 1));
         holder.tvTitle.setText(musicInfo.getMusicName());
         if (TextUtils.isEmpty(musicInfo.getAlbumName())) {
@@ -58,6 +63,14 @@ public class MusicAdapter extends CommonBaseAdapter<MusicAdapter.Holder, MusicIn
             holder.tvSubTitle.setText(String.format("%s -- %s", MusicDataUtils.getSingers(musicInfo), musicInfo.getAlbumName()));
         }
         holder.ivMv.setVisibility(musicInfo.isLocal() || TextUtils.equals("0", musicInfo.getMvId()) ? View.GONE : View.VISIBLE);
+        holder.ivMv.setOnClickListener(v -> {
+            if (!TextUtils.equals("0", musicInfo.getMvId())) {
+                Intent intent = new Intent(context, MvDetailsActivity.class);
+                intent.putExtra(KEY_ID, musicInfo.getMvId());
+                context.startActivity(intent);
+                parentFragment.getActivity().overridePendingTransition(R.anim.v_fragment_enter, R.anim.v_fragment_exit);
+            }
+        });
         holder.ivMore.setOnClickListener(v -> {
             BottomMusicInfoDialog bottomMusicInfoDialog = new BottomMusicInfoDialog();
             Bundle args = new Bundle();

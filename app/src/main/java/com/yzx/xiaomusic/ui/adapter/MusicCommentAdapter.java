@@ -88,7 +88,7 @@ public class MusicCommentAdapter extends RecyclerView.Adapter {
                 MusicHolder musicHolder = (MusicHolder) holder;
                 MusicInfo musicInfo = ServiceManager.getInstance().getService().getMusicInfo();
                 if (musicInfo != null) {
-                    GlideUtils.loadImg(holder.itemView.getContext(), musicInfo.getAlbumCoverPath(), ((MusicHolder) holder).ivCover);
+                    GlideUtils.loadImg(holder.itemView.getContext(), musicInfo.getAlbumCoverPath(), GlideUtils.TYPE_HEAD, ((MusicHolder) holder).ivCover);
                     musicHolder.tvTitle.setText(musicInfo.getMusicName());
                     musicHolder.tvSubTitle.setText(MusicDataUtils.getSingers(musicInfo));
                 }
@@ -142,7 +142,7 @@ public class MusicCommentAdapter extends RecyclerView.Adapter {
     private void setHotCommentData(@NonNull RecyclerView.ViewHolder holder,
                                    MusicComment.HotCommentsBean hotCommentsBean, MusicComment.HotCommentsBean.UserBean user) {
         CommentHolder commentHolder = (CommentHolder) holder;
-        GlideUtils.loadImg(holder.itemView.getContext(), user.getAvatarUrl(), commentHolder.ivHead);
+        GlideUtils.loadImg(holder.itemView.getContext(), user.getAvatarUrl(), GlideUtils.TYPE_HEAD, commentHolder.ivHead);
         commentHolder.tvTitle.setText(user.getNickname());
         commentHolder.tvSubTitle.setText(TimeUtils.getFriendlyData(hotCommentsBean.getTime()));
         commentHolder.tvContent.setText(hotCommentsBean.getContent());

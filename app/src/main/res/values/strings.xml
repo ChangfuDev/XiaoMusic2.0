@@ -91,4 +91,5 @@
     <string name="register_e">Register</string>
     <string name="register">注册</string>
     <string name="changeAccount">切换账号</string>
+    <string name="gettingLyric">获取歌词中...</string>
 </resources>
