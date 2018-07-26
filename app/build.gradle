@@ -21,10 +21,11 @@ android {
     }
     buildTypes {
         release {
-            //删除无用资源
-            shrinkResources true
-            //是否开启混淆
-            minifyEnabled true
+//            //删除无用资源
+//            shrinkResources true
+//            //是否开启混淆
+//            minifyEnabled true
+            minifyEnabled false
 //            //是否去除未利用的资源
 //            shrinkResources true
 //            //是否使用zipalign工具压缩

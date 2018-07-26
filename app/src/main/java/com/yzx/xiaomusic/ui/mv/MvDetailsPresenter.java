@@ -3,8 +3,6 @@ package com.yzx.xiaomusic.ui.mv;
 import com.yzx.commonlibrary.base.mvp.CommonBasePresenter;
 import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;
 import com.yzx.xiaomusic.model.entity.mv.MvInfo;
-import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
-import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
 
 /**
  * Created by yzx on 2018/7/23.
@@ -17,19 +15,19 @@ public class MvDetailsPresenter extends CommonBasePresenter<MvDetailsActivity, M
     }
 
     public void getMv(String mvId) {
-        mView.loadService.showCallback(LoadingCallback.class);
+//        mView.loadService.showCallback(LoadingCallback.class);
         mModel.getMv(mvId, new CommonMvpObserver<MvInfo>() {
 
             @Override
             protected void onSuccess(MvInfo mvInfo) {
-                mView.loadService.showSuccess();
+//                mView.loadService.showSuccess();
                 mView.setData(mvInfo);
             }
 
             @Override
             protected void onFail(int code, String errorMsg) {
                 super.onFail(code, errorMsg);
-                mView.loadService.showCallback(ErrorCallback.class);
+//                mView.loadService.showCallback(ErrorCallback.class);
             }
         });
     }

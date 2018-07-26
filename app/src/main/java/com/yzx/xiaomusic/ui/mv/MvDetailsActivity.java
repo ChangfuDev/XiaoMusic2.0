@@ -3,46 +3,34 @@ package com.yzx.xiaomusic.ui.mv;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadService;
-import com.kingja.loadsir.core.LoadSir;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.NormalGSYVideoPlayer;
-import com.yzx.commonlibrary.base.mvp.CommonBaseMvpActivity;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.model.entity.mv.MvInfo;
-import com.yzx.xiaomusic.widget.video.YVideoPlayer;
+import com.yzx.xiaomusic.widget.video.GSYBaseActivityDetail;
+import com.yzx.xiaomusic.widget.video.StandardVideoPlayer;
 
 import butterknife.BindView;
 
 import static com.yzx.xiaomusic.Constant.KEY_ID;
+import static com.yzx.xiaomusic.widget.video.YVideoPlayer.DEFINITION_1080P;
+import static com.yzx.xiaomusic.widget.video.YVideoPlayer.DEFINITION_240P;
+import static com.yzx.xiaomusic.widget.video.YVideoPlayer.DEFINITION_480P;
+import static com.yzx.xiaomusic.widget.video.YVideoPlayer.DEFINITION_720P;
 
 /**
  * @author yzx
  * @date 2018/7/23
  * Description
  */
-public class MvDetailsActivity extends CommonBaseMvpActivity<MvDetailsPresenter> {
+public class MvDetailsActivity extends GSYBaseActivityDetail<StandardVideoPlayer, MvDetailsPresenter> {
 
-    //    @BindView(R.id.tv_title)
-//    TextView tvTitle;
-//    @BindView(R.id.tv_subTitle)
-//    TextView tvSubTitle;
-//    @BindView(R.id.tb)
-//    Toolbar tb;
-//    @BindView(R.id.player)
-//    StandardGSYVideoPlayer player;
-    @BindView(R.id.normalPlayer)
-    NormalGSYVideoPlayer normalPlayer;
     @BindView(R.id.yPlayer)
-    YVideoPlayer yPlayer;
+    StandardVideoPlayer yPlayer;
     private String mvId;
-
-    //是否是全屏
-    boolean fullScreen = false;
     OrientationUtils orientationUtils;
     public LoadService loadService;
 
@@ -59,37 +47,44 @@ public class MvDetailsActivity extends CommonBaseMvpActivity<MvDetailsPresenter>
     @Override
     protected void initView(Bundle savedInstanceState) {
 
-        // 重新加载逻辑
-        loadService = LoadSir.getDefault().register(this, (Callback.OnReloadListener) v -> {
-            // 重新加载逻辑
-            mPresenter.getMv(mvId);
-        });
         Intent intent = getIntent();
         mvId = intent.getStringExtra(KEY_ID);
-        Log.i(TAG, "initView: " + mvId);
 
+//        orientationUtils = new OrientationUtils(this, yPlayer);
 
-//        //设置返回键
-//        player.getBackButton().setVisibility(View.VISIBLE);
-//        //设置旋转
-//        orientationUtils = new OrientationUtils(this, player);
-//        //设置全屏按键功能,这是使用的是选择屏幕，而不是全屏
-//        final ImageView fullscreenButton = player.getFullscreenButton();
-//        fullscreenButton.setOnClickListener(v -> orientationUtils.resolveByClick());
-//        //是否可以滑动调整
-//        player.setIsTouchWiget(true);
+        yPlayer.getCurrentPlayer().setEnlargeImageRes(R.drawable.aah);
+        yPlayer.getCurrentPlayer().setShrinkImageRes(R.drawable.aaj);
+//        //全屏逻辑
+//        yPlayer.getFullscreenButton().setOnClickListener(v -> {
+//            orientationUtils.resolveByClick();
+//            if (yPlayer.isIfCurrentIsFullscreen()) {
+//                onBackPressedSupport();
+//            } else {
+//                yPlayer.startWindowFullscreen(MvDetailsActivity.this, true, false);
 //
-//        final boolean[] show = {true};
-//        player.setOnClickListener(v -> {
-//            player.startWindowFullscreen(MvDetailsActivity.this, show[0], show[0]);
-//            show[0] = !show[0];
+//            }
 //        });
-//        //设置返回按键功能
-//        player.getBackButton().setOnClickListener(v -> onBackPressed());
-        yPlayer.setAutoFullWithSize(true);
+
+//        yPlayer.setActivity(this);
+//        //返回键
+//        yPlayer.getBackButton().setOnClickListener(v -> onBackPressedSupport());
+//        yPlayer.getGSYVideoManager().setLastState(CURRENT_STATE_PREPAREING);
+
+        initVideoBuilderMode();
         mPresenter.getMv(mvId);
     }
 
+
+    /**
+     * 选择builder模式
+     */
+    @Override
+    public void initVideoBuilderMode() {
+        initVideo();
+        getGSYVideoOptionBuilder().
+                setVideoAllCallBack(this)
+                .build(getGSYVideoPlayer());
+    }
 
     public void setData(MvInfo mvInfo) {
         MvInfo.DataBean data = mvInfo.getData();
@@ -98,19 +93,38 @@ public class MvDetailsActivity extends CommonBaseMvpActivity<MvDetailsPresenter>
         if (TextUtils.isEmpty(mostClearUrl)) {
             return;
         }
-//        tvTitle.setText(data.getBriefDesc());
-        Log.i(TAG, "setData: " + mostClearUrl);
-        //增加title
-//        player.getTitleTextView().setVisibility(View.VISIBLE);
-//        player.setUp(mostClearUrl, true, data.getName());
-//        player.startPlayLogic();
-
-//        normalPlayer.setUp(mostClearUrl, true, data.getName());
-//        normalPlayer.startAfterPrepared();
-
-        yPlayer.setUp(mostClearUrl, true, data.getName());
+        //设置清晰度
+//        yPlayer.setDefinition(getDefinitionByBrs(data.getBrs()));
+        getGSYVideoOptionBuilder().setVideoTitle(data.getBriefDesc())
+                .setUrl(mostClearUrl)
+                .build(getGSYVideoPlayer());
+//        Log.i(TAG, "setData: " + mostClearUrl);
+//        //增加title
+//        yPlayer.setUp(mostClearUrl, true, data.getName());
         yPlayer.startPlayLogic();
+    }
 
+    private String getDefinitionByBrs(MvInfo.DataBean.BrsBean brs) {
+        String p1080 = brs.get_$1080();
+        if (!TextUtils.isEmpty(p1080)) {
+            return DEFINITION_1080P;
+        }
+
+        String p720 = brs.get_$720();
+        if (!TextUtils.isEmpty(p720)) {
+            return DEFINITION_720P;
+        }
+
+        String p480 = brs.get_$480();
+        if (!TextUtils.isEmpty(p480)) {
+            return DEFINITION_480P;
+        }
+
+        String p240 = brs.get_$240();
+        if (!TextUtils.isEmpty(p240)) {
+            return DEFINITION_240P;
+        }
+        return null;
     }
 
     private String getMostClearUrl(MvInfo.DataBean.BrsBean brs) {
@@ -136,17 +150,18 @@ public class MvDetailsActivity extends CommonBaseMvpActivity<MvDetailsPresenter>
         return null;
     }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        player.onVideoPause();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        player.onVideoResume();
-//    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        yPlayer.onVideoPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        yPlayer.onVideoResume();
+    }
 
     @Override
     protected void onDestroy() {
@@ -157,17 +172,35 @@ public class MvDetailsActivity extends CommonBaseMvpActivity<MvDetailsPresenter>
         }
     }
 
-//
-//    @Override
-//    public void onBackPressedSupport() {
-//        //先返回正常状态
-//        if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-//            player.getFullscreenButton().performClick();
-//            return;
-//        }
-//        //释放所有
-//        player.setVideoAllCallBack(null);
-//        super.onBackPressedSupport();
-//    }
+    @Override
+    public StandardVideoPlayer getGSYVideoPlayer() {
+        return yPlayer;
+    }
+
+    @Override
+    public GSYVideoOptionBuilder getGSYVideoOptionBuilder() {
+        return new GSYVideoOptionBuilder()
+//                .setThumbImageView(imageView)
+//                .setUrl(url)
+                .setCacheWithPlay(true)
+                .setVideoTitle(" ")
+                .setIsTouchWiget(true)
+                .setRotateViewAuto(false)
+                .setLockLand(false)
+                //打开动画
+                .setShowFullAnimation(false)
+                .setNeedLockFull(true)
+                .setSeekRatio(1);
+    }
+
+    @Override
+    public void clickForFullScreen() {
+
+    }
+
+    @Override
+    public boolean getDetailOrientationRotateAuto() {
+        return true;
+    }
 
 }

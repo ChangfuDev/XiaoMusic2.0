@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
 
-    <!--<include layout="@layout/include_toolbar_accent" />-->
+    <!--&lt;!&ndash;<include layout="@layout/include_toolbar_accent" />&ndash;&gt;-->
 
     <!--<com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer-->
     <!--android:id="@+id/player"-->
@@ -13,16 +13,15 @@
     <!--android:layout_height="200dp" />-->
 
 
-    <com.shuyu.gsyvideoplayer.video.NormalGSYVideoPlayer
-        android:id="@+id/normalPlayer"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
+    <!--<com.shuyu.gsyvideoplayer.video.NormalGSYVideoPlayer-->
+    <!--android:id="@+id/normalPlayer"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="200dp" />-->
 
-    <com.yzx.xiaomusic.widget.video.YVideoPlayer
+    <com.yzx.xiaomusic.widget.video.StandardVideoPlayer
         android:id="@+id/yPlayer"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="10dp" />
+        android:layout_height="200dp" />
 
 
 </LinearLayout>

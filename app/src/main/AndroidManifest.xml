@@ -52,7 +52,7 @@
             android:name=".ui.mv.MvDetailsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.FullScreen" />
+            android:theme="@style/AppTheme.Transparent" />
 
         <service android:name=".service.MusicService" />
         <!--小窗口控制音乐-->
