@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
+
+import static com.yzx.xiaomusic.ui.adapter.RecommendAdapter.TYPE_BANNER;
 
 /**
  * @author yzx
@@ -69,7 +70,8 @@ public class RecommendFragment extends BaseMvpFragment<RecommendPresenter> {
 //        设置回收复用池大小
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
         recyclerView.setRecycledViewPool(viewPool);
-        viewPool.setMaxRecycledViews(0, 10);
+//        viewPool.setMaxRecycledViews(0, 10);
+        viewPool.setMaxRecycledViews(TYPE_BANNER, 100);
 //        步骤3：设置Adapter
         DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager, true);
         recyclerView.setAdapter(delegateAdapter);
@@ -136,32 +138,20 @@ public class RecommendFragment extends BaseMvpFragment<RecommendPresenter> {
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        mPresenter.getSongSheet();
-        mPresenter.getLatestAlbums();
-        mPresenter.getBanner();
-    }
 
-    public void setSongSheetData(List<SongSheetList.PlaylistsBean> playlists) {
-        songSheetAdapter.setSongSheetData(playlists);
-    }
-
-    public void setAlbumData(List<LatestAlbumList.AlbumsBean> albums) {
-        albumAdapter.setAlbumData(albums);
-    }
-
-    public void setBannerData(List<AVObject> list) {
-        bannerAdapter.setBannerData(list);
-
-        for (int i = 0; i < list.size(); i++) {
-            Log.i(TAG, "setBannerData: " + list.get(i).toString());
-        }
+        mPresenter.getRecommend();
     }
 
     @Override
     public void reload(View v) {
         super.reload(v);
-        mPresenter.getSongSheet();
-        mPresenter.getLatestAlbums();
-        mPresenter.getBanner();
+        mPresenter.getRecommend();
+    }
+
+    public void setData(SongSheetList songSheetList, LatestAlbumList latestAlbumList, List<AVObject> banners) {
+        albumAdapter.setAlbumData(latestAlbumList.getAlbums());
+        songSheetAdapter.setSongSheetData(songSheetList.getPlaylists());
+        bannerAdapter.setBannerData(banners);
+
     }
 }

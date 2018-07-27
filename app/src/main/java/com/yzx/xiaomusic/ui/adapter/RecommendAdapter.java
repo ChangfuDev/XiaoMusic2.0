@@ -57,23 +57,27 @@ public class RecommendAdapter extends DelegateAdapter.Adapter implements View.On
 
     private final LayoutHelper helper;
     private final int count;
-    private final BannerViewHolder bannerViewHolder;
     private SupportFragment parentFragment;
     private List<SongSheetList.PlaylistsBean> playlists;
     private List<LatestAlbumList.AlbumsBean> albums;
     private List<AVObject> banners;
+    boolean bannered;
 
     public RecommendAdapter(SupportFragment parentFragment, LayoutHelper helper, int count) {
         this.parentFragment = parentFragment;
         this.helper = helper;
         this.count = count;
 
-        bannerViewHolder = new BannerViewHolder();
     }
 
     @Override
     public LayoutHelper onCreateLayoutHelper() {
         return helper;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
     }
 
     @NonNull
@@ -102,7 +106,11 @@ public class RecommendAdapter extends DelegateAdapter.Adapter implements View.On
         Context context = holder.itemView.getContext();
         switch (getItemViewType(position)) {
             case TYPE_BANNER:
-                dealBanner((BannerHolder) holder);
+                //处理下Banner重复创建导致的卡顿
+                if (!bannered && banners != null) {
+                    dealBanner((BannerHolder) holder);
+                    bannered = !bannered;
+                }
                 break;
             case TYPE_FOUR:
                 dealFour((FourHolder) holder);
@@ -164,14 +172,12 @@ public class RecommendAdapter extends DelegateAdapter.Adapter implements View.On
     private void dealBanner(BannerHolder holder) {
         holder.banner.setDelayedTime(5000);
 //        holder.banner.setIndicatorRes(R.color.colorDivider, R.color.colorAccent);
-        holder.banner.setPages(banners, () -> bannerViewHolder);
+        holder.banner.setPages(banners, BannerViewHolder::new);
         holder.banner.setBannerPageClickListener((view, i) -> {
             ToastUtils.showToast(banners.get(i).getString("type"));
             holder.banner.setDelayedTime(5000);
         });
         holder.banner.start();
-        holder.setIsRecyclable(false);
-//        holder.banner.start();
     }
 
     private void dealFour(FourHolder holder) {
@@ -210,6 +216,13 @@ public class RecommendAdapter extends DelegateAdapter.Adapter implements View.On
         this.banners = banners;
         notifyDataSetChanged();
     }
+
+//    public void setData(List<SongSheetList.PlaylistsBean> playlists, List<LatestAlbumList.AlbumsBean> albums, List<AVObject> banners) {
+//        this.playlists = playlists;
+//        this.albums = albums;
+//        this.banners = banners;
+//        notifyDataSetChanged();
+//    }
 
 
     class BannerHolder extends RecyclerView.ViewHolder {
