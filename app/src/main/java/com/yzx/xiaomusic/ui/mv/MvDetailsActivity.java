@@ -3,6 +3,7 @@ package com.yzx.xiaomusic.ui.mv;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.kingja.loadsir.core.LoadService;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -54,22 +55,12 @@ public class MvDetailsActivity extends GSYBaseActivityDetail<StandardVideoPlayer
 
         yPlayer.getCurrentPlayer().setEnlargeImageRes(R.drawable.aah);
         yPlayer.getCurrentPlayer().setShrinkImageRes(R.drawable.aaj);
-//        //全屏逻辑
-//        yPlayer.getFullscreenButton().setOnClickListener(v -> {
-//            orientationUtils.resolveByClick();
-//            if (yPlayer.isIfCurrentIsFullscreen()) {
-//                onBackPressedSupport();
-//            } else {
-//                yPlayer.startWindowFullscreen(MvDetailsActivity.this, true, false);
-//
-//            }
-//        });
-
-//        yPlayer.setActivity(this);
-//        //返回键
-//        yPlayer.getBackButton().setOnClickListener(v -> onBackPressedSupport());
-//        yPlayer.getGSYVideoManager().setLastState(CURRENT_STATE_PREPAREING);
-
+        //控制
+        yPlayer.setOnBottomContainerVisibleListener(enable -> {
+            Log.i(TAG, "initView: " + enable);
+//            showToast(enable + "");
+            full(enable);
+        });
         initVideoBuilderMode();
         mPresenter.getMv(mvId);
     }

@@ -56,8 +56,6 @@ public class RecommendPresenter extends CommonBasePresenter<RecommendFragment, R
                         }
                     }
                 });
-
-                mView.showSuccessLayout();
             }
 
 

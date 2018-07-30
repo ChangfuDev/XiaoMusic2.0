@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
@@ -229,13 +230,13 @@ public abstract class GSYBaseActivityDetail<T extends GSYBaseVideoPlayer, P exte
     @Override
     public void onClickBlank(String url, Object... objects) {
 
-        showToast("onClickBlank: ");
+//        showToast("onClickBlank: ");
         Log.i(TAG, "onClickBlank: ");
     }
 
     @Override
     public void onClickBlankFullscreen(String url, Object... objects) {
-        showToast("onClickBlankFullscreen: ");
+//        showToast("onClickBlankFullscreen: ");
         Log.i(TAG, "onClickBlankFullscreen: ");
     }
 
@@ -272,5 +273,22 @@ public abstract class GSYBaseActivityDetail<T extends GSYBaseVideoPlayer, P exte
      */
     public boolean isAutoFullWithSize() {
         return false;
+    }
+
+    public void full(boolean enable) {
+//        if (activity == null) {
+//            return;
+//        }
+        if (enable) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+            getWindow().setAttributes(lp);
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        } else {
+            WindowManager.LayoutParams attr = getWindow().getAttributes();
+            attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setAttributes(attr);
+//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
     }
 }

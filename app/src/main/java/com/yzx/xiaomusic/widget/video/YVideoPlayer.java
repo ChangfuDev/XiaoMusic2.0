@@ -42,7 +42,7 @@ public class YVideoPlayer extends StandardGSYVideoPlayer {
 
     @Override
     public int getLayoutId() {
-        return R.layout.layout_video_y;
+        return R.layout.layout_video_standard;
     }
 
 
@@ -50,7 +50,7 @@ public class YVideoPlayer extends StandardGSYVideoPlayer {
     protected void init(Context context) {
         super.init(context);
 
-        tvDefinition = (TextView) findViewById(R.id.tv_definition);
+//        tvDefinition = (TextView) findViewById(R.id.tv_definition);
 //        progressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
 //
 //        mBottomContainer.setOnSystemUiVisibilityChangeListener(visibility -> {

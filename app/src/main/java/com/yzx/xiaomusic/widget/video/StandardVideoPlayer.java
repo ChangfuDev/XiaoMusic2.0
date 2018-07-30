@@ -75,6 +75,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
     protected int mDialogProgressHighLightColor = -11;
 
     protected int mDialogProgressNormalColor = -11;
+    private OnBottomContainerVisibleListener onBottomContainerVisibleListener;
 
     /**
      * 1.5.0开始加入，如果需要不同布局区分功能，需要重载
@@ -119,7 +120,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
      */
     @Override
     public int getLayoutId() {
-        return R.layout.video_layout_standard;
+        return com.yzx.xiaomusic.R.layout.layout_video_standard;
     }
 
     /**
@@ -742,11 +743,20 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         } else if (mStartButton instanceof ImageView) {
             ImageView imageView = (ImageView) mStartButton;
             if (mCurrentState == CURRENT_STATE_PLAYING) {
-                imageView.setImageResource(R.drawable.video_click_pause_selector);
+                imageView.setImageResource(com.yzx.xiaomusic.R.drawable.a03);
             } else if (mCurrentState == CURRENT_STATE_ERROR) {
-                imageView.setImageResource(R.drawable.video_click_error_selector);
+                imageView.setImageResource(com.yzx.xiaomusic.R.drawable.a02);
             } else {
-                imageView.setImageResource(R.drawable.video_click_play_selector);
+                imageView.setImageResource(com.yzx.xiaomusic.R.drawable.a02);
+            }
+        }
+
+        //底部控制器显示监听
+        if (onBottomContainerVisibleListener != null && mBottomContainer != null) {
+            if (mBottomContainer.getVisibility() == VISIBLE) {
+                onBottomContainerVisibleListener.onVisible(true);
+            } else {
+                onBottomContainerVisibleListener.onVisible(false);
             }
         }
     }
@@ -862,5 +872,12 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         }
     }
 
+    public void setOnBottomContainerVisibleListener(OnBottomContainerVisibleListener onBottomContainerVisibleListener) {
+        this.onBottomContainerVisibleListener = onBottomContainerVisibleListener;
+    }
+
+    public interface OnBottomContainerVisibleListener {
+        void onVisible(boolean visible);
+    }
 
 }

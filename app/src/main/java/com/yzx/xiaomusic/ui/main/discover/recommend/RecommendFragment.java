@@ -149,9 +149,9 @@ public class RecommendFragment extends BaseMvpFragment<RecommendPresenter> {
     }
 
     public void setData(SongSheetList songSheetList, LatestAlbumList latestAlbumList, List<AVObject> banners) {
-        albumAdapter.setAlbumData(latestAlbumList.getAlbums());
-        songSheetAdapter.setSongSheetData(songSheetList.getPlaylists());
         bannerAdapter.setBannerData(banners);
-
+        songSheetAdapter.setSongSheetData(songSheetList.getPlaylists());
+        albumAdapter.setAlbumData(latestAlbumList.getAlbums());
+        showSuccessLayout();
     }
 }
