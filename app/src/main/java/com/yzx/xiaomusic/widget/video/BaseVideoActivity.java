@@ -2,7 +2,6 @@ package com.yzx.xiaomusic.widget.video;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -18,7 +17,7 @@ import com.yzx.commonlibrary.base.mvp.CommonBasePresenter;
  * 详情模式播放页面基础类
  * Created by guoshuyu on 2017/9/14.
  */
-public abstract class GSYBaseActivityDetail<T extends GSYBaseVideoPlayer, P extends CommonBasePresenter> extends CommonBaseMvpActivity<P> implements VideoAllCallBack {
+public abstract class BaseVideoActivity<T extends GSYBaseVideoPlayer, P extends CommonBasePresenter> extends CommonBaseMvpActivity<P> implements VideoAllCallBack {
 
     protected boolean isPlay;
 
@@ -67,7 +66,7 @@ public abstract class GSYBaseActivityDetail<T extends GSYBaseVideoPlayer, P exte
             orientationUtils.resolveByClick();
         }
         //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-        getGSYVideoPlayer().startWindowFullscreen(GSYBaseActivityDetail.this, hideActionBarWhenFull(), hideStatusBarWhenFull());
+        getGSYVideoPlayer().startWindowFullscreen(BaseVideoActivity.this, hideActionBarWhenFull(), hideStatusBarWhenFull());
 
     }
 
@@ -230,14 +229,11 @@ public abstract class GSYBaseActivityDetail<T extends GSYBaseVideoPlayer, P exte
     @Override
     public void onClickBlank(String url, Object... objects) {
 
-//        showToast("onClickBlank: ");
-        Log.i(TAG, "onClickBlank: ");
     }
 
     @Override
     public void onClickBlankFullscreen(String url, Object... objects) {
-//        showToast("onClickBlankFullscreen: ");
-        Log.i(TAG, "onClickBlankFullscreen: ");
+
     }
 
     public boolean hideActionBarWhenFull() {
@@ -275,20 +271,19 @@ public abstract class GSYBaseActivityDetail<T extends GSYBaseVideoPlayer, P exte
         return false;
     }
 
+
     public void full(boolean enable) {
-//        if (activity == null) {
-//            return;
-//        }
+
         if (enable) {
             WindowManager.LayoutParams lp = getWindow().getAttributes();
             lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
             getWindow().setAttributes(lp);
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         } else {
             WindowManager.LayoutParams attr = getWindow().getAttributes();
             attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().setAttributes(attr);
-//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
     }
 }

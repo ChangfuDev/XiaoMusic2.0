@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,17 @@ import moe.codeest.enviews.ENPlayView;
  */
 
 public class StandardVideoPlayer extends GSYVideoPlayer {
+
+    private static final String TAG = "yglStandardVideoPlayer";
+
+
+    /**
+     * 清晰度
+     */
+    public static final String DEFINITION_1080P = "1080P";
+    public static final String DEFINITION_720P = "超请";
+    public static final String DEFINITION_480P = "高清";
+    public static final String DEFINITION_240P = "清晰";
 
     //亮度dialog
     protected Dialog mBrightnessDialog;
@@ -76,6 +88,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
 
     protected int mDialogProgressNormalColor = -11;
     private OnBottomContainerVisibleListener onBottomContainerVisibleListener;
+    private TextView tvDefinition;
 
     /**
      * 1.5.0开始加入，如果需要不同布局区分功能，需要重载
@@ -111,6 +124,9 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
             mProgressBar.setThumb(mBottomShowProgressThumbDrawable);
         }
 
+        //清晰度
+        tvDefinition = (TextView) findViewById(com.yzx.xiaomusic.R.id.tv_definition);
+
     }
 
     /**
@@ -129,7 +145,6 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
     @Override
     public void startPlayLogic() {
         if (mVideoAllCallBack != null) {
-            Debuger.printfLog("onClickStartThumb");
             mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, StandardVideoPlayer.this);
         }
         prepareVideo();
@@ -345,6 +360,10 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         if (st.mCurrentTimeTextView != null && sf.mCurrentTimeTextView != null) {
             st.mCurrentTimeTextView.setText(sf.mCurrentTimeTextView.getText());
         }
+
+        if (sf.tvDefinition != null && st.tvDefinition != null) {
+            st.tvDefinition.setText(sf.tvDefinition.getText());
+        }
     }
 
     /**
@@ -420,6 +439,16 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
                 }
             }
         }
+
+
+        //底部控制器显示监听
+        if (onBottomContainerVisibleListener != null && mBottomContainer != null) {
+            if (mBottomContainer.getVisibility() == VISIBLE) {
+                onBottomContainerVisibleListener.onVisible(true);
+            } else {
+                onBottomContainerVisibleListener.onVisible(false);
+            }
+        }
     }
 
     @Override
@@ -428,6 +457,16 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         setViewShowState(mTopContainer, INVISIBLE);
         setViewShowState(mBottomProgressBar, VISIBLE);
         setViewShowState(mStartButton, INVISIBLE);
+
+        Log.i(TAG, "hideAllWidget: ");
+        //底部控制器显示监听
+        if (onBottomContainerVisibleListener != null && mBottomContainer != null) {
+            if (mBottomContainer.getVisibility() == VISIBLE) {
+                onBottomContainerVisibleListener.onVisible(true);
+            } else {
+                onBottomContainerVisibleListener.onVisible(false);
+            }
+        }
     }
 
 
@@ -440,7 +479,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         setViewShowState(mStartButton, VISIBLE);
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         setViewShowState(mThumbImageViewLayout, VISIBLE);
-        setViewShowState(mBottomProgressBar, INVISIBLE);
+//        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
         updateStartImage();
@@ -458,7 +497,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         setViewShowState(mStartButton, INVISIBLE);
         setViewShowState(mLoadingProgressBar, VISIBLE);
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
-        setViewShowState(mBottomProgressBar, INVISIBLE);
+//        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
 
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -478,7 +517,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         setViewShowState(mStartButton, VISIBLE);
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
-        setViewShowState(mBottomProgressBar, INVISIBLE);
+//        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -496,7 +535,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         setViewShowState(mStartButton, VISIBLE);
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
-        setViewShowState(mBottomProgressBar, INVISIBLE);
+//        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -515,7 +554,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         setViewShowState(mStartButton, INVISIBLE);
         setViewShowState(mLoadingProgressBar, VISIBLE);
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
-        setViewShowState(mBottomProgressBar, INVISIBLE);
+//        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
 
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -535,7 +574,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         setViewShowState(mStartButton, VISIBLE);
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         setViewShowState(mThumbImageViewLayout, VISIBLE);
-        setViewShowState(mBottomProgressBar, INVISIBLE);
+//        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -553,7 +592,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         setViewShowState(mStartButton, VISIBLE);
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
-        setViewShowState(mBottomProgressBar, INVISIBLE);
+//        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -652,7 +691,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         setViewShowState(mStartButton, INVISIBLE);
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
-        setViewShowState(mBottomProgressBar, INVISIBLE);
+//        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
 
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -701,7 +740,7 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
         setViewShowState(mStartButton, INVISIBLE);
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
-        setViewShowState(mBottomProgressBar, INVISIBLE);
+//        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
 
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -748,15 +787,6 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
                 imageView.setImageResource(com.yzx.xiaomusic.R.drawable.a02);
             } else {
                 imageView.setImageResource(com.yzx.xiaomusic.R.drawable.a02);
-            }
-        }
-
-        //底部控制器显示监听
-        if (onBottomContainerVisibleListener != null && mBottomContainer != null) {
-            if (mBottomContainer.getVisibility() == VISIBLE) {
-                onBottomContainerVisibleListener.onVisible(true);
-            } else {
-                onBottomContainerVisibleListener.onVisible(false);
             }
         }
     }
@@ -878,6 +908,10 @@ public class StandardVideoPlayer extends GSYVideoPlayer {
 
     public interface OnBottomContainerVisibleListener {
         void onVisible(boolean visible);
+    }
+
+    public void setDefinition(String definition) {
+        tvDefinition.setText(definition);
     }
 
 }

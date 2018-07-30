@@ -17,10 +17,6 @@ public class YVideoPlayer extends StandardGSYVideoPlayer {
 
     public static final String TAG = "yglYVideoPlayer";
 
-    public static final String DEFINITION_1080P = "1080P";
-    public static final String DEFINITION_720P = "超请";
-    public static final String DEFINITION_480P = "高清";
-    public static final String DEFINITION_240P = "清晰";
     //视频清晰度
     private TextView tvDefinition;
     //    private AppCompatSeekBar seekBar;

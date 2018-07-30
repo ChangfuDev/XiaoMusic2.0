@@ -3,7 +3,6 @@ package com.yzx.xiaomusic.ui.mv;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.kingja.loadsir.core.LoadService;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -11,23 +10,23 @@ import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.model.entity.mv.MvInfo;
-import com.yzx.xiaomusic.widget.video.GSYBaseActivityDetail;
+import com.yzx.xiaomusic.widget.video.BaseVideoActivity;
 import com.yzx.xiaomusic.widget.video.StandardVideoPlayer;
 
 import butterknife.BindView;
 
 import static com.yzx.xiaomusic.Constant.KEY_ID;
-import static com.yzx.xiaomusic.widget.video.YVideoPlayer.DEFINITION_1080P;
-import static com.yzx.xiaomusic.widget.video.YVideoPlayer.DEFINITION_240P;
-import static com.yzx.xiaomusic.widget.video.YVideoPlayer.DEFINITION_480P;
-import static com.yzx.xiaomusic.widget.video.YVideoPlayer.DEFINITION_720P;
+import static com.yzx.xiaomusic.widget.video.StandardVideoPlayer.DEFINITION_1080P;
+import static com.yzx.xiaomusic.widget.video.StandardVideoPlayer.DEFINITION_240P;
+import static com.yzx.xiaomusic.widget.video.StandardVideoPlayer.DEFINITION_480P;
+import static com.yzx.xiaomusic.widget.video.StandardVideoPlayer.DEFINITION_720P;
 
 /**
  * @author yzx
  * @date 2018/7/23
  * Description
  */
-public class MvDetailsActivity extends GSYBaseActivityDetail<StandardVideoPlayer, MvDetailsPresenter> {
+public class MvDetailsActivity extends BaseVideoActivity<StandardVideoPlayer, MvDetailsPresenter> {
 
     @BindView(R.id.yPlayer)
     StandardVideoPlayer yPlayer;
@@ -51,15 +50,11 @@ public class MvDetailsActivity extends GSYBaseActivityDetail<StandardVideoPlayer
         Intent intent = getIntent();
         mvId = intent.getStringExtra(KEY_ID);
 
-//        orientationUtils = new OrientationUtils(this, yPlayer);
-
         yPlayer.getCurrentPlayer().setEnlargeImageRes(R.drawable.aah);
         yPlayer.getCurrentPlayer().setShrinkImageRes(R.drawable.aaj);
         //控制
         yPlayer.setOnBottomContainerVisibleListener(enable -> {
-            Log.i(TAG, "initView: " + enable);
-//            showToast(enable + "");
-            full(enable);
+            full(!enable);
         });
         initVideoBuilderMode();
         mPresenter.getMv(mvId);
@@ -85,16 +80,19 @@ public class MvDetailsActivity extends GSYBaseActivityDetail<StandardVideoPlayer
             return;
         }
         //设置清晰度
-//        yPlayer.setDefinition(getDefinitionByBrs(data.getBrs()));
-        getGSYVideoOptionBuilder().setVideoTitle(data.getBriefDesc())
+        yPlayer.setDefinition(getDefinitionByBrs(data.getBrs()));
+        getGSYVideoOptionBuilder().setVideoTitle(data.getName())
                 .setUrl(mostClearUrl)
                 .build(getGSYVideoPlayer());
-//        Log.i(TAG, "setData: " + mostClearUrl);
-//        //增加title
-//        yPlayer.setUp(mostClearUrl, true, data.getName());
         yPlayer.startPlayLogic();
     }
 
+    /**
+     * 根据码率获取清晰度描述
+     *
+     * @param brs
+     * @return
+     */
     private String getDefinitionByBrs(MvInfo.DataBean.BrsBean brs) {
         String p1080 = brs.get_$1080();
         if (!TextUtils.isEmpty(p1080)) {
@@ -118,6 +116,12 @@ public class MvDetailsActivity extends GSYBaseActivityDetail<StandardVideoPlayer
         return null;
     }
 
+    /**
+     * 获取已有的最高清晰度
+     *
+     * @param brs
+     * @return
+     */
     private String getMostClearUrl(MvInfo.DataBean.BrsBean brs) {
         String p1080 = brs.get_$1080();
         if (!TextUtils.isEmpty(p1080)) {

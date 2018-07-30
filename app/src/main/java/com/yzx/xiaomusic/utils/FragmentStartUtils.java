@@ -2,7 +2,6 @@ package com.yzx.xiaomusic.utils;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import me.yokeyword.fragmentation.ISupportFragment;
 import me.yokeyword.fragmentation.SupportFragment;
@@ -48,8 +47,8 @@ public class FragmentStartUtils {
             } else {
                 parentFragment.start(targetFragment);
             }
-            Log.i(TAG, "startFragment: " + parentFragment.getClass().getSimpleName());
-            Log.i(TAG, "startFragment: " + parentFragment.getClass());
+//            Log.i(TAG, "startFragment: " + parentFragment.getClass().getSimpleName());
+//            Log.i(TAG, "startFragment: " + parentFragment.getClass());
         }
     }
 
