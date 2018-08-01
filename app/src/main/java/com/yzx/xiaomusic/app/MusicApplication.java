@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.bumptech.glide.Glide;
 import com.kingja.loadsir.core.LoadSir;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -37,25 +38,12 @@ import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SERVICE_
  */
 public class MusicApplication extends CommonBaseApplication {
 
+    private static final String TAG = "yglMusicApplication";
+
     {
         PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
         PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad", "http://sns.whalecloud.com");
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
-    }
-
-    static {
-        //设置全局的Header构建器
-//        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
-//            //全局设置主题颜色
-//            layout.setPrimaryColorsId(R.color.colorPrimary, android.R.color.white);
-//            //.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
-//            return new MaterialHeader(context);
-//        });
-//        //设置全局的Footer构建器
-//        SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> {
-//            //指定为经典Footer，默认是 BallPulseFooter
-//            return new MusicFooter(context);
-//        });
     }
 
     private RefWatcher refWatcher;
@@ -74,7 +62,7 @@ public class MusicApplication extends CommonBaseApplication {
     public void onCreate() {
         super.onCreate();
         // 初始化参数依次为 this, AppId, AppKey
-        AVOSCloud.initialize(this,"CghDjwlOTN96qvIL1XFcamD3-gzGzoHsz","sIqdXCfJFgilIp0bor4g32K9");
+        AVOSCloud.initialize(this, "CghDjwlOTN96qvIL1XFcamD3-gzGzoHsz", "sIqdXCfJFgilIp0bor4g32K9");
         // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
         AVOSCloud.setDebugLogEnabled(true);
         //初始化友盟
@@ -128,5 +116,24 @@ public class MusicApplication extends CommonBaseApplication {
     @Override
     public String initBaseUrl() {
         return BASE_URL;
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        //内存不足时，清除
+        Glide.get(this).clearMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+
+        if (level == TRIM_MEMORY_UI_HIDDEN) {
+            Glide.get(this).clearMemory();
+        }
+        //Glide内存优化
+        Glide.get(this).trimMemory(level);
+        Log.i(TAG, "onTrimMemory: " + level);
     }
 }

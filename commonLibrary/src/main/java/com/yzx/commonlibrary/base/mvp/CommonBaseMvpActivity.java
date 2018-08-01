@@ -31,4 +31,5 @@ public abstract class CommonBaseMvpActivity<P extends CommonBasePresenter> exten
      */
     protected abstract P getPresenter();
 
+
 }

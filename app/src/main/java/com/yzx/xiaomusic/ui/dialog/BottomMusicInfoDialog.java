@@ -143,6 +143,7 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
                     Intent intent = new Intent(getContext(), MvDetailsActivity.class);
                     intent.putExtra(KEY_ID, musicInfo.getMvId());
                     getContext().startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.v_fragment_enter, R.anim.v_fragment_exit);
                 }
                 break;
             case 7:

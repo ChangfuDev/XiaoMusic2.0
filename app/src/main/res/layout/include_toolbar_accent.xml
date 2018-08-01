@@ -5,7 +5,7 @@
     android:id="@+id/tb"
     android:background="@color/colorAccent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/toolbarHeight"
     android:paddingTop="25dp"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
     app:layout_collapseMode="pin"

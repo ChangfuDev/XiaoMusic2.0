@@ -146,6 +146,7 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
     @Override
     public void onResume() {
         super.onResume();
+
         //更新缓存进度
         if (musicInfo != null) {
             seekBar.setMax((int) musicInfo.getDuration());

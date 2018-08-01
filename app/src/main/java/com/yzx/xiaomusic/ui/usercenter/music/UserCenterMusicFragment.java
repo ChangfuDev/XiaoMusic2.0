@@ -15,6 +15,7 @@ import com.yzx.xiaomusic.model.entity.user.UserSongSheet;
 import com.yzx.xiaomusic.ui.adapter.SongSheetAdapter;
 import com.yzx.xiaomusic.ui.songsheet.detail.SongSheetDetailFragment;
 import com.yzx.xiaomusic.ui.usercenter.UserCenterFragment;
+import com.yzx.xiaomusic.widget.MusicFooter;
 
 import butterknife.BindView;
 import io.reactivex.Observable;
@@ -34,6 +35,7 @@ public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPres
     SmartRefreshLayout smartRefreshLayout;
     private String userId;
     private SongSheetAdapter adapter;
+    private int index;
 
     @Override
     protected UserCenterMusicPresenter getPresenter() {
@@ -58,12 +60,14 @@ public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPres
         adapter = new SongSheetAdapter();
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
+        smartRefreshLayout.setRefreshFooter(new MusicFooter(getContext()));
+        smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> mPresenter.getUserInfo(index, "10", userId));
     }
 
     @Override
     protected void lazyLoadData() {
         super.lazyLoadData();
-        mPresenter.getUserInfo("0", "10", userId);
+        mPresenter.getUserInfo(index, "10", userId);
     }
 
 
@@ -73,7 +77,9 @@ public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPres
         if (userSongSheet.getPlaylist() != null && userSongSheet.getPlaylist().size() > 0) {
 
             UserCenterFragment userCenterFragment = (UserCenterFragment) getParentFragment();
-            userCenterFragment.upData(userSongSheet.getPlaylist().get(0).getCreator());
+            if (index == 0) {
+                userCenterFragment.upData(userSongSheet.getPlaylist().get(0).getCreator());
+            }
             Observable
                     .fromIterable(userSongSheet.getPlaylist())
                     .map(playlistBean -> {
@@ -95,7 +101,9 @@ public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPres
                         return songSheet;
                     })
                     .toList()
-                    .subscribe(songSheets -> adapter.setData(songSheets));
+                    .subscribe(songSheets -> adapter.addData(songSheets));
+
+            index += 10;
         }
     }
 

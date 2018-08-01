@@ -338,7 +338,11 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
             case R.id.rl_user_info:
                 arguments.clear();
                 if (result == null) {
-                    showToast("缺少用户信息");
+                    if (TextUtils.equals("-1", songSheetId)) {
+                        arguments.putString(KEY_USER_ID, "480602967");
+                        easyStart(new UserCenterFragment(), arguments);
+                    }
+//                    showToast("缺少用户信息");
                 } else {
                     arguments.putString(KEY_USER_ID, String.valueOf(result.getCreator().getUserId()));
                     easyStart(new UserCenterFragment(), arguments);
