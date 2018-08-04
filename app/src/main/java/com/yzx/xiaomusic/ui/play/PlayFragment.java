@@ -104,6 +104,9 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
         service = ServiceManager.getInstance().getService();
+        if (service == null) {
+            return;
+        }
         musicInfo = service.getMusicInfo();
     }
 

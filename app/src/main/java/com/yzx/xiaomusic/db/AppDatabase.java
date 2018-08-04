@@ -23,6 +23,18 @@ public abstract class AppDatabase extends RoomDatabase {
         if (appDataBase == null) {
             appDataBase = Room.databaseBuilder(MusicApplication.getContext(), AppDatabase.class, "xiaoMusic")
                     .allowMainThreadQueries()
+                    //处理数据库版本更新相关.参数是版本号
+//                    .addMigrations(new Migration(1, 2) {
+//                        @Override
+//                        public void migrate(@NonNull SupportSQLiteDatabase database) {
+//
+//                        }
+//                    }, new Migration(2, 3) {
+//                        @Override
+//                        public void migrate(@NonNull SupportSQLiteDatabase database) {
+//
+//                        }
+//                    })
                     .build();
         }
         return appDataBase;

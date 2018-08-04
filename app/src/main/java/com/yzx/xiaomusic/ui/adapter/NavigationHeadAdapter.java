@@ -2,10 +2,7 @@ package com.yzx.xiaomusic.ui.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,13 +13,9 @@ import com.avos.avoscloud.AVUser;
 import com.othershe.library.NiceImageView;
 import com.yzx.commonlibrary.utils.ResourceUtils;
 import com.yzx.xiaomusic.R;
-import com.yzx.xiaomusic.ui.login.LoginFragment;
 import com.yzx.xiaomusic.ui.main.MainFragment;
-import com.yzx.xiaomusic.utils.FragmentStartUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.widget.ShapeTextView;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,8 +30,8 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
     public static final int TYPE_DEFAULT = 2;
 
 
-    private ArrayList<Integer> navigationMenuIcons;
-    private ArrayList<Integer> navigationMenuTitles;
+    private int[] navigationMenuIcons;
+    private String[] navigationMenuTitles;
     private MainFragment parentFragment;
 
     @Override
@@ -63,8 +56,8 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
-        if (position == 0) {
 
+        if (position == 0) {
             HeadHolder headHolder = (HeadHolder) holder;
             AVUser currentUser = AVUser.getCurrentUser();
             GlideUtils.loadImg(context, R.drawable.ic_background, headHolder.ivNavigationHeadBackground);
@@ -72,22 +65,7 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
             if (currentUser == null) {
                 headHolder.llUnLogin.setVisibility(View.VISIBLE);
                 headHolder.llLogin.setVisibility(View.GONE);
-                headHolder.stvGoLogin.setOnClickListener(v -> {
-                    final boolean[] hadStart = {false};
-                    parentFragment.drawerLayout.closeDrawer(Gravity.START);
-                    parentFragment.drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-                        @Override
-                        public void onDrawerClosed(View drawerView) {
-                            super.onDrawerClosed(drawerView);
-                            Log.i("ygl", "onDrawerClosed: ");
-
-                            if (!hadStart[0]) {
-                                FragmentStartUtils.startFragment(parentFragment, new LoginFragment());
-                                hadStart[0] = true;
-                            }
-                        }
-                    });
-                });
+                headHolder.stvGoLogin.setOnClickListener(v -> parentFragment.closeNavigationAndSetTag(0));
             } else {
                 //登陆
                 headHolder.llUnLogin.setVisibility(View.GONE);
@@ -96,21 +74,22 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
                 headHolder.tvName.setText(currentUser.getUsername());
                 headHolder.stvAccountGrade.setText(String.format("Lv %s", 8));
                 headHolder.stvSignIn.setText(R.string.signIn);
+                headHolder.stvSignIn.setOnClickListener(v -> parentFragment.closeNavigationAndSetTag(2));
             }
         } else {
             MenuHolder menuHolder = (MenuHolder) holder;
-            menuHolder.tvNavigationMenuTitle.setText(navigationMenuTitles.get(position - 1));
-            menuHolder.ivNavigationMenuIcon.setImageResource(navigationMenuIcons.get(position - 1));
+            menuHolder.tvNavigationMenuTitle.setText(navigationMenuTitles[position - 1]);
+            menuHolder.ivNavigationMenuIcon.setImageResource(navigationMenuIcons[position - 1]);
         }
     }
 
 
     @Override
     public int getItemCount() {
-        return navigationMenuTitles.size() + 1;
+        return navigationMenuTitles.length + 1;
     }
 
-    public void setData(MainFragment parentFragment, ArrayList<Integer> navigationMenuIcons, ArrayList<Integer> navigationMenuTitles) {
+    public void setData(MainFragment parentFragment, String[] navigationMenuTitles, int[] navigationMenuIcons) {
         this.parentFragment = parentFragment;
         this.navigationMenuIcons = navigationMenuIcons;
         this.navigationMenuTitles = navigationMenuTitles;

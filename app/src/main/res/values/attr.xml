@@ -45,4 +45,18 @@
         <attr name="rightIcon" format="reference" />
         <attr name="rightIconTint" format="color|reference" />
     </declare-styleable>
+
+
+    <!--签到-->
+    <declare-styleable name="SignInView">
+        <attr name="siv_signedTextSize" format="dimension|reference" />
+        <attr name="siv_signedTextColor" format="color|reference" />
+        <attr name="siv_unSignTextSize" format="dimension|reference" />
+        <attr name="siv_unSignTextColor" format="color|reference" />
+        <attr name="siv_unSignIconColor" format="color|reference" />
+        <attr name="siv_signedIconColor" format="color|reference" />
+        <attr name="siv_lineColor" format="color|reference" />
+        <attr name="siv_lineHeight" format="dimension|reference" />
+        <attr name="siv_space" format="dimension|reference" />
+    </declare-styleable>
 </resources>

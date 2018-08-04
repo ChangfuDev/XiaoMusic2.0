@@ -28,12 +28,15 @@ import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.NavigationHeadAdapter;
+import com.yzx.xiaomusic.ui.login.LoginFragment;
 import com.yzx.xiaomusic.ui.main.discover.DiscoverFragment;
 import com.yzx.xiaomusic.ui.main.music.MusicFragment;
+import com.yzx.xiaomusic.ui.main.navigation.SignInFragment;
 import com.yzx.xiaomusic.ui.main.video.VideoFragment;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
 import com.yzx.xiaomusic.ui.setting.SettingFragment;
 import com.yzx.xiaomusic.utils.EventBusUtils;
+import com.yzx.xiaomusic.utils.FragmentStartUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.widget.CircleProgress;
@@ -46,7 +49,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Unbinder;
+import me.yokeyword.fragmentation.SupportFragment;
 
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
@@ -90,12 +93,13 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
     LinearLayout llExit;
     @BindView(R.id.layout_bottom_music_controller)
     LinearLayout layoutBottomMusicController;
-    Unbinder unbinder;
-    private ArrayList<Integer> navigationMenuTitles;
-    private ArrayList<Integer> navigationMenuIcons;
+
     private ArrayList<Fragment> fragments;
     private MusicInfo musicInfo;
     private NavigationHeadAdapter adapter;
+    private MainFragment mainFragment;
+    private String[] titles;
+    private int[] icons;
 
     @Override
     protected int initContentViewId() {
@@ -106,45 +110,14 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
 
+        mainFragment = this;
         //menu文案
-        navigationMenuTitles = new ArrayList<>();
-        navigationMenuTitles.add(R.string.myMessage);
-        navigationMenuTitles.add(R.string.vip);
-        navigationMenuTitles.add(R.string.shoppingMall);
-        navigationMenuTitles.add(R.string.gameRecommend);
-        navigationMenuTitles.add(R.string.listenOnLine);
-
-        navigationMenuTitles.add(R.string.myFriend);
-        navigationMenuTitles.add(R.string.nearbyPerson);
-
-        navigationMenuTitles.add(R.string.personalSkin);
-        navigationMenuTitles.add(R.string.findSongByListen);
-        navigationMenuTitles.add(R.string.stopPlayTimely);
-        navigationMenuTitles.add(R.string.scan);
-        navigationMenuTitles.add(R.string.musicAlarm);
-        navigationMenuTitles.add(R.string.driveMode);
-        navigationMenuTitles.add(R.string.musicCloudDisk);
-        navigationMenuTitles.add(R.string.coupon);
-
-        //menuIcon
-        navigationMenuIcons = new ArrayList<>();
-        navigationMenuIcons.add(R.drawable.ak4);
-        navigationMenuIcons.add(R.drawable.akc);
-        navigationMenuIcons.add(R.drawable.ak_);
-        navigationMenuIcons.add(R.drawable.ak1);
-        navigationMenuIcons.add(R.drawable.ajz);
-
-        navigationMenuIcons.add(R.drawable.ak0);
-        navigationMenuIcons.add(R.drawable.ak6);
-
-        navigationMenuIcons.add(R.drawable.ak9);
-        navigationMenuIcons.add(R.drawable.ak2);
-        navigationMenuIcons.add(R.drawable.aka);
-        navigationMenuIcons.add(R.drawable.ak6);
-        navigationMenuIcons.add(R.drawable.akb);
-        navigationMenuIcons.add(R.drawable.aju);
-        navigationMenuIcons.add(R.drawable.ajv);
-        navigationMenuIcons.add(R.drawable.ajx);
+        titles = getResources().getStringArray(R.array.navigationListTitle);
+        //图标
+        icons = new int[]{R.drawable.ak4, R.drawable.akc, R.drawable.ak_, R.drawable.ak1, R.drawable.ajz,
+                R.drawable.ak0, R.drawable.ak6,
+                R.drawable.ak9, R.drawable.ak2, R.drawable.aka, R.drawable.ak6,
+                R.drawable.akb, R.drawable.aju, R.drawable.aju, R.drawable.ajx};
 
         fragments = new ArrayList<>();
         fragments.add(new MusicFragment());
@@ -173,6 +146,32 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
         tl.addTab(tl.newTab().setIcon(R.drawable.ic_music));
         tl.addTab(tl.newTab().setIcon(R.drawable.ic_discover));
         tl.addTab(tl.newTab().setIcon(R.drawable.ic_video));
+
+        //根据tag跳转至目标Fragment
+        drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+                SupportFragment toTargetFragment = null;
+                switch ((int) drawerLayout.getTag(R.id.drawerLayout)) {
+                    case 0:
+                        toTargetFragment = new LoginFragment();
+                        break;
+                    case 1:
+                        toTargetFragment = new SettingFragment();
+                        break;
+                    case 2:
+                        toTargetFragment = new SignInFragment();
+                        break;
+                }
+
+                if (toTargetFragment == null) {
+                    return;
+                }
+                FragmentStartUtils.startFragment(mainFragment, toTargetFragment);
+            }
+        });
 
         CommonBaseFragmentPagerAdapter pagerAdapter = new CommonBaseFragmentPagerAdapter(getChildFragmentManager());
         pagerAdapter.setFragments(fragments);
@@ -206,7 +205,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
             }
         });
         adapter = new NavigationHeadAdapter();
-        adapter.setData(this, navigationMenuIcons, navigationMenuTitles);
+        adapter.setData(this, titles, icons);
         recyclerView.setAdapter(adapter);
     }
 
@@ -280,24 +279,19 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
             case R.id.ll_night_mode:
                 break;
             case R.id.ll_setting:
-                drawerLayout.closeDrawer(Gravity.START);
-                final boolean[] hadStart = {false};
-                drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-                    @Override
-                    public void onDrawerClosed(View drawerView) {
-                        super.onDrawerClosed(drawerView);
-                        if (!hadStart[0]) {
-                            start(new SettingFragment());
-                            hadStart[0] = true;
-                        }
-                    }
-                });
+                closeNavigationAndSetTag(1);
                 break;
             case R.id.ll_exit:
                 MusicApplication.getContext().unbindService(ServiceManager.getInstance().getConn());
                 getActivity().finish();
                 break;
         }
+    }
+
+    public void closeNavigationAndSetTag(int tag) {
+        drawerLayout.closeDrawer(Gravity.START);
+        drawerLayout.setTag(R.id.drawerLayout, tag);
+
     }
 
 }

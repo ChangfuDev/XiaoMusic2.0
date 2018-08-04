@@ -65,6 +65,7 @@ public class BottomMusicInfoDialogAdapter extends CommonBaseAdapter<BottomMusicI
             case 6:
                 title = "查看视频";
                 holder.itemView.setClickable(!TextUtils.equals("0", musicInfo.getMvId()));
+                holder.itemView.setAlpha(TextUtils.equals("0", musicInfo.getMvId()) ? 0.5f : 1f);
                 break;
             case 7:
                 title = "相似推荐";

@@ -92,4 +92,28 @@
     <string name="register">注册</string>
     <string name="changeAccount">切换账号</string>
     <string name="gettingLyric">获取歌词中...</string>
+
+
+    <!--Navigation列表标题-->
+    <string-array name="navigationListTitle">
+        <item>我的消息</item>
+        <item>VIP会员</item>
+        <item>商城</item>
+        <item>游戏推荐</item>
+        <item>在线听歌免流量</item>
+
+        <item>我的好友</item>
+        <item>附近的人</item>
+
+        <item>个性换肤</item>
+        <item>听歌识曲</item>
+        <item>定时停止播放</item>
+        <item>扫一扫</item>
+        <item>音乐闹铃</item>
+        <item>驾驶模式</item>
+        <item>音乐云盘</item>
+        <item>优惠券</item>
+
+    </string-array>
+
 </resources>
