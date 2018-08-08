@@ -59,4 +59,27 @@
         <attr name="siv_lineHeight" format="dimension|reference" />
         <attr name="siv_space" format="dimension|reference" />
     </declare-styleable>
+
+
+    <!--听歌识曲-->
+    <declare-styleable name="ListeningToSongView">
+        <attr name="ltsv_wave_color" format="reference|color" />
+        <attr name="ltsv_inner_circle_radius" format="dimension" />
+        <attr name="ltsv_inner_drawable" format="reference" />
+    </declare-styleable>
+
+    <!--等级-->
+    <declare-styleable name="GradeView">
+        <attr name="gv_gradeBackLineColor" format="reference|color" />
+        <attr name="gv_gradeForeLineStartColor" format="reference|color" />
+        <attr name="gv_gradeForeLineStopColor" format="reference|color" />
+        <attr name="gv_gradeTextColor" format="reference|color" />
+        <attr name="gv_gradeTextSize" format="dimension" />
+        <attr name="gv_space" format="dimension" />
+        <attr name="gv_gradeDividerWidth" format="dimension" />
+        <attr name="gv_gradeDividerColor" format="reference|color" />
+        <attr name="gv_gradeLineHeight" format="dimension" />
+        <attr name="gv_count" format="integer" />
+        <attr name="gv_current" format="float" />
+    </declare-styleable>
 </resources>

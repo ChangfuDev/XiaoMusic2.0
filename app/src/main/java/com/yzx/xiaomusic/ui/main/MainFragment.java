@@ -31,6 +31,8 @@ import com.yzx.xiaomusic.ui.adapter.NavigationHeadAdapter;
 import com.yzx.xiaomusic.ui.login.LoginFragment;
 import com.yzx.xiaomusic.ui.main.discover.DiscoverFragment;
 import com.yzx.xiaomusic.ui.main.music.MusicFragment;
+import com.yzx.xiaomusic.ui.main.navigation.GradeFragment;
+import com.yzx.xiaomusic.ui.main.navigation.ListeningToSongFragment;
 import com.yzx.xiaomusic.ui.main.navigation.SignInFragment;
 import com.yzx.xiaomusic.ui.main.video.VideoFragment;
 import com.yzx.xiaomusic.ui.search.SearchFragment;
@@ -61,8 +63,27 @@ import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_USER_INF
 /**
  * @author yzx
  */
-public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClickListener {
+public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClickListener, NavigationHeadAdapter.OnItemClickListenner {
     private static final String TAG = "yglMainFragment";
+    public static final int NAV_MY_MESSAGE = 0;
+    public static final int NAV_VIP = 1;
+    public static final int NAV_SHOP = 2;
+    public static final int NAV_GAME = 3;
+    public static final int NAV_FREE_LISTEN = 4;
+    public static final int NAV_MY_FRIEND = 5;
+    public static final int NAV_NEARBY_PERSON = 6;
+    public static final int NAV_CHNAGE_SKIN = 7;
+    public static final int NAV_LISTENING_TO_SONG = 8;
+    public static final int NAV_STOP_TIMELY = 9;
+    public static final int NAV_SCAN = 10;
+    public static final int NAV_MUSIC_ALRAM = 11;
+    public static final int NAV_DRIVE_MODE = 12;
+    public static final int NAV_CLOUD = 13;
+    public static final int NAV_COUPON = 14;
+    public static final int NAV_LOGIN = 15;
+    public static final int NAV_SETTING = 16;
+    public static final int NAV_SIGN_IN = 17;
+    public static final int NAV_GRADE = 18;
     @BindView(R.id.tl)
     TabLayout tl;
     @BindView(R.id.tb)
@@ -117,7 +138,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
         icons = new int[]{R.drawable.ak4, R.drawable.akc, R.drawable.ak_, R.drawable.ak1, R.drawable.ajz,
                 R.drawable.ak0, R.drawable.ak6,
                 R.drawable.ak9, R.drawable.ak2, R.drawable.aka, R.drawable.ak6,
-                R.drawable.akb, R.drawable.aju, R.drawable.aju, R.drawable.ajx};
+                R.drawable.akb, R.drawable.aju, R.drawable.ajv, R.drawable.ajx};
 
         fragments = new ArrayList<>();
         fragments.add(new MusicFragment());
@@ -155,14 +176,20 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
 
                 SupportFragment toTargetFragment = null;
                 switch ((int) drawerLayout.getTag(R.id.drawerLayout)) {
-                    case 0:
+                    case NAV_LISTENING_TO_SONG:
+                        toTargetFragment = new ListeningToSongFragment();
+                        break;
+                    case NAV_LOGIN:
                         toTargetFragment = new LoginFragment();
                         break;
-                    case 1:
+                    case NAV_SETTING:
                         toTargetFragment = new SettingFragment();
                         break;
-                    case 2:
+                    case NAV_SIGN_IN:
                         toTargetFragment = new SignInFragment();
+                        break;
+                    case NAV_GRADE:
+                        toTargetFragment = new GradeFragment();
                         break;
                 }
 
@@ -199,7 +226,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                if (recyclerView.getChildLayoutPosition(view) == 4 || recyclerView.getChildLayoutPosition(view) == 6) {
+                if (recyclerView.getChildLayoutPosition(view) == 5 || recyclerView.getChildLayoutPosition(view) == 7) {
                     outRect.bottom = DensityUtils.dip2px(getContext(), 5);
                 }
             }
@@ -207,6 +234,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
         adapter = new NavigationHeadAdapter();
         adapter.setData(this, titles, icons);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -279,7 +307,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
             case R.id.ll_night_mode:
                 break;
             case R.id.ll_setting:
-                closeNavigationAndSetTag(1);
+                closeNavigationAndSetTag(NAV_SETTING);
                 break;
             case R.id.ll_exit:
                 MusicApplication.getContext().unbindService(ServiceManager.getInstance().getConn());
@@ -288,10 +316,19 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
         }
     }
 
+    /**
+     * 关闭DrawerLayout
+     *
+     * @param tag
+     */
     public void closeNavigationAndSetTag(int tag) {
         drawerLayout.closeDrawer(Gravity.START);
         drawerLayout.setTag(R.id.drawerLayout, tag);
 
     }
 
+    @Override
+    public void onItemClick(View itemView, int position) {
+        closeNavigationAndSetTag(position);
+    }
 }

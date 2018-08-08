@@ -3,6 +3,7 @@ package com.yzx.xiaomusic.ui.setting;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVUser;
@@ -38,6 +39,10 @@ public class SettingFragment extends BaseFragment {
 
         tvTitle.setText(R.string.setting);
         initToolBar(tb);
+
+        if (AVUser.getCurrentUser() != null) {
+            tvLoginOut.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.tv_login_out)

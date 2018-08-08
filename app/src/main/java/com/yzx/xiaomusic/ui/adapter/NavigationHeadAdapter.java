@@ -20,6 +20,10 @@ import com.yzx.xiaomusic.widget.ShapeTextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.yzx.xiaomusic.ui.main.MainFragment.NAV_GRADE;
+import static com.yzx.xiaomusic.ui.main.MainFragment.NAV_LOGIN;
+import static com.yzx.xiaomusic.ui.main.MainFragment.NAV_SIGN_IN;
+
 /**
  * Created by yzx on 2018/5/31.
  * Description
@@ -33,6 +37,7 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
     private int[] navigationMenuIcons;
     private String[] navigationMenuTitles;
     private MainFragment parentFragment;
+    private OnItemClickListenner onItemClickListener;
 
     @Override
     public int getItemViewType(int position) {
@@ -65,7 +70,7 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
             if (currentUser == null) {
                 headHolder.llUnLogin.setVisibility(View.VISIBLE);
                 headHolder.llLogin.setVisibility(View.GONE);
-                headHolder.stvGoLogin.setOnClickListener(v -> parentFragment.closeNavigationAndSetTag(0));
+                headHolder.stvGoLogin.setOnClickListener(v -> parentFragment.closeNavigationAndSetTag(NAV_LOGIN));
             } else {
                 //登陆
                 headHolder.llUnLogin.setVisibility(View.GONE);
@@ -74,12 +79,18 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
                 headHolder.tvName.setText(currentUser.getUsername());
                 headHolder.stvAccountGrade.setText(String.format("Lv %s", 8));
                 headHolder.stvSignIn.setText(R.string.signIn);
-                headHolder.stvSignIn.setOnClickListener(v -> parentFragment.closeNavigationAndSetTag(2));
+                headHolder.stvSignIn.setOnClickListener(v -> parentFragment.closeNavigationAndSetTag(NAV_SIGN_IN));
+                headHolder.stvAccountGrade.setOnClickListener(v -> parentFragment.closeNavigationAndSetTag(NAV_GRADE));
             }
         } else {
             MenuHolder menuHolder = (MenuHolder) holder;
             menuHolder.tvNavigationMenuTitle.setText(navigationMenuTitles[position - 1]);
             menuHolder.ivNavigationMenuIcon.setImageResource(navigationMenuIcons[position - 1]);
+            holder.itemView.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(holder.itemView, position - 1);
+                }
+            });
         }
     }
 
@@ -93,6 +104,10 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
         this.parentFragment = parentFragment;
         this.navigationMenuIcons = navigationMenuIcons;
         this.navigationMenuTitles = navigationMenuTitles;
+    }
+
+    public void setOnItemClickListener(OnItemClickListenner onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     class HeadHolder extends RecyclerView.ViewHolder {
@@ -129,5 +144,9 @@ public class NavigationHeadAdapter extends RecyclerView.Adapter {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface OnItemClickListenner {
+        void onItemClick(View itemView, int position);
     }
 }

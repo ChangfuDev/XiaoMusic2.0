@@ -92,6 +92,9 @@
     <string name="register">注册</string>
     <string name="changeAccount">切换账号</string>
     <string name="gettingLyric">获取歌词中...</string>
+    <string name="listeningToSong">听歌识曲</string>
+    <string name="myGrade">我的等级</string>
+    <string name="currentGrade">当前等级：</string>
 
 
     <!--Navigation列表标题-->
