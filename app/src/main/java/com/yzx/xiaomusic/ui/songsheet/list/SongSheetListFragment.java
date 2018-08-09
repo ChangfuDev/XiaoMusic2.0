@@ -132,9 +132,13 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
 
     public void setData(List<SongSheetList.PlaylistsBean> list) {
         offset += ApiConstant.LIMIT;
-        adapter.addData(list);
+        adapter.setData(list);
     }
 
+    public void addData(List<SongSheetList.PlaylistsBean> playlists) {
+        offset += ApiConstant.LIMIT;
+        adapter.addData(playlists);
+    }
     @Override
     public void onLoadMore(RefreshLayout refreshLayout) {
         mPresenter.getSongSheet(offset);
@@ -184,4 +188,6 @@ public class SongSheetListFragment extends BaseMvpFragment<SongSheetListPresente
                 break;
         }
     }
+
+
 }

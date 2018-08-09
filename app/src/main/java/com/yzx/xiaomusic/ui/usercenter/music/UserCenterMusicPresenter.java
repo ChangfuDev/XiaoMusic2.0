@@ -7,8 +7,6 @@ import com.yzx.xiaomusic.model.entity.user.UserSongSheet;
 import com.yzx.xiaomusic.widget.loadsir.ErrorCallback;
 import com.yzx.xiaomusic.widget.loadsir.LoadingCallback;
 
-import java.util.List;
-
 public class UserCenterMusicPresenter extends CommonBasePresenter<UserCenterMusicFragment, UserCenterMusicModel> {
 
 
@@ -28,11 +26,11 @@ public class UserCenterMusicPresenter extends CommonBasePresenter<UserCenterMusi
                 if (offset == 0) {
                     mView.loadService.showSuccess();
                 } else {
-                    mView.smartRefreshLayout.finishLoadMore();
-                }
-                List<UserSongSheet.PlaylistBean> playlist = userSongSheet.getPlaylist();
-                if (playlist != null && playlist.size() < 10) {
-                    mView.smartRefreshLayout.finishLoadMoreWithNoMoreData();
+                    if (userSongSheet.isMore()){
+                        mView.smartRefreshLayout.finishLoadMore(0);
+                    }else {
+                        mView.smartRefreshLayout.finishLoadMoreWithNoMoreData();
+                    }
                 }
                 mView.setData(userSongSheet);
             }

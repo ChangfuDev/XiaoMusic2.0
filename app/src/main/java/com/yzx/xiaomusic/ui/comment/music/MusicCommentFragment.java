@@ -95,7 +95,7 @@ public class MusicCommentFragment extends BaseMvpFragment<MusicCommentPresenter>
 
     public void setData(MusicComment musicComment) {
         adapter.setData(musicComment);
-        adapter.notifyDataSetChanged();
+//        adapter.notifyDataSetChanged();
         offset += 10;
     }
 

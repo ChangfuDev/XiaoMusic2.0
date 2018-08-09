@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:stateListAnimator="@drawable/state_list_animator_scale"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:stateListAnimator="@drawable/state_list_animator_scale">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content">
         <!--歌单背景-->
         <com.yzx.xiaomusic.widget.SquareImageView
             android:id="@+id/iv_cover"
@@ -26,7 +25,7 @@
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="2"
+        android:maxLines="1"
         android:paddingBottom="2dp"
         android:paddingStart="5dp"
         android:paddingTop="5dp"
@@ -39,7 +38,7 @@
         android:id="@+id/tv_subTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="2"
+        android:maxLines="1"
         android:paddingBottom="5dp"
         android:paddingStart="5dp"
         android:textColor="@color/colorSubTitle"

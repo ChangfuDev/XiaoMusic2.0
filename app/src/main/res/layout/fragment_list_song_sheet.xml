@@ -135,7 +135,8 @@
                 android:layout_height="match_parent"
                 android:background="@color/colorWhite"
                 android:paddingEnd="5dp"
-                android:paddingStart="5dp" />
+                android:paddingStart="5dp"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 

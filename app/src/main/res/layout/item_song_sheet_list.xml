@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:stateListAnimator="@drawable/state_list_animator_scale"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:stateListAnimator="@drawable/state_list_animator_scale">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content">
         <!--歌单背景-->
         <com.yzx.xiaomusic.widget.SquareImageView
             android:id="@+id/iv_cover"
@@ -19,7 +18,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_default_song_sheet"/>
+            android:src="@drawable/ic_default_song_sheet" />
         <!--歌单听量-->
         <TextView
             android:id="@+id/tv_play_count"
@@ -45,6 +44,7 @@
         android:id="@+id/tv_songSheetDes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="top"
         android:maxLines="2"
         android:padding="5dp"
         android:textColor="@color/colorTitle"

@@ -5,7 +5,9 @@ import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;
 import com.yzx.xiaomusic.model.entity.songsheet.SongSheetList;
 
 /**
- * Created by yzx on 2018/6/23.
+ *
+ * @author yzx
+ * @date 2018/6/23
  * Description
  */
 public class SongSheetListPresenter extends CommonBasePresenter<SongSheetListFragment, SongSheetListModel> {
@@ -23,14 +25,16 @@ public class SongSheetListPresenter extends CommonBasePresenter<SongSheetListFra
             protected void onSuccess(SongSheetList songSheetList) {
                 if (offset == 0) {
                     mView.showSuccessLayout();
+                    mView.setData(songSheetList.getPlaylists());
                 } else {
+
                     if (songSheetList.isMore()) {
-                        mView.smartRefreshLayout.finishLoadMore();
+                        mView.smartRefreshLayout.finishLoadMore(0);
                     } else {
                         mView.smartRefreshLayout.finishLoadMoreWithNoMoreData();
                     }
+                    mView.addData(songSheetList.getPlaylists());
                 }
-                mView.setData(songSheetList.getPlaylists());
             }
 
             @Override

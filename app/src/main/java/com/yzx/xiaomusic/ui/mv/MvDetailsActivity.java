@@ -1,10 +1,15 @@
 package com.yzx.xiaomusic.ui.mv;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
+import android.widget.TextView;
 
+import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadService;
+import com.kingja.loadsir.core.LoadSir;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
@@ -16,6 +21,7 @@ import com.yzx.xiaomusic.widget.video.StandardVideoPlayer;
 import butterknife.BindView;
 
 import static com.yzx.xiaomusic.Constant.KEY_ID;
+import static com.yzx.xiaomusic.utils.CommonUtils.getFriendlyCount;
 import static com.yzx.xiaomusic.widget.video.StandardVideoPlayer.DEFINITION_1080P;
 import static com.yzx.xiaomusic.widget.video.StandardVideoPlayer.DEFINITION_240P;
 import static com.yzx.xiaomusic.widget.video.StandardVideoPlayer.DEFINITION_480P;
@@ -30,9 +36,28 @@ public class MvDetailsActivity extends BaseVideoActivity<StandardVideoPlayer, Mv
 
     @BindView(R.id.yPlayer)
     StandardVideoPlayer yPlayer;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.tv_date)
+    TextView tvDate;
+    @BindView(R.id.tv_play_count)
+    TextView tvPlayCount;
+    @BindView(R.id.tv_des)
+    TextView tvDes;
+    @BindView(R.id.nestScrollView)
+    NestedScrollView nestScrollView;
+    @BindView(R.id.tv_like_num)
+    TextView tvLikeNum;
+    @BindView(R.id.tv_collect_num)
+    TextView tvCollectNum;
+    @BindView(R.id.tv_comment_num)
+    TextView tvCommentNum;
+    @BindView(R.id.tv_share_num)
+    TextView tvShareNum;
     private String mvId;
     OrientationUtils orientationUtils;
     public LoadService loadService;
+
 
     @Override
     protected MvDetailsPresenter getPresenter() {
@@ -47,17 +72,18 @@ public class MvDetailsActivity extends BaseVideoActivity<StandardVideoPlayer, Mv
     @Override
     protected void initView(Bundle savedInstanceState) {
 
+        loadService = LoadSir.getDefault().register(nestScrollView, (Callback.OnReloadListener) v -> mPresenter.getMv(mvId));
+
         Intent intent = getIntent();
         mvId = intent.getStringExtra(KEY_ID);
 
         yPlayer.getCurrentPlayer().setEnlargeImageRes(R.drawable.aah);
         yPlayer.getCurrentPlayer().setShrinkImageRes(R.drawable.aaj);
         //控制
-        yPlayer.setOnBottomContainerVisibleListener(enable -> {
-            full(!enable);
-        });
+        yPlayer.setOnBottomContainerVisibleListener(enable -> full(!enable));
         initVideoBuilderMode();
         mPresenter.getMv(mvId);
+
     }
 
 
@@ -72,6 +98,7 @@ public class MvDetailsActivity extends BaseVideoActivity<StandardVideoPlayer, Mv
                 .build(getGSYVideoPlayer());
     }
 
+    @SuppressLint("DefaultLocale")
     public void setData(MvInfo mvInfo) {
         MvInfo.DataBean data = mvInfo.getData();
 
@@ -85,6 +112,16 @@ public class MvDetailsActivity extends BaseVideoActivity<StandardVideoPlayer, Mv
                 .setUrl(mostClearUrl)
                 .build(getGSYVideoPlayer());
         yPlayer.startPlayLogic();
+
+        tvTitle.setText(data.getName());
+        tvDate.setText(String.format("发布：%s", data.getPublishTime()));
+        tvPlayCount.setText(String.format("播放：%s", getFriendlyCount(data.getPlayCount())));
+        tvDes.setText(data.getDesc());
+
+        tvLikeNum.setText(getFriendlyCount(data.getLikeCount()));
+        tvCollectNum.setText(getFriendlyCount(data.getSubCount()));
+        tvCommentNum.setText(getFriendlyCount(data.getCommentCount()));
+        tvShareNum.setText(getFriendlyCount(data.getShareCount()));
     }
 
     /**
