@@ -140,10 +140,14 @@ public class BottomMusicInfoDialog extends BaseListBottomDialog implements Commo
                 break;
             case 6:
                 if (!TextUtils.equals("0", musicInfo.getMvId())) {
+
                     Intent intent = new Intent(getContext(), MvDetailsActivity.class);
                     intent.putExtra(KEY_ID, musicInfo.getMvId());
-                    getContext().startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.v_fragment_enter, R.anim.v_fragment_exit);
+                    getActivity().startActivity(intent);
+                    parentFragment.getActivity().overridePendingTransition(R.anim.v_fragment_enter, R.anim.v_fragment_exit);
+//                    arguments.clear();
+//                    arguments.putString(KEY_ID, musicInfo.getMvId());
+//                    FragmentStartUtils.startFragment(parentFragment, new MvDetailFragment(), arguments);
                 }
                 break;
             case 7:

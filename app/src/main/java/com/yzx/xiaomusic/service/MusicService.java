@@ -102,32 +102,51 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     @Override
     public void onCreate() {
         super.onCreate();
+
+
+        setUpMediaPlayer();
+        //显示上次播放的歌曲信息
+        setUpLastPlayInfo();
+
+        //用来随机播放
+        random = new Random();
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            mMediaSessionManager = new MediaSessionManager(this);
+        }
+    }
+
+
+    /**
+     * 初始化mediaPlayer
+     */
+    private void setUpMediaPlayer() {
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnBufferingUpdateListener(this);
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnSeekCompleteListener(this);
         mediaPlayer.setOnErrorListener(this);
+
         //设置成播放音乐
         AudioAttributes attributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
         mediaPlayer.setAudioAttributes(attributes);
-        //用来随机播放
-        random = new Random();
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        //显示上次播放的歌曲信息
+    }
+
+    /**
+     * 初始化上次播放记录
+     */
+    private void setUpLastPlayInfo() {
         String stringSongSheet = SPUtils.getString(KEY_SONG_SHEET, null);
         if (!TextUtils.isEmpty(stringSongSheet)) {
             setSongSheet(JsonUtils.stringToList(stringSongSheet, MusicInfo.class));
             index = SPUtils.getInt(KEY_LAST_POSITION, 0);
             musicInfo = getSongSheet().get(index);
             EventBusUtils.postMusicChanged();
-        }
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            mMediaSessionManager = new MediaSessionManager(this);
         }
     }
 
@@ -315,7 +334,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
     public void start() {
         mediaPlayer.start();
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 21) {
             mMediaSessionManager.updatePlaybackState();
         }
         mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -324,7 +343,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
 
     public void pause() {
         mediaPlayer.pause();
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 21) {
             mMediaSessionManager.updatePlaybackState();
         }
         mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);

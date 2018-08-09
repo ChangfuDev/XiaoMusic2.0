@@ -174,8 +174,14 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
 
+                Object tag = drawerLayout.getTag(R.id.drawerLayout);
+
+                if (tag==null){
+                    return;
+                }
+
                 SupportFragment toTargetFragment = null;
-                switch ((int) drawerLayout.getTag(R.id.drawerLayout)) {
+                switch ((int)tag) {
                     case NAV_LISTENING_TO_SONG:
                         toTargetFragment = new ListeningToSongFragment();
                         break;

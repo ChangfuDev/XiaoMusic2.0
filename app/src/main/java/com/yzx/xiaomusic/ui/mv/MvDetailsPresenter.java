@@ -5,7 +5,9 @@ import com.yzx.commonlibrary.base.mvp.CommonMvpObserver;
 import com.yzx.xiaomusic.model.entity.mv.MvInfo;
 
 /**
- * Created by yzx on 2018/7/23.
+ *
+ * @author yzx
+ * @date 2018/7/23
  * Description
  */
 public class MvDetailsPresenter extends CommonBasePresenter<MvDetailsActivity, MvDetailsModel> {

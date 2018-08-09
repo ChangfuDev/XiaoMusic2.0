@@ -33,7 +33,8 @@ import static com.yzx.xiaomusic.Constant.KEY_BUGLY;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_SERVICE_CREATED;
 
 /**
- * Created by yzx on 2018/5/14.
+ * @author yzx
+ * @date 2018/5/14
  * Description
  */
 public class MusicApplication extends CommonBaseApplication {

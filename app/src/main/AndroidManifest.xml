@@ -51,8 +51,14 @@
         <activity
             android:name=".ui.mv.MvDetailsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent" />
+            android:screenOrientation="portrait" />
+
+        <!--<activity-->
+            <!--android:name=".ui.play.PlayActivity"-->
+            <!--android:launchMode="singleTask" />-->
+
+        <!--<activity android:name=".ui.singer.SingerDetailActivity" />-->
+
 
         <service android:name=".service.MusicService" />
         <!--小窗口控制音乐-->
@@ -68,8 +74,7 @@
             </intent-filter>
         </receiver>
 
-        <!--6.0之前耳机控制-->
-        <receiver android:name=".receiver.MediaKeyReceiverextends" />
+
     </application>
 
 </manifest>

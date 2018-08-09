@@ -69,6 +69,10 @@ public class MusicAdapter extends CommonBaseAdapter<MusicAdapter.Holder, MusicIn
                 intent.putExtra(KEY_ID, musicInfo.getMvId());
                 context.startActivity(intent);
                 parentFragment.getActivity().overridePendingTransition(R.anim.v_fragment_enter, R.anim.v_fragment_exit);
+
+//                Bundle args = new Bundle();
+//                args.putString(KEY_ID, musicInfo.getMvId());
+//                FragmentStartUtils.startFragment(parentFragment, new MvDetailFragment(), args);
             }
         });
         holder.ivMore.setOnClickListener(v -> {

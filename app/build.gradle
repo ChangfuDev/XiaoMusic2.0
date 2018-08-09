@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'androidx.navigation.safeargs'
+//apply plugin: 'androidx.navigation.safeargs'
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -14,9 +14,17 @@ android {
 //        manifestPlaceholders = [UMENG_CHANNEL: "你的qq appid"]
         flavorDimensions("channel")
 
+        /**
+         * armeabiv-v7a: 第7代及以上的 ARM 处理器。2011年15月以后的生产的大部分Android设备都使用它.
+            arm64-v8a: 第8代、64位ARM处理器，很少设备，三星 Galaxy S6是其中之一。
+            armeabi: 第5代、第6代的ARM处理器，早期的手机用的比较多。
+            x86: 平板、模拟器用得比较多。
+            x86_64: 64位的平板。
+         */
         ndk {
             // 设置支持的SO库架构
-            abiFilters 'armeabi','x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+//            abiFilters 'armeabi','x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
     }
     buildTypes {
@@ -38,7 +46,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     //为了解决部分第三方库重复打包了META-INF的问题
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
@@ -90,8 +98,8 @@ dependencies {
     //圆形头像
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.Othershe:NiceImageView:1.0.0'
-    implementation 'android.arch.navigation:navigation-fragment:1.0.0-alpha01'
-    implementation 'android.arch.navigation:navigation-ui:1.0.0-alpha01'
+//    implementation 'android.arch.navigation:navigation-fragment:1.0.0-alpha01'
+//    implementation 'android.arch.navigation:navigation-ui:1.0.0-alpha01'
 
     //FlowLayout
     implementation 'com.hyman:flowlayout-lib:1.1.2'
@@ -165,5 +173,7 @@ dependencies {
     implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
 
     //完整版引入
-    implementation 'com.shuyu:GSYVideoPlayer:5.0.1'
+    implementation 'com.shuyu:gsyVideoPlayer-java:5.0.2'
+    implementation 'com.shuyu:gsyVideoPlayer-armv7a:5.0.2'
+    implementation 'com.shuyu:gsyVideoPlayer-arm64:5.0.2'
 }

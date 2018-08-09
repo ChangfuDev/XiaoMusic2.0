@@ -5,7 +5,8 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 /**
- * Created by yzx on 2018/1/25.
+ * @author yzx
+ * @date 2018/1/25
  * Description
  */
 
@@ -30,14 +31,14 @@ public class MediaSessionManager {
 
     private void initMediaSession() {
         mediaSessionCompat = new MediaSessionCompat(playService, TAG);
-        mediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS| MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+        mediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
         mediaSessionCompat.setCallback(callback);
         mediaSessionCompat.setActive(true);
     }
 
 
     public void updatePlaybackState() {
-        int state = playService.isPlaying()? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
+        int state = playService.isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
         mediaSessionCompat.setPlaybackState(
                 new PlaybackStateCompat.Builder()
                         .setActions(MEDIA_SESSION_ACTIONS)
@@ -74,24 +75,12 @@ public class MediaSessionManager {
 
     private MediaSessionCompat.Callback callback = new MediaSessionCompat.Callback() {
         @Override
-        public void onPlay()  {
-//            Log.i(TAG, "onPlay: ");
-//            if (playService.isPlaying()){
-//                playService.pause();
-//            }else {
-//                playService.start();
-//            }
+        public void onPlay() {
             playService.playPause();
         }
 
         @Override
         public void onPause() {
-//            Log.i(TAG, "onPause: ");
-//            if (playService.isPlaying()){
-//                playService.pause();
-//            }else {
-//                playService.play();
-//            }
             playService.playPause();
         }
 
@@ -116,7 +105,7 @@ public class MediaSessionManager {
         @Override
         public void onSeekTo(long pos) {
 //            mPlayService.seekTo((int) pos);
-            Log.i(TAG, "onSeekTo: "+pos);
+            Log.i(TAG, "onSeekTo: " + pos);
 //            playService.setProgress((int) pos);
 //            playService.previous();
         }

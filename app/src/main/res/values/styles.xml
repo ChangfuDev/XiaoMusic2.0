@@ -45,8 +45,9 @@
     <!--解决启动时白屏-->
     <style name="AppTheme.Launch" parent="AppTheme.Transparent">
         <!--会和转场动画有冲突-->
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowContentOverlay">@color/colorTransparent</item>
+        <!--<item name="android:windowIsTranslucent">true</item>-->
+        <!--<item name="android:windowContentOverlay">@color/colorTransparent</item>-->
+        <item name="android:windowBackground">@drawable/ic_bg_window</item>
     </style>
 
     <style name="WaterEffect_gray">

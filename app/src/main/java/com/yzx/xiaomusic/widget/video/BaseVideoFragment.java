@@ -1,7 +1,7 @@
 package com.yzx.xiaomusic.widget.video;
 
 import android.content.res.Configuration;
-import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
 
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -9,14 +9,14 @@ import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
-import com.yzx.commonlibrary.base.mvp.CommonBaseMvpActivity;
 import com.yzx.commonlibrary.base.mvp.CommonBasePresenter;
+import com.yzx.xiaomusic.base.BaseMvpFragment;
 
 /**
- * 详情模式播放页面基础类
- * Created by guoshuyu on 2017/9/14.
+ * Created by yzx on 2018/8/9.
+ * Description
  */
-public abstract class BaseVideoActivity<T extends GSYBaseVideoPlayer, P extends CommonBasePresenter> extends CommonBaseMvpActivity<P> implements VideoAllCallBack {
+public abstract class BaseVideoFragment<T extends GSYBaseVideoPlayer, P extends CommonBasePresenter> extends BaseMvpFragment<P> implements VideoAllCallBack {
 
     protected boolean isPlay;
 
@@ -24,18 +24,18 @@ public abstract class BaseVideoActivity<T extends GSYBaseVideoPlayer, P extends 
 
     protected OrientationUtils orientationUtils;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//    }
 
     /**
      * 选择普通模式
      */
     public void initVideo() {
         //外部辅助的旋转，帮助全屏
-        orientationUtils = new OrientationUtils(this, getGSYVideoPlayer());
+        orientationUtils = new OrientationUtils(getActivity(), getGSYVideoPlayer());
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
         if (getGSYVideoPlayer().getFullscreenButton() != null) {
@@ -62,37 +62,50 @@ public abstract class BaseVideoActivity<T extends GSYBaseVideoPlayer, P extends 
             orientationUtils.resolveByClick();
         }
         //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-        getGSYVideoPlayer().startWindowFullscreen(BaseVideoActivity.this, hideActionBarWhenFull(), hideStatusBarWhenFull());
+        getGSYVideoPlayer().startWindowFullscreen(getContext(), hideActionBarWhenFull(), hideStatusBarWhenFull());
 
     }
 
+
+//    @Override
+//    public void onBackPressedSupport() {
+//        if (orientationUtils != null) {
+//            orientationUtils.backToProtVideo();
+//        }
+//        if (GSYVideoManager.backFromWindowFull(this)) {
+//            return;
+//        }
+//        super.onBackPressedSupport();
+//    }
+
+
     @Override
-    public void onBackPressedSupport() {
+    public boolean onBackPressedSupport() {
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
-        if (GSYVideoManager.backFromWindowFull(this)) {
-            return;
+        if (GSYVideoManager.backFromWindowFull(getContext())) {
+            return false;
         }
-        super.onBackPressedSupport();
+        return super.onBackPressedSupport();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         getGSYVideoPlayer().getCurrentPlayer().onVideoPause();
         isPause = true;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         getGSYVideoPlayer().getCurrentPlayer().onVideoResume();
         isPause = false;
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         if (isPlay) {
             GSYBaseVideoPlayer currentPlayer = getGSYVideoPlayer().getCurrentPlayer();
             if (currentPlayer != null) {
@@ -110,7 +123,7 @@ public abstract class BaseVideoActivity<T extends GSYBaseVideoPlayer, P extends 
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
         if (isPlay && !isPause) {
-            getGSYVideoPlayer().onConfigurationChanged(this, newConfig, orientationUtils, hideActionBarWhenFull(), hideStatusBarWhenFull());
+            getGSYVideoPlayer().onConfigurationChanged(getActivity(), newConfig, orientationUtils, hideActionBarWhenFull(), hideStatusBarWhenFull());
         }
     }
 
@@ -270,16 +283,21 @@ public abstract class BaseVideoActivity<T extends GSYBaseVideoPlayer, P extends 
 
     public void full(boolean enable) {
 
+        FragmentActivity activity = getActivity();
+
+        if (activity == null) {
+            return;
+        }
         if (enable) {
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
             lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-            getWindow().setAttributes(lp);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            activity.getWindow().setAttributes(lp);
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         } else {
-            WindowManager.LayoutParams attr = getWindow().getAttributes();
+            WindowManager.LayoutParams attr = activity.getWindow().getAttributes();
             attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().setAttributes(attr);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            activity.getWindow().setAttributes(attr);
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
     }
 }
