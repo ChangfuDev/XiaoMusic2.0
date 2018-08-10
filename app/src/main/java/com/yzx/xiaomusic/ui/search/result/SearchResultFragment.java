@@ -2,6 +2,7 @@ package com.yzx.xiaomusic.ui.search.result;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -119,11 +120,18 @@ public class SearchResultFragment extends BaseMvpFragment<SearchResultPresenter>
 
         recyclerView.setAdapter(adapter);
     }
+//
+//    @Override
+//    protected void lazyLoadData() {
+//        super.lazyLoadData();
+//
+//        getSearchContent();
+//        search(0);
+//    }
 
     @Override
-    protected void lazyLoadData() {
-        super.lazyLoadData();
-
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         getSearchContent();
         search(0);
     }

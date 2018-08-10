@@ -2,6 +2,7 @@ package com.yzx.xiaomusic.ui.usercenter.music;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,12 +65,17 @@ public class UserCenterMusicFragment extends BaseMvpFragment<UserCenterMusicPres
         smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> mPresenter.getUserInfo(index, "10", userId));
     }
 
+//    @Override
+//    protected void lazyLoadData() {
+//        super.lazyLoadData();
+//        mPresenter.getUserInfo(index, "10", userId);
+//    }
+
     @Override
-    protected void lazyLoadData() {
-        super.lazyLoadData();
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         mPresenter.getUserInfo(index, "10", userId);
     }
-
 
     @SuppressLint("CheckResult")
     public void setData(UserSongSheet userSongSheet) {

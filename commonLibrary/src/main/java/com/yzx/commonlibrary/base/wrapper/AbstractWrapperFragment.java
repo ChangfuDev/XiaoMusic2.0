@@ -4,9 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.StringRes;
 
-import com.yzx.commonlibrary.base.CommonLazyFragment;
 import com.yzx.commonlibrary.base.mvp.ICommonBaseView;
 import com.yzx.commonlibrary.utils.ToastUtils;
+
+import me.yokeyword.fragmentation.SupportFragment;
 
 import static com.yzx.commonlibrary.utils.ResourceUtils.parseString;
 
@@ -15,7 +16,7 @@ import static com.yzx.commonlibrary.utils.ResourceUtils.parseString;
  * @date 2018/4/24
  * Description  封装了Toast，Loading的Fragment
  */
-public abstract class AbstractWrapperFragment extends CommonLazyFragment implements ICommonBaseView {
+public abstract class AbstractWrapperFragment extends SupportFragment implements ICommonBaseView {
     private ProgressDialog progressDialog;
 
     @Override

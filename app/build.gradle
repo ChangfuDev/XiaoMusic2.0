@@ -33,13 +33,20 @@ android {
 //            shrinkResources true
 //            //是否开启混淆
 //            minifyEnabled true
-            minifyEnabled false
-//            //是否去除未利用的资源
-//            shrinkResources true
+            minifyEnabled true
 //            //是否使用zipalign工具压缩
 //            zipAlignEnable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+//设置编译的lint开关，程序在buid的时候，会执行lint检查，有任何的错误或者警告提示，都会终止构建
+    lintOptions{
+        abortOnError false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -49,9 +56,6 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
-    }
-    lintOptions {
-        abortOnError false
     }
 //    配置多渠道打包
     productFlavors {
@@ -98,8 +102,10 @@ dependencies {
     //圆形头像
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.Othershe:NiceImageView:1.0.0'
-//    implementation 'android.arch.navigation:navigation-fragment:1.0.0-alpha01'
-//    implementation 'android.arch.navigation:navigation-ui:1.0.0-alpha01'
+
+    //    implementation 'android.arch.navigation:navigation-fragment:1.0.0-alpha01'
+
+    //    implementation 'android.arch.navigation:navigation-ui:1.0.0-alpha01'
 
     //FlowLayout
     implementation 'com.hyman:flowlayout-lib:1.1.2'
@@ -159,8 +165,10 @@ dependencies {
 
     //bugly
     implementation 'com.tencent.bugly:crashreport:2.6.6.1'
+
     // LeanCloud 基础包
     implementation 'cn.leancloud.android:avoscloud-sdk:v4.6.4'
+
     //leakcanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
@@ -169,7 +177,8 @@ dependencies {
     implementation('com.alibaba.android:vlayout:1.2.8@aar') {
         transitive = true
     }
-//    banner
+
+    //    banner
     implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
 
     //完整版引入
