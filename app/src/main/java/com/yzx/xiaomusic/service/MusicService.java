@@ -45,6 +45,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.yzx.xiaomusic.Constant.BASE_URL;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_LOADING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_PROGRESS;
@@ -184,7 +185,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         musicInfo = songSheet.get(position);
         //TODO EventBus 歌曲改变
         EventBusUtils.postMusicChanged();
-        Log.i(TAG, "setMusicIndex: " + musicInfo.getMusicName() + position);
+//        Log.i(TAG, "setMusicIndex: " + musicInfo.getMusicName() + position);
     }
 
     public int getIndex() {
@@ -209,15 +210,16 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
 //        缓存不足时，先暂停
         if (musicInfo != null && musicInfo.getDuration() > 0) {
-            if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 1) {
-                pause();
-                EventBusUtils.postBufferringState();
+            if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 3) {
+                sendPauseEvent();
+                EventBusUtils.post(new MessageEvent(TYPE_MUSIC_LOADING));
             } else {
                 if (!mp.isPlaying()) {
                     start();
                 }
             }
         }
+
         buffer = percent;
         EventBusUtils.postBuffer(percent);
     }
@@ -445,11 +447,16 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
             Log.i(TAG, "playNetMusic: cache");
         } else {
             Log.i(TAG, "playNetMusic: noCache");
+            EventBusUtils.postBuffer(0);
             getNetMusicAddressAndPlay(musicInfo);
         }
     }
 
     private void getNetMusicAddressAndPlay(MusicInfo musicInfo) {
+
+        sendPauseEvent();
+        EventBusUtils.post(new MessageEvent(TYPE_MUSIC_LOADING));
+
         getMusicAddress(musicInfo.getMusicId(), new CommonMvpObserver<MusicAddress>() {
 
             @Override

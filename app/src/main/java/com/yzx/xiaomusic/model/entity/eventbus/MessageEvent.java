@@ -33,6 +33,7 @@ public class MessageEvent {
      * 缓存进度不足时
      */
     public static final int TYPE_MUSIC_BUFFERRING = 7;
+
     /**
      * 服务创建完成
      */
@@ -42,6 +43,11 @@ public class MessageEvent {
      * 用户信息改变（登陆登出）
      */
     public static final int TYPE_USER_INFOR_CHANGED = 8;
+
+    /**
+     * 加载中
+     */
+    public static final int TYPE_MUSIC_LOADING = 9;
 
     public MessageEvent(int type) {
         this.type = type;

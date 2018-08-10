@@ -2,15 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
+    android:layout_height="match_parent">
 
 
-    <ImageView
-        android:id="@+id/iv_head"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@id/iv_cover"
-        android:scaleType="centerCrop" />
+    <!--<ImageView-->
+    <!--android:id="@+id/iv_head"-->
+    <!--android:layout_width="100dp"-->
+    <!--android:layout_height="100dp"-->
+    <!--android:layout_marginStart="10dp"-->
+    <!--android:layout_toEndOf="@id/iv_cover"-->
+    <!--android:scaleType="centerCrop" />-->
+
+
+    <com.yzx.xiaomusic.widget.MusicSeekBar
+        android:id="@+id/seekBar"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:msb_height="2dp"
+        app:msb_max="100"
+        app:msb_progress="50"
+        app:msb_secondProgress="50" />
 </RelativeLayout>

@@ -76,7 +76,7 @@ public abstract class BaseFragment extends CommonBaseFragment {
 
         service = ServiceManager.getInstance().getService();
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        loadService = LoadSir.getDefault().register(view, (Callback.OnReloadListener) v -> reload(v));
+        loadService = LoadSir.getDefault().register(view, (Callback.OnReloadListener) this::reload);
         loadService.showSuccess();
 
         return loadService.getLoadLayout();

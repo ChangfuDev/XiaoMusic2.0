@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.yzx.xiaomusic.R;
@@ -32,7 +30,7 @@ import com.yzx.xiaomusic.utils.FragmentStartUtils;
 import com.yzx.xiaomusic.utils.GlideUtils;
 import com.yzx.xiaomusic.utils.MusicDataUtils;
 import com.yzx.xiaomusic.utils.TimeUtils;
-import com.yzx.xiaomusic.widget.simplelistenner.SimpleSeekBarChangeListener;
+import com.yzx.xiaomusic.widget.MusicSeekBar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -40,8 +38,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_BUFFERRING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
+import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_LOADING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PAUSE;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_PLAYING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_BUFFER;
@@ -69,7 +67,7 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
     @BindView(R.id.tv_current_progress)
     TextView tvCurrentProgress;
     @BindView(R.id.seekBar)
-    AppCompatSeekBar seekBar;
+    MusicSeekBar seekBar;
     @BindView(R.id.tv_duration)
     TextView tvDuration;
     @BindView(R.id.iv_bg)
@@ -122,14 +120,14 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         initToolBar(tb);
         tb.inflateMenu(R.menu.menu_share);
         tb.setOnMenuItemClickListener(this);
-        seekBar.setOnSeekBarChangeListener(new SimpleSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    service.seekTo(progress);
-                }
-            }
-        });
+//        seekBar.setOnSeekBarChangeListener(new SimpleSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                if (fromUser) {
+//                    service.seekTo(progress);
+//                }
+//            }
+//        });
         playCardFragment = new PlayCardFragment();
         lyricFragment = new LyricFragment();
         loadMultipleRootFragment(R.id.fragmentContainer, 0, playCardFragment, lyricFragment);
@@ -154,9 +152,9 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         if (musicInfo != null) {
             seekBar.setMax((int) musicInfo.getDuration());
             if (musicInfo.isLocal() || CacheUtils.isMusicCache(musicInfo.getMusicId())) {
-                seekBar.setSecondaryProgress((int) musicInfo.getDuration());
+                seekBar.setSecondProgress((int) musicInfo.getDuration());
             } else {
-                seekBar.setSecondaryProgress((int) (musicInfo.getDuration() * (service.getBuffer()) / 100));
+                seekBar.setSecondProgress((int) (musicInfo.getDuration() * (service.getBuffer()) / 100));
             }
         }
         //更新播放状态
@@ -256,8 +254,8 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 }
                 break;
             case TYPE_MUSIC_UPDATE_BUFFER:
-                seekBar.setMax((int) musicInfo.getDuration());
-                seekBar.setSecondaryProgress((int) (musicInfo.getDuration() * ((int) event.getContent()) / 100));
+//                seekBar.setMax((int) musicInfo.getDuration());
+                seekBar.setSecondProgress((int) (musicInfo.getDuration() * ((int) event.getContent()) / 100));
                 break;
             case TYPE_MUSIC_PLAYING:
                 ivPlayPause.setImageResource(R.drawable.acq);
@@ -266,13 +264,20 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 ivPlayPause.setImageResource(R.drawable.acs);
                 break;
             case TYPE_MUSIC_UPDATE_PROGRESS:
+                seekBar.setState(MusicSeekBar.STATE_PLAYING);
                 Integer content = (Integer) event.getContent();
-                seekBar.setMax((int) musicInfo.getDuration());
+//                seekBar.setMax((int) musicInfo.getDuration());
                 seekBar.setProgress(content);
                 tvCurrentProgress.setText(TimeUtils.getFormatData(content, TimeUtils.FORMAT_MM_SS));
                 break;
-            case TYPE_MUSIC_BUFFERRING:
+//            case TYPE_MUSIC_BUFFERRING:
+//                //TODO 缓存不足时操作
+//                seekBar.setState(MusicSeekBar.STATE_LOADING);
+//                break;
+            case TYPE_MUSIC_LOADING:
                 //TODO 缓存不足时操作
+                seekBar.setState(MusicSeekBar.STATE_LOADING);
+                Log.i(TAG, "onMessageEvent: " + seekBar.getState());
                 break;
         }
     }

@@ -82,4 +82,18 @@
         <attr name="gv_count" format="integer" />
         <attr name="gv_current" format="float" />
     </declare-styleable>
+
+    <!--带状态的音乐进度条-->
+    <declare-styleable name="MusicSeekBar">
+        <attr name="msb_backColor" format="reference|color" />
+        <attr name="msb_secondProgressColor" format="reference|color" />
+        <attr name="msb_progressColor" format="reference|color" />
+        <attr name="msb_max" format="integer" />
+        <attr name="msb_secondProgress" format="integer" />
+        <attr name="msb_progress" format="integer" />
+        <attr name="msb_thumb" format="reference" />
+        <attr name="msb_loading_thumb" format="reference" />
+        <attr name="msb_loading_bg" format="reference" />
+        <attr name="msb_height" format="dimension"/>
+    </declare-styleable>
 </resources>
