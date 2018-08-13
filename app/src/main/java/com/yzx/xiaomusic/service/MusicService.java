@@ -176,7 +176,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
     }
 
     public int getCurrentPosition() {
-        return currentPosition;
+        return mediaPlayer.getCurrentPosition();
     }
 
     public void setMusicIndex(int position) {
@@ -212,7 +212,7 @@ public class MusicService extends Service implements MediaPlayer.OnBufferingUpda
         if (musicInfo != null && musicInfo.getDuration() > 0) {
             if (percent - (mp.getCurrentPosition() * 100 / musicInfo.getDuration()) < 3) {
                 sendPauseEvent();
-                EventBusUtils.post(new MessageEvent(TYPE_MUSIC_LOADING));
+                EventBusUtils.postMusicLoading(mp.getCurrentPosition());
             } else {
                 if (!mp.isPlaying()) {
                     start();

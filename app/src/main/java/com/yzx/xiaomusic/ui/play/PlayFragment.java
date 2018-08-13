@@ -120,14 +120,17 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         initToolBar(tb);
         tb.inflateMenu(R.menu.menu_share);
         tb.setOnMenuItemClickListener(this);
-//        seekBar.setOnSeekBarChangeListener(new SimpleSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                if (fromUser) {
-//                    service.seekTo(progress);
-//                }
-//            }
-//        });
+
+        seekBar.setOnChangeListener((musicSeekBar, progress, isFormUser) -> {
+            if (isFormUser) {
+                service.seekTo(progress);
+                tvCurrentProgress.setText(TimeUtils.getFormatData(progress, TimeUtils.FORMAT_MM_SS));
+                //如果滑动进度大于缓存，设置为Loading状态
+                if (service != null && musicSeekBar.getMax() > 0 && service.getBuffer() < progress * 100 / musicSeekBar.getMax()) {
+                    musicSeekBar.setState(MusicSeekBar.STATE_LOADING);
+                }
+            }
+        });
         playCardFragment = new PlayCardFragment();
         lyricFragment = new LyricFragment();
         loadMultipleRootFragment(R.id.fragmentContainer, 0, playCardFragment, lyricFragment);
@@ -139,7 +142,7 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
             if (!musicInfo.isLocal()) {
                 GlideUtils.loadBlurImg(getContext(), musicInfo.getAlbumCoverPath(), ivBg);
             }
-            tvCurrentProgress.setText("00:00");
+            tvCurrentProgress.setText(TimeUtils.getFormatData(service.getCurrentPosition(), TimeUtils.FORMAT_MM_SS));
             tvDuration.setText(TimeUtils.getFormatData(musicInfo.getDuration(), TimeUtils.FORMAT_MM_SS));
         }
     }
@@ -270,12 +273,9 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 seekBar.setProgress(content);
                 tvCurrentProgress.setText(TimeUtils.getFormatData(content, TimeUtils.FORMAT_MM_SS));
                 break;
-//            case TYPE_MUSIC_BUFFERRING:
-//                //TODO 缓存不足时操作
-//                seekBar.setState(MusicSeekBar.STATE_LOADING);
-//                break;
             case TYPE_MUSIC_LOADING:
                 //TODO 缓存不足时操作
+//                seekBar.setProgress(0);
                 seekBar.setState(MusicSeekBar.STATE_LOADING);
                 Log.i(TAG, "onMessageEvent: " + seekBar.getState());
                 break;

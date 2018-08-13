@@ -12,6 +12,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
@@ -50,6 +51,7 @@ public class MusicSeekBar extends View {
     private int animatedValue;
     private Matrix matrix;
     private ValueAnimator valueAnimator;
+    private OnChangeListener onChangeListener;
 
     public MusicSeekBar(Context context) {
         this(context, null);
@@ -61,6 +63,9 @@ public class MusicSeekBar extends View {
 
     public MusicSeekBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+
+        setClickable(true);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
 
@@ -94,8 +99,8 @@ public class MusicSeekBar extends View {
      * 将dp转换为与之相等的px
      */
     public int dp2px(float dipValue) {
-        float scale = getContext().getResources().getDisplayMetrics().density;
-        return (int) (dipValue * scale + 0.5f);
+        float density = getContext().getResources().getDisplayMetrics().density;
+        return (int) (dipValue * density + 0.5f);
     }
 
 
@@ -122,7 +127,6 @@ public class MusicSeekBar extends View {
 
         measuredHeight = getMeasuredHeight();
         measuredWidth = getMeasuredWidth();
-
     }
 
     /**
@@ -219,6 +223,10 @@ public class MusicSeekBar extends View {
         invalidate();
     }
 
+    public int getMax() {
+        return max;
+    }
+
     public void setProgress(int progress) {
         this.progress = progress;
         invalidate();
@@ -227,6 +235,27 @@ public class MusicSeekBar extends View {
     public void setSecondProgress(int secondProgress) {
         this.secondProgress = secondProgress;
         invalidate();
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (onChangeListener == null) {
+            return super.onTouchEvent(event);
+        }
+
+        switch (event.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_UP:
+                int progress = (int) (event.getX() * max / realWidth);
+                onChangeListener.onChange(this, progress, true);
+                setProgress(progress);
+                break;
+        }
+        return super.onTouchEvent(event);
     }
 
     private void animat() {
@@ -244,6 +273,7 @@ public class MusicSeekBar extends View {
 
     public void setState(int state) {
 
+        //如果状态一致，不修改了
         if (this.state == state) {
             return;
         }
@@ -260,5 +290,16 @@ public class MusicSeekBar extends View {
 
     public int getState() {
         return state;
+    }
+
+    public void setOnChangeListener(OnChangeListener onChangeListener) {
+        this.onChangeListener = onChangeListener;
+    }
+
+    /**
+     * 改变监听接口
+     */
+    public interface OnChangeListener {
+        void onChange(MusicSeekBar musicSeekBar, int progress, boolean isFormUser);
     }
 }
