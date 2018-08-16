@@ -185,4 +185,5 @@ dependencies {
     implementation 'com.shuyu:gsyVideoPlayer-java:5.0.2'
     implementation 'com.shuyu:gsyVideoPlayer-armv7a:5.0.2'
     implementation 'com.shuyu:gsyVideoPlayer-arm64:5.0.2'
+    implementation project(':leancloud')
 }

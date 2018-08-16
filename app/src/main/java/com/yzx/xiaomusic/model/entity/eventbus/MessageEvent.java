@@ -29,10 +29,6 @@ public class MessageEvent {
      */
     public static final int TYPE_MUSIC_UPDATE_PROGRESS = 6;
 
-    /**
-     * 缓存进度不足时
-     */
-    public static final int TYPE_MUSIC_BUFFERRING = 7;
 
     /**
      * 服务创建完成

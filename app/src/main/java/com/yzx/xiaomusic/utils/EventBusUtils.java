@@ -4,7 +4,6 @@ import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_BUFFERRING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_CHANGED;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_LOADING;
 import static com.yzx.xiaomusic.model.entity.eventbus.MessageEvent.TYPE_MUSIC_UPDATE_BUFFER;
@@ -58,13 +57,13 @@ public class EventBusUtils {
     public static void postBuffer(int percent) {
         post(new MessageEvent(TYPE_MUSIC_UPDATE_BUFFER, percent));
     }
-
-    /**
-     * 缓存进度不足播放时
-     */
-    public static void postBufferringState() {
-        post(new MessageEvent(TYPE_MUSIC_BUFFERRING));
-    }
+//
+//    /**
+//     * 缓存进度不足播放时
+//     */
+//    public static void postBufferringState() {
+//        post(new MessageEvent(TYPE_MUSIC_BUFFERRING));
+//    }
 
     /**
      * 音乐改变
@@ -73,6 +72,11 @@ public class EventBusUtils {
         post(new MessageEvent(TYPE_MUSIC_CHANGED));
     }
 
+    /**
+     * 音乐获取或者缓存不足时loading
+     *
+     * @param progress
+     */
     public static void postMusicLoading(int progress) {
         post(new MessageEvent(TYPE_MUSIC_LOADING, progress));
     }

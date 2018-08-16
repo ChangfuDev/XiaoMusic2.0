@@ -28,7 +28,7 @@ import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.eventbus.MessageEvent;
 import com.yzx.xiaomusic.service.ServiceManager;
 import com.yzx.xiaomusic.ui.adapter.NavigationHeadAdapter;
-import com.yzx.xiaomusic.ui.login.LoginFragment;
+import com.yzx.xiaomusic.ui.login.LoginAndRegisterFragment;
 import com.yzx.xiaomusic.ui.main.discover.DiscoverFragment;
 import com.yzx.xiaomusic.ui.main.music.MusicFragment;
 import com.yzx.xiaomusic.ui.main.navigation.GradeFragment;
@@ -176,17 +176,17 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
 
                 Object tag = drawerLayout.getTag(R.id.drawerLayout);
 
-                if (tag==null){
+                if (tag == null) {
                     return;
                 }
 
                 SupportFragment toTargetFragment = null;
-                switch ((int)tag) {
+                switch ((int) tag) {
                     case NAV_LISTENING_TO_SONG:
                         toTargetFragment = new ListeningToSongFragment();
                         break;
                     case NAV_LOGIN:
-                        toTargetFragment = new LoginFragment();
+                        toTargetFragment = new LoginAndRegisterFragment();
                         break;
                     case NAV_SETTING:
                         toTargetFragment = new SettingFragment();
@@ -202,6 +202,8 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
                 if (toTargetFragment == null) {
                     return;
                 }
+                //重置Tag
+                drawerLayout.setTag(R.id.drawerLayout, null);
                 FragmentStartUtils.startFragment(mainFragment, toTargetFragment);
             }
         });

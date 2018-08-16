@@ -9,14 +9,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVUser;
 import com.yzx.commonlibrary.base.adapter.CommonBaseAdapter;
 import com.yzx.commonlibrary.utils.ResourceUtils;
+import com.yzx.leancloud.utils.LeanUtils;
 import com.yzx.xiaomusic.Constant;
 import com.yzx.xiaomusic.R;
 import com.yzx.xiaomusic.db.DBUtils;
+import com.yzx.xiaomusic.db.entity.ExtraMusicInfo;
+import com.yzx.xiaomusic.model.entity.common.MusicInfo;
 import com.yzx.xiaomusic.model.entity.common.SongSheetInfo;
 import com.yzx.xiaomusic.ui.songsheet.detail.SongSheetDetailFragment;
 import com.yzx.xiaomusic.utils.FragmentStartUtils;
+import com.yzx.xiaomusic.utils.JsonUtils;
 import com.yzx.xiaomusic.widget.UnScrollLinearLayoutManager;
 
 import java.util.ArrayList;
@@ -96,9 +101,24 @@ public class MainMusicAdapter extends CommonBaseAdapter<RecyclerView.ViewHolder,
                 ArrayList<SongSheetInfo> songSheetInfos = new ArrayList<>();
                 SongSheetInfo songSheetInfo = new SongSheetInfo();
                 songSheetInfo.setId("-1");
-                songSheetInfo.setCreatorNickName("帅气的杨子晓=^_^=");
+                //根据登录状态显示用户信息
+                if (LeanUtils.isLogin()) {
+                    String username = AVUser.getCurrentUser().getUsername();
+                    songSheetInfo.setCreatorNickName(username);
+                } else {
+                    songSheetInfo.setCreatorNickName("");
+                }
+
                 songSheetInfo.setTitle("我喜欢的音乐");
-                songSheetInfo.setCoverUrl(Constant.PIC);
+
+                List<ExtraMusicInfo> allLikedMusicInfos = DBUtils.getExtraMusicInfoDao().getAllLikedMusicInfos();
+                if (allLikedMusicInfos.size() > 0) {
+                    String musicInfoString = allLikedMusicInfos.get(0).getMusicInfo();
+                    MusicInfo musicInfo = (MusicInfo) JsonUtils.stringToObject(musicInfoString, MusicInfo.class);
+                    songSheetInfo.setCoverUrl(musicInfo.getAlbumCoverPath());
+                } else {
+                    songSheetInfo.setCoverUrl(Constant.PIC);
+                }
                 int size = DBUtils.getExtraMusicInfoDao().getAllLikedMusicInfos().size();
                 songSheetInfo.setMusicCount(String.valueOf(size));
                 songSheetInfos.add(songSheetInfo);

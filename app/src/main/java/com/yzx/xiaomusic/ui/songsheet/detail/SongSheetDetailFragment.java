@@ -8,6 +8,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -209,10 +210,13 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
         GlideUtils.loadBlurImg(getContext(), cover, ivBg);
         GlideUtils.loadBlurImg(getContext(), cover, tbBg);
         GlideUtils.loadImg(getContext(), cover, ivLittleBg);
+        Log.i(TAG, "initView: " + cover);
 
         adapter = new MusicAdapter(getFragmentManager(), this);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
+        //控制用户信息显示
+        rlUserInfo.setVisibility(TextUtils.equals("-1", songSheetId) ? View.GONE : View.VISIBLE);
     }
 
     private SongSheetInfo getSongSheetInfoById() {
@@ -337,13 +341,7 @@ public class SongSheetDetailFragment extends BaseMvpFragment<SongSheetDetailPres
                 break;
             case R.id.rl_user_info:
                 arguments.clear();
-                if (result == null) {
-                    if (TextUtils.equals("-1", songSheetId)) {
-                        arguments.putString(KEY_USER_ID, "480602967");
-                        easyStart(new UserCenterFragment(), arguments);
-                    }
-//                    showToast("缺少用户信息");
-                } else {
+                if (result != null) {
                     arguments.putString(KEY_USER_ID, String.valueOf(result.getCreator().getUserId()));
                     easyStart(new UserCenterFragment(), arguments);
                 }

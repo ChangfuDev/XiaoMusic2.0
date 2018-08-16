@@ -124,7 +124,7 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
         seekBar.setOnChangeListener((musicSeekBar, progress, isFormUser) -> {
             if (isFormUser) {
                 service.seekTo(progress);
-                tvCurrentProgress.setText(TimeUtils.getFormatData(progress, TimeUtils.FORMAT_MM_SS));
+                refreshProgress(progress);
                 //如果滑动进度大于缓存，设置为Loading状态
                 if (service != null && musicSeekBar.getMax() > 0 && service.getBuffer() < progress * 100 / musicSeekBar.getMax()) {
                     musicSeekBar.setState(MusicSeekBar.STATE_LOADING);
@@ -142,9 +142,18 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
             if (!musicInfo.isLocal()) {
                 GlideUtils.loadBlurImg(getContext(), musicInfo.getAlbumCoverPath(), ivBg);
             }
-            tvCurrentProgress.setText(TimeUtils.getFormatData(service.getCurrentPosition(), TimeUtils.FORMAT_MM_SS));
+            refreshProgress(service.getCurrentPosition());
             tvDuration.setText(TimeUtils.getFormatData(musicInfo.getDuration(), TimeUtils.FORMAT_MM_SS));
         }
+    }
+
+    /**
+     * 更改进度显示
+     *
+     * @param progress
+     */
+    private void refreshProgress(int progress) {
+        tvCurrentProgress.setText(TimeUtils.getFormatData(progress, TimeUtils.FORMAT_MM_SS));
     }
 
     @Override
@@ -246,6 +255,11 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
     @SuppressLint("CheckResult")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
+
+        if (TYPE_MUSIC_UPDATE_PROGRESS != event.getType()) {
+            Log.i(TAG, "onMessageEvent: " + event.getType());
+        }
+
         switch (event.getType()) {
             case TYPE_MUSIC_CHANGED:
                 musicInfo = service.getMusicInfo();
@@ -257,7 +271,6 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
                 }
                 break;
             case TYPE_MUSIC_UPDATE_BUFFER:
-//                seekBar.setMax((int) musicInfo.getDuration());
                 seekBar.setSecondProgress((int) (musicInfo.getDuration() * ((int) event.getContent()) / 100));
                 break;
             case TYPE_MUSIC_PLAYING:
@@ -269,15 +282,14 @@ public class PlayFragment extends BaseMvpFragment<PlayPresenter> implements Tool
             case TYPE_MUSIC_UPDATE_PROGRESS:
                 seekBar.setState(MusicSeekBar.STATE_PLAYING);
                 Integer content = (Integer) event.getContent();
-//                seekBar.setMax((int) musicInfo.getDuration());
                 seekBar.setProgress(content);
-                tvCurrentProgress.setText(TimeUtils.getFormatData(content, TimeUtils.FORMAT_MM_SS));
+                refreshProgress(content);
                 break;
             case TYPE_MUSIC_LOADING:
-                //TODO 缓存不足时操作
-//                seekBar.setProgress(0);
+                Integer progress = (Integer) event.getContent();
+                seekBar.setProgress(progress);
+                refreshProgress(progress);
                 seekBar.setState(MusicSeekBar.STATE_LOADING);
-                Log.i(TAG, "onMessageEvent: " + seekBar.getState());
                 break;
         }
     }

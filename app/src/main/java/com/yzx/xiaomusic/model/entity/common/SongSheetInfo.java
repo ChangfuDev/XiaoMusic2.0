@@ -27,6 +27,19 @@ public class SongSheetInfo implements Serializable {
     String creatorCoverUrl;
     String creatorBgUrl;
     String creatorNickName;
+    /**
+     * 是否是leanCloud后台
+     */
+    boolean isLeanCloud;
+
+    public boolean isLeanCloud() {
+        return isLeanCloud;
+    }
+
+    public void setLeanCloud(boolean leanCloud) {
+        isLeanCloud = leanCloud;
+    }
+
 
     public String getPlayCount() {
         return playCount;

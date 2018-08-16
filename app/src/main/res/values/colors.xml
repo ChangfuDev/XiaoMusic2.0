@@ -6,7 +6,7 @@
 
 
     <color name="colorDivider">#e1e2e4</color>
-    <color name="colorBg">@color/colorDivider</color>
+    <color name="colorBg">#f0f0f0</color>
     <color name="colorTitle">#2f2e3e</color>
     <color name="colorPressed">#e1e2e4</color>
     <!--<color name="colorTransparent">#33ffffff</color>-->
